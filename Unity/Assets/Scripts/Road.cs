@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class Road : MonoBehaviour
@@ -7,6 +6,7 @@ public class Road : MonoBehaviour
     private Player owner = null;
     private Tile firstTile = null;
     private Tile secondTile = null;
+    private Tuple<IntersectionCoordinates, IntersectionCoordinates> intersectionPair;
     
     public Player Owner { get => owner; set => owner = value; }
         
