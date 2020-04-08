@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class HexMesh : MonoBehaviour {
-
-	Mesh hexMesh;
+public class HexMesh : MonoBehaviour
+{
+    Mesh hexMesh;
 	List<Vector3> vertices;
 	List<int> triangles;
     MeshCollider meshCollider;
@@ -44,6 +44,7 @@ public class HexMesh : MonoBehaviour {
             );
         }
     }
+    
     void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
     {
         int vertexIndex = vertices.Count;

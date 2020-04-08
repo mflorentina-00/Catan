@@ -1,33 +1,25 @@
-﻿using System.Runtime.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public struct HexCoordinates
 {
-    [SerializeField]
-    private int x, z;
-
-
     public int X
     {
-        get
-        {
-            return x;
-        }
+        get;
+        private set;
     }
     public int Z
     {
-        get
-        {
-            return z;
-        }
+        get;
+        private set;
     }
 
     public HexCoordinates(int x, int z)
     {
-        this.x = x;
-        this.z = z;
+        X = x;
+        Z = z;
     }
+    
     public int Y
     {
         get
@@ -42,12 +34,14 @@ public struct HexCoordinates
     }
     public Vector2 FromAxialToOffset()
     {
-        return new Vector2(x+z/2,z);
+        return new Vector2(X + Z / 2, Z);
     }
+
     public override string ToString()
     {
         return "(" + X.ToString() + ", " + Z.ToString() + ")";
     }
+    
     public string ToStringCube()
     {
        
@@ -58,14 +52,15 @@ public struct HexCoordinates
     {
         return X.ToString() + "\n" + Z.ToString();
     }
+    
     public string ToStringCubeOnSeparateLines()
     {
         return X.ToString() + "\n" + Y.ToString() + "\n" + Z.ToString();
     }
 
-    public Vector3 FromCordsToPosition()
+    public Vector3 FromCoordsToPosition()
     {
-        int x =(int) FromAxialToOffset().x;
+        int x = (int) FromAxialToOffset().x;
         int z = (int) FromAxialToOffset().y;
         float X1 = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
         float Z1 = z * (HexMetrics.outerRadius * 1.5f);
@@ -73,7 +68,7 @@ public struct HexCoordinates
         return position;
     }
 
-    public static HexCoordinates FromPosition(Vector3 position)
+    public static HexCoordinates FromPositionToCoords(Vector3 position)
     {
         float x = position.x / (HexMetrics.innerRadius * 2f);
         float y = -x;

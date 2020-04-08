@@ -4,16 +4,12 @@ using UnityEngine.UI;
 
 public class HexGrid : MonoBehaviour
 {
-
     public int width = 3;
     public int height = 3;
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
-
     Canvas gridCanvas;
-
     HexCell[] cells;
-
     HexMesh hexMesh;
 
     #region Controller
@@ -36,20 +32,20 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    Tuple<HexCell, HexCell> FindNeighborTile(Vector3 position)
+    Tuple<HexCell, HexCell> FindNeighborTile(Vector3 position) 
     {
         HexCoordinates currentTile = TouchCell(position);
-        int currentPos = (int)(currentTile.FromAxialToOffset().x + currentTile.FromAxialToOffset().y*width);
+        int currentPos = (int) (currentTile.FromAxialToOffset().x + currentTile.FromAxialToOffset().y*width);
         HexCell[] neighbors = cells[currentPos].GetAllNeighbors();
         float minDistance = 100000f;
         HexCell closestNeighbor = null;
         foreach (HexCell neighbor in neighbors)
         {
             if (neighbor != null) {
-                float currDistance = (float)Vector3.Distance(position, neighbor.coordinates.FromCordsToPosition());
-                if (currDistance < minDistance)
+                float currentDist = Vector3.Distance(position, neighbor.coordinates.FromCoordsToPosition());
+                if (currentDist < minDistance)
                 {
-                    minDistance = currDistance;
+                    minDistance = currentDist;
                     closestNeighbor = neighbor;
                 }
             }
@@ -58,18 +54,18 @@ public class HexGrid : MonoBehaviour
         //Debug.Log(minDistance);
         Tuple<HexCell, HexCell> adjacentRoadTiles = new Tuple<HexCell, HexCell>(cells[(int)currentTile.FromAxialToOffset().x+(int)currentTile.FromAxialToOffset().y], closestNeighbor);
         return adjacentRoadTiles;
-
     }
 
     HexCoordinates TouchCell(Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+        HexCoordinates coordinates = HexCoordinates.FromPositionToCoords(position);
         //Debug.Log(position.ToString());
         //Debug.Log("touched at " + coordinates.ToStringCube());
         return coordinates;
     }
     #endregion
+    
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
@@ -92,7 +88,7 @@ public class HexGrid : MonoBehaviour
         position.y = 0f;
         position.z = z * (HexMetrics.outerRadius * 1.5f);
 
-        HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
+        HexCell cell = cells[i] = Instantiate(cellPrefab);
         cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
@@ -121,15 +117,15 @@ public class HexGrid : MonoBehaviour
             }
         }
 
-        Text label = Instantiate<Text>(cellLabelPrefab);
+        Text label = Instantiate(cellLabelPrefab);
         label.rectTransform.SetParent(gridCanvas.transform, false);
         label.rectTransform.anchoredPosition =
             new Vector2(position.x, position.z);
         label.text = cell.coordinates.ToStringCubeOnSeparateLines();
     }
+    
     void Start()
     {
         hexMesh.Triangulate(cells);
     }
-
 }
