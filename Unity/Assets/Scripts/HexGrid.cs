@@ -29,6 +29,7 @@ public class HexGrid : MonoBehaviour
         {
             TouchCell(hit.point);
             FindNeighborTile(hit.point);
+            FindNeighborTileForBuilding(hit.point);
         }
     }
 
@@ -53,6 +54,39 @@ public class HexGrid : MonoBehaviour
         //Debug.Log((int)(closestNeighbor.coordinates.FromAxialToOffset().x + closestNeighbor.coordinates.FromAxialToOffset().y * width));
         //Debug.Log(minDistance);
         Tuple<HexCell, HexCell> adjacentRoadTiles = new Tuple<HexCell, HexCell>(cells[(int)currentTile.FromAxialToOffset().x+(int)currentTile.FromAxialToOffset().y], closestNeighbor);
+        return adjacentRoadTiles;
+    }
+    
+    Tuple<HexCell, HexCell, HexCell> FindNeighborTileForBuilding(Vector3 position) {
+        HexCoordinates currentTile = TouchCell(position);
+        int currentPos = (int) (currentTile.FromAxialToOffset().x + currentTile.FromAxialToOffset().y * width);
+        HexCell[] neighbors = cells[currentPos].GetAllNeighbors();
+        float minDistance = 100000f;
+        float minDistance2 = 100000f;
+        HexCell closestNeighbor = null;
+        HexCell closestNeighbor2 = null;
+
+        foreach (HexCell neighbor in neighbors) {
+            if (neighbor != null) {
+                float currentDist = (float)Vector3.Distance(position, neighbor.coordinates.FromCoordsToPosition());
+                if (currentDist < minDistance) {
+                    minDistance2 = minDistance;
+                    closestNeighbor2 = closestNeighbor;
+
+                    minDistance = currentDist;
+                    closestNeighbor = neighbor;
+                }
+                else if (currentDist < minDistance2) {
+                    minDistance2 = currentDist;
+                    closestNeighbor2 = neighbor;
+                }
+            }
+        }
+        //Debug.Log((int) (closestNeighbor.coordinates.FromAxialToOffset().x + closestNeighbor.coordinates.FromAxialToOffset().y * width));
+        Debug.Log(closestNeighbor.coordinates.FromAxialToOffset().x.ToString() + " " + (closestNeighbor.coordinates.FromAxialToOffset().y).ToString());
+        //Debug.Log(minDistance);
+        Tuple<HexCell, HexCell, HexCell> adjacentRoadTiles = new Tuple<HexCell, HexCell, HexCell>(cells[currentPos], closestNeighbor, closestNeighbor2);
+        Debug.Log(cells[currentPos].ToString() + " " + closestNeighbor.ToString() + " " + closestNeighbor2.ToString());
         return adjacentRoadTiles;
     }
 
