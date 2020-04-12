@@ -15,7 +15,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		IntersectionGraph.createIntersectionGraph();
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(Application.class);
 		/*
 		try {
 			ConnectivitySimulation conn = new ConnectivitySimulation();
@@ -23,6 +23,6 @@ public class Application {
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
-		 */
+		*/
 	}
 }
