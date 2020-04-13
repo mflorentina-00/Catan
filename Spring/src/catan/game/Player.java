@@ -20,6 +20,7 @@ public class Player {
     /* Fields */
 
     private int id;
+    public final Game game;
 
     private List<Road> roads;
     private List<Intersection> settlements;
@@ -47,9 +48,9 @@ public class Player {
 
     /* Constructors */
 
-    public Player() {}
 
-    public Player(int id) {
+    public Player(int id,Game game) {
+        this.game=game;
         this.id = id;
         roads = new ArrayList<>(Component.ROADS);
         settlements = new ArrayList<>(Component.SETTLEMENTS);
@@ -266,12 +267,11 @@ public class Player {
     //TODO: understand were to implement playerAcceptingTrade and playerWhichTrade
     public boolean makeTrade(List<Pair<ResourceType,Integer>> offer,List<Pair<ResourceType,Integer>> request){
         if(!canMakeTrade(offer)){return false;}
-        List<Player> acceptingTrade=new ArrayList<>();
-        //List<Player> acceptingTrade= playerAcceptingTrade(offer,request);
+        List<Player> acceptingTrade=game.playerAcceptingTrade(this,offer,request);
         if(acceptingTrade.size()==0)
             return false;
         else{
-            //playerWhichTrade(acceptingTrade.get(0),offer,request);
+            game.playerWhichTrade(this,acceptingTrade.get(0),offer,request);
             return true;
         }
 

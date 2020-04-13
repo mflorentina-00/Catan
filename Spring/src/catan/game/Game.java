@@ -1,8 +1,9 @@
 package catan.game;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import catan.game.enumeration.ResourceType;
+import javafx.util.Pair;
+
+import java.util.*;
 
 
 public class Game {
@@ -31,6 +32,31 @@ public class Game {
         this.maxPlayers = maxPlayers;
     }
 
+
+    public List<Player> playerAcceptingTrade(Player player, List<Pair<ResourceType,Integer>> offer,
+                                                    List<Pair<ResourceType,Integer>> request){
+        List<Player> playersThatAccept=new ArrayList<>();
+        for(String playerId:players.keySet()){
+            /*
+                TODO W8 players Responses
+                    if response is YES and
+                    and the below verification then we add the player to the possible pick
+             */
+            if(players.get(playerId).canMakeTrade(request)){
+                playersThatAccept.add(players.get(playerId));
+            }
+        }
+        return playersThatAccept;
+    }
+    public void playerWhichTrade(Player player, Player player1, List<Pair<ResourceType, Integer>> offer,
+                                 List<Pair<ResourceType, Integer>> request) {
+        /*
+            TODO add player1 notify
+         */
+        player.tradeHappened(offer, request);
+        player1.tradeHappened(request,offer);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,4 +69,6 @@ public class Game {
     public int hashCode() {
         return Objects.hash(players);
     }
+
+
 }
