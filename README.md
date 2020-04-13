@@ -5,6 +5,6 @@ Descrierea pachetelor:
  - API - configurarea jocului și request-uri pentru fiecare comandă
  - card - dezvoltările cu acțiunile lor și banca
  - enumeration - enum-uri cu toate tipurile standard de care avem nevoie in joc (resurse, proprietăți etc.)
- - map - mapa cu toate structurile ei (grafuri etc.)
+ - board - tabla cu toate structurile ei (grafuri etc.)
  - rule - toate constantele de care avem nevoie  
 Application conține funcția main.
