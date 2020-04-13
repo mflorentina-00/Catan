@@ -1,4 +1,4 @@
-package tilegraph;
+package catan.game.map;
 
 public class TileGraph {
 

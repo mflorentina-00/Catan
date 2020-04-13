@@ -6,8 +6,14 @@ import java.util.Objects;
 
 
 public class Game {
-    private Map<String,Player> players = new HashMap<>();
+    private Map<String,Player> players;
     private int maxPlayers;
+    private catan.game.map.Map map;
+
+    public Game() {
+        players=new HashMap<>();
+        map=new catan.game.map.Map();
+    }
 
     public Map<String, Player> getPlayers() {
         return players;

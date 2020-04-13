@@ -20,4 +20,13 @@ public class Component {
     public static final int ROADS = 15;
     public static final int SETTLEMENTS = 5;
     public static final int CITIES = 4;
+
+    public static final int FIELDS_TILE=4;
+    public static final int FOREST_TILE=4;
+    public static final int PASTURE_TILE=4;
+    public static final int MOUNTAINS_TILE=3;
+    public static final int HILLS_TILE=3;
+    public static final int DESERT_TILE=1;
+
+
 }

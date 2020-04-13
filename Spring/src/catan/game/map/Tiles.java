@@ -1,4 +1,4 @@
-package tilegraph;
+package catan.game.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class Tiles {
     }
     
     public void createTiles(){
-        tiles = new HashMap<Integer,List<Tile>>();
+        tiles = new HashMap<>();
         List<Tile> ringTile = new ArrayList<>();
         ringTile.add(new Tile(0));
         tiles.put(0,ringTile);

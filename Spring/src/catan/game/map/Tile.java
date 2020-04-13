@@ -1,10 +1,14 @@
-package tilegraph;
+package catan.game.map;
+
+import catan.game.enumeration.ResourceType;
 
 import java.util.List;
 
 public class Tile {
     
     private int ID;
+    private ResourceType resource;
+    private int number;
     private List<Tile> neighbours;
     
     Tile(int ID){
@@ -29,6 +33,22 @@ public class Tile {
     
     public void addNeighbour(Tile neighbour){
         this.neighbours.add(neighbour);
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setResource(ResourceType resource) {
+        this.resource = resource;
+    }
+
+    public ResourceType getResource() {
+        return resource;
     }
 
     @Override
