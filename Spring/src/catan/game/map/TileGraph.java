@@ -1,12 +1,34 @@
 package catan.game.map;
 
-public class TileGraph {
+import java.util.ArrayList;
+import java.util.List;
 
-    public static void main(String[] args) {
-        Tiles tiles = new Tiles(19);
+public class TileGraph {
+    private Tiles tiles = new Tiles(19);
+    TileGraph() {
+
         tiles.createTiles();
         tiles.createMatrix();
-        tiles.printMatrix();
+        //tiles.printMatrix();
     }
-    
+
+    public boolean areAdjacent(int source,int target)
+    {
+
+        return  tiles.adjentTiles[source][target];
+
+    }
+
+
+    public List<Integer> getTRing(Integer index)
+    {  List<Integer> retList=new ArrayList<>();
+       List<Tile> list=tiles.getRing(index);
+
+       for(int i=0;i<list.size();i++)
+         retList.add(list.get(i).getID());
+       return retList;
+
+
+    }
+
 }

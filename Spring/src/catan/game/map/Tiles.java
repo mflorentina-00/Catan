@@ -9,7 +9,7 @@ public class Tiles {
     
     private Map<Integer,List<Tile>> tiles;
     private int numberTiles;
-    private boolean[][] adjentTiles;
+    protected boolean[][] adjentTiles;
     private int rings = 2;
     
     Tiles(int numberTiles){
@@ -123,5 +123,9 @@ public class Tiles {
             System.out.println();
         }
     }
-    
+
+
+   protected List<Tile> getRing(Integer index) {
+        return tiles.get(index);
+    }
 }

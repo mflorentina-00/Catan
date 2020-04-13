@@ -7,7 +7,7 @@ public class IntersectionGraph {
     private static List<List<Integer>> positions = new ArrayList<>(3);
     private static boolean[][] adjacency;
 
-    public static void createIntersectionGraph() {
+    IntersectionGraph() {
         setPositions();
         markAdjacentIntersections();
         // printAdjacency();
@@ -100,5 +100,9 @@ public class IntersectionGraph {
                 }
             }
         }
+    }
+
+    public static List<Integer> getPositions(Integer index) {
+        return positions.get(index);
     }
 }

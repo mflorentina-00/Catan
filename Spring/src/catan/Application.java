@@ -14,15 +14,15 @@ public class Application {
 	public static Map<String, Game> games = new HashMap<>();
 
 	public static void main(String[] args) {
-		IntersectionGraph.createIntersectionGraph();
+
 		SpringApplication.run(Application.class);
-		/*
+
 		try {
 			ConnectivitySimulation conn = new ConnectivitySimulation();
 			conn.simulation();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
-		*/
+
 	}
 }
