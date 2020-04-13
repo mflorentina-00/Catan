@@ -1,5 +1,5 @@
 # Catan
-## Atunci când dați commit, nu adăugați decât .java sau pom.xml dacă îl modificați.  
+## Atunci când dați commit, nu adăugați .idea, doar .java sau pom.xml.  
 Ar fi bine sa folosim o aplicație de versionare precum Git Desktop sau sistemul de versionare din IDE, dacă există (pentru Intellij puteți folosi următorul link: https://www.jetbrains.com/help/idea/set-up-a-git-repository.html, respectiv Git din meniul VCS).  
 Dacă nu vă merge proiectul, o posibilitate ar fi: click-dreapta pe src, Mark Directory as Sources Root.  
 Descrierea pachetelor:
