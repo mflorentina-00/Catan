@@ -19,28 +19,33 @@ public class Board {
         tiles = new Vector<>();
         generateRandomTiles();
         mappingTilesWithIntersections();
-        printTileMap();
-        printIntersectionMap();
+       // printTileMap();
+       // printIntersectionMap();
     }
 
     public void printTileMap() {
         int i = 0;
         for (ArrayList<Integer> list : tileMap) {
-            System.out.print(i + " : ");
+            System.out.print("Tile:" + i + " : ");
             for (Integer neighbor : list) {
-                System.out.println(neighbor + " ");
+                System.out.print(neighbor + " ");
             }
+            System.out.println(" ");
+            i=i+1;
         }
     }
 
     public void printIntersectionMap() {
         int i = 0;
         for (ArrayList<Integer> list : intersectionMap) {
-            System.out.print(i + " : ");
+            System.out.print("Intersection " + i + " : ");
             for (Integer neighbor : list) {
-                System.out.println(neighbor + " ");
+                System.out.print(neighbor + " ");
             }
+            System.out.println(" ");
+            i=i+1;
         }
+
     }
 
     public void generateRandomTiles() {
@@ -142,22 +147,23 @@ private void mappingTilesWithIntersections() {
 
         for (int j = 0; j < tileRingSize; j++) {
             //cand se lucreaza cu primul inel de tile-uri,acesta avand doar un singur tile
-            if (tileRingSize == 1) {
-                for (int k = 0; k < tileRingSize; k++) {
-                    tileMap.get(tileRing.get(j)).add(intersectionRing.get(k));
-                    intersectionMap.get(intersectionRing.get(k)).add(tileRing.get(j));
-                }
+           // if (tileRingSize == 1) {
+             //   for (int k = 0; k < tileRingSize; k++) {
+                  //  tileMap.get(tileRing.get(j)).add(intersectionRing.get(k));
+                   // intersectionMap.get(intersectionRing.get(k)).add(tileRing.get(j));
+               // }
 
-            }
+           // }
 
             int iIndex3 = 3;
             int iIndex4 = iIndex3;
-            boolean corner = ((j % i) == 0);
-            if (corner) {
-                iIndex3++;
-                iIndex4--;
+            if(i!=0) {
+                boolean corner = ((j % i) == 0);
+                if (corner) {
+                    iIndex3++;
+                    iIndex4--;
+                }
             }
-
 
             for (int k = 0; k < iIndex3; k++) {
                 tileMap.get(tileRing.get(j)).add(intersectionRing.get(iIndex1));
@@ -166,6 +172,7 @@ private void mappingTilesWithIntersections() {
                     iIndex1 = (iIndex1 + 1) % intersectionRingSize;
                 }
             }
+            if(beforeIntersectionRing!=null){
             for (int k = 0; k < iIndex4; k++) {
                 tileMap.get(tileRing.get(j)).add(beforeIntersectionRing.get(iIndex2));
                 intersectionMap.get(beforeIntersectionRing.get(iIndex2)).add(tileRing.get(j));
@@ -175,9 +182,18 @@ private void mappingTilesWithIntersections() {
             }
 
 
-        }
-    }
+        }}
 
+    }
+    tileMap.get(0).add(3);
+    tileMap.get(0).add(4);
+    tileMap.get(0).add(5);
+    intersectionMap.get(3).add(0);
+    Collections.sort(intersectionMap.get(3));
+    intersectionMap.get(4).add(0);
+    Collections.sort(intersectionMap.get(4));
+    intersectionMap.get(5).add(0);
+    Collections.sort(intersectionMap.get(5));
 }
 
 }
