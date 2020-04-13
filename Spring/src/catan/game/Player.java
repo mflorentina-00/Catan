@@ -48,6 +48,9 @@ public class Player {
 
     /* Constructors */
 
+    public Player(Game game) {
+        this.game = game;
+    }
 
     public Player(int id,Game game) {
         this.game=game;

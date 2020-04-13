@@ -1,4 +1,4 @@
-package catan.game.map;
+package catan.game.board;
 
 import catan.game.enumeration.ResourceType;
 import catan.game.rule.Component;
@@ -8,17 +8,39 @@ import java.util.*;
 //TODO Add TileGraph
 //TODO Add ResourceShuffle
 //TODO Generate MapJSON
-public class Map {
+public class Board {
     Vector<Tile> tiles;
     IntersectionGraph iG = new IntersectionGraph();
     TileGraph tG = new TileGraph();
     private static ArrayList<ArrayList<Integer>> tileMap;
     private static ArrayList<ArrayList<Integer>> intersectionMap;
 
-    public Map() {
+    public Board() {
         tiles = new Vector<>();
         generateRandomTiles();
-        mapingTilesWithIntersections();
+        mappingTilesWithIntersections();
+        printTileMap();
+        printIntersectionMap();
+    }
+
+    public void printTileMap() {
+        int i = 0;
+        for (ArrayList<Integer> list : tileMap) {
+            System.out.print(i + " : ");
+            for (Integer neighbor : list) {
+                System.out.println(neighbor + " ");
+            }
+        }
+    }
+
+    public void printIntersectionMap() {
+        int i = 0;
+        for (ArrayList<Integer> list : intersectionMap) {
+            System.out.print(i + " : ");
+            for (Integer neighbor : list) {
+                System.out.println(neighbor + " ");
+            }
+        }
     }
 
     public void generateRandomTiles() {
@@ -85,7 +107,7 @@ public class Map {
     }
 }
 
-private void mapingTilesWithIntersections() {
+private void mappingTilesWithIntersections() {
     tileMap = new ArrayList<ArrayList<Integer>>(19);
     intersectionMap = new ArrayList<ArrayList<Integer>>(54);
     //Acordam spatiu pentru fiecare mapa

@@ -1,4 +1,4 @@
-package catan.game.map;
+package catan.game.board;
 
 import java.util.ArrayList;
 import java.util.List;

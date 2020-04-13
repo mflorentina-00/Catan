@@ -1,6 +1,7 @@
 package catan.game;
 
 import catan.game.enumeration.ResourceType;
+import catan.game.board.Board;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -9,11 +10,11 @@ import java.util.*;
 public class Game {
     private Map<String,Player> players;
     private int maxPlayers;
-    private catan.game.map.Map map;
+    private Board board;
 
     public Game() {
         players=new HashMap<>();
-        map=new catan.game.map.Map();
+        board =new Board();
     }
 
     public Map<String, Player> getPlayers() {

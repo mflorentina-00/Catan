@@ -1,4 +1,4 @@
-package catan.game.map;
+package catan.game.board;
 
 import catan.game.enumeration.ResourceType;
 

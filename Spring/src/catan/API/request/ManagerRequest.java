@@ -54,7 +54,7 @@ public class ManagerRequest implements GameRequest {
                 return new Response(102, "The game does not exist.");
             if (Application.games.get(gameKey).getPlayers().size() == Application.games.get(gameKey).getMaxPlayers())
                 return new Response(102, "There is no room left.");
-            Application.games.get(gameKey).getPlayers().put(userId, new Player());
+            Application.games.get(gameKey).getPlayers().put(userId, new Player(Application.games.get(gameKey)));
             return new Response(100, userId);
         }
         else if(tokens[0].equalsIgnoreCase("setMaxPlayers")) {
