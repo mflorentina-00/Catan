@@ -11,6 +11,7 @@ import catan.game.property.Road;
 import catan.game.rule.Component;
 import catan.game.rule.Cost;
 import catan.game.rule.VictoryPoint;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -251,6 +252,41 @@ public class Player {
         resources.put(ResourceType.Ore,ores-Cost.CITY_ORES);
         resources.put(ResourceType.Grain,grains-Cost.CITY_GRAINS);
 
+    }
+
+
+    public boolean canMakeTrade(List<Pair<ResourceType,Integer>> offer){
+        for(Pair<ResourceType,Integer> pair:offer){
+            ResourceType type=pair.getKey();
+            if(resources.get(type)<pair.getValue())
+                return false;
+        }
+        return true;
+    }
+    //TODO: understand were to implement playerAcceptingTrade and playerWhichTrade
+    public boolean makeTrade(List<Pair<ResourceType,Integer>> offer,List<Pair<ResourceType,Integer>> request){
+        if(!canMakeTrade(offer)){return false;}
+        List<Player> acceptingTrade=new ArrayList<>();
+        //List<Player> acceptingTrade= playerAcceptingTrade(offer,request);
+        if(acceptingTrade.size()==0)
+            return false;
+        else{
+            //playerWhichTrade(acceptingTrade.get(0),offer,request);
+            return true;
+        }
+
+    }
+    public void tradeHappened(List<Pair<ResourceType,Integer>> offer,List<Pair<ResourceType,Integer>> request){
+        for(Pair<ResourceType,Integer> pair:offer){
+            ResourceType type=pair.getKey();
+            Integer resourceCount=resources.get(type);
+            resources.put(type,resourceCount-pair.getValue());
+        }
+        for(Pair<ResourceType,Integer> pair:request){
+            ResourceType type=pair.getKey();
+            Integer resourceCount=resources.get(type);
+            resources.put(type,resourceCount+pair.getValue());
+        }
     }
 
 
