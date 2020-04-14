@@ -44,37 +44,37 @@ public class ManagerRequest implements GameRequest {
         String[] tokens = command.split("[/]+");
         if (tokens[0].equalsIgnoreCase("newGame")) {
             String gameKey = randString.nextString();
-            Application.games.put(gameKey,new Game());
-            return new Response(100,gameKey);
+            Application.games.put(gameKey, new Game());
+            return new Response(Status.SUCCESS, gameKey);
         }
         if (tokens[0].equalsIgnoreCase("startGame")) {
             String gameKey = tokens[1];
             if (Application.games.get(gameKey) == null)
-                return new Response(102, "The game does not exist.");
-            if(Application.games.get(gameKey).startGame())
-                return new Response(100,"Game started");
-            return new Response(102,"Game couldn't start");
+                return new Response(Status.ERROR, "The game does not exist.");
+            if (Application.games.get(gameKey).startGame())
+                return new Response(Status.SUCCESS,"Game started");
+            return new Response(Status.ERROR,"Game couldn't start.");
         }
         else if (tokens[0].equalsIgnoreCase("addPlayer")) {
             String gameKey = tokens[1];
             String userId = randString.nextString();
             if (Application.games.get(gameKey) == null)
-                return new Response(102, "The game does not exist.");
+                return new Response(Status.ERROR, "The game does not exist.");
             if (Application.games.get(gameKey).getPlayers().size() == Application.games.get(gameKey).getMaxPlayers())
-                return new Response(102, "There is no room left.");
+                return new Response(Status.ERROR, "There is no room left.");
             Application.games.get(gameKey).getPlayers().put(userId, new Player(userId,Application.games.get(gameKey)));
-            Application.games.get(gameKey).addPlayerOrder(userId);
-            return new Response(100, userId);
+            Application.games.get(gameKey).addNextPlayer(userId);
+            return new Response(Status.SUCCESS, userId);
         }
         else if(tokens[0].equalsIgnoreCase("setMaxPlayers")) {
             String gameKey = tokens[1];
             int playersNum = Integer.parseInt(tokens[2]);
             if (Application.games.get(gameKey) == null)
-                return new Response(102, "The game does not exist.");
+                return new Response(Status.ERROR, "The game does not exist.");
             if (Application.games.get(gameKey).getPlayers().size()>playersNum)
-                return new Response(102,"There are already to many players.");
+                return new Response(Status.ERROR, "There are already to many players.");
             Application.games.get(gameKey).setMaxPlayers(playersNum);
         }
-        return new Response(100,command);
+        return new Response(Status.SUCCESS, command);
     }
 }

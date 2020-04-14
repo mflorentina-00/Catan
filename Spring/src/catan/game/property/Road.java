@@ -17,7 +17,7 @@ public class Road extends Property {
     }
 
     public void setCoordinates(Intersection start, Intersection end) {
-        if (start.getId() < end.getId()) {
+        if (start.getID() < end.getID()) {
             coordinates = new Pair<>(start, end);
         }
         else {

@@ -3,7 +3,6 @@ package catan.game.card;
 import catan.game.Player;
 import catan.game.card.development.*;
 
-import catan.game.enumeration.PlayerType;
 import catan.game.enumeration.ResourceType;
 
 import java.util.*;
@@ -20,9 +19,9 @@ public class Bank {
     private Stack<RoadBuilding> roadBuildings;
     private Stack<VictoryPoint> victoryPoints;
     private Stack<YearOfPlenty> yearsOfPlenty;
-    private Map<PlayerType, Stack<Road>> roads;
-    private Map<PlayerType, Stack<Intersection>> settlements;
-    private Map<PlayerType, Stack<Intersection>> cities;
+    private List<Stack<Road>> roads;
+    private List<Stack<Intersection>> settlements;
+    private List<Stack<Intersection>> cities;
 
     public Bank() {
         createResources();
@@ -88,8 +87,8 @@ public class Bank {
         return null;
     }
 
-    public Road getRoad(Player player, PlayerType playerType) {
-        Stack<Road> playerRoads = roads.get(playerType);
+    public Road getRoad(Player player, int index) {
+        Stack<Road> playerRoads = roads.get(index);
         if (!playerRoads.isEmpty()) {
             Road road = playerRoads.pop();
             road.setOwner(player);
@@ -98,8 +97,8 @@ public class Bank {
         return null;
     }
 
-    public Intersection getSettlement(Player player, PlayerType playerType) {
-        Stack<Intersection> playerSettlements = settlements.get(playerType);
+    public Intersection getSettlement(Player player, int index) {
+        Stack<Intersection> playerSettlements = settlements.get(index);
         if (!playerSettlements.isEmpty()) {
             Intersection settlement = playerSettlements.pop();
             settlement.setOwner(player);
@@ -108,8 +107,8 @@ public class Bank {
         return null;
     }
 
-    public Intersection getCity(Player player, PlayerType playerType) {
-        Stack<Intersection> playerCities = cities.get(playerType);
+    public Intersection getCity(Player player, int index) {
+        Stack<Intersection> playerCities = cities.get(index);
         if (!playerCities.isEmpty()) {
             Intersection city = playerCities.pop();
             city.setOwner(player);
@@ -118,11 +117,11 @@ public class Bank {
         return null;
     }
 
-    public void restoreSettlement(Player player, PlayerType playerType, Intersection intersection) {
+    public void restoreSettlement(Player player, int playerIndex, Intersection intersection) {
         intersection.setOwner(null);
-        Stack<Intersection> playerSettlements = settlements.get(playerType);
+        Stack<Intersection> playerSettlements = settlements.get(playerIndex);
         playerSettlements.push(intersection);
-        settlements.put(playerType, playerSettlements);
+        settlements.add(playerIndex, playerSettlements);
     }
 
     private void createResources() {
@@ -182,35 +181,35 @@ public class Bank {
     }
 
     private void createRoads() {
-        roads = new HashMap<>(Component.NO_OF_PLAYERS);
-        for (PlayerType player : PlayerType.values()) {
+        roads = new ArrayList<>(Component.NO_OF_PLAYERS);
+        for (int playerIndex = 0; playerIndex < Component.NO_OF_PLAYERS; ++playerIndex) {
             Stack<Road> playerRoads = new Stack<>();
             for (int index = 0; index < Component.ROADS; ++index) {
                 playerRoads.push(new Road());
             }
-            roads.put(player, playerRoads);
+            roads.add(playerIndex, playerRoads);
         }
     }
 
     private void createSettlements() {
-        settlements = new HashMap<>(Component.NO_OF_PLAYERS);
-        for (PlayerType player : PlayerType.values()) {
+        settlements = new ArrayList<>(Component.NO_OF_PLAYERS);
+        for (int playerIndex = 0; playerIndex < Component.NO_OF_PLAYERS; ++playerIndex) {
             Stack<Intersection> playerSettlements = new Stack<>();
             for (int index = 0; index < Component.SETTLEMENTS; ++index) {
                 playerSettlements.push(new Intersection());
             }
-            settlements.put(player, playerSettlements);
+            settlements.add(playerIndex, playerSettlements);
         }
     }
 
     private void createCities() {
-        cities = new HashMap<>(Component.NO_OF_PLAYERS);
-        for (PlayerType player : PlayerType.values()) {
+        cities = new ArrayList<>(Component.NO_OF_PLAYERS);
+        for (int playerIndex = 0; playerIndex < Component.NO_OF_PLAYERS; ++playerIndex) {
             Stack<Intersection> playerCities = new Stack<>();
             for (int index = 0; index < Component.CITIES; ++index) {
                 playerCities.push(new Intersection());
             }
-            cities.put(player, playerCities);
+            cities.add(playerIndex, playerCities);
         }
     }
 }

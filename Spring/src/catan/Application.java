@@ -2,6 +2,7 @@ package catan;
 
 import catan.game.Game;
 import catan.game.board.Board;
+import catan.game.board.TileGraph;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,15 +15,12 @@ public class Application {
 	public static Map<String, Game> games = new HashMap<>();
 
 	public static void main(String[] args) {
-		Board board = new Board();
-
 		SpringApplication.run(Application.class);
 		try {
 			ConnectivitySimulation conn = new ConnectivitySimulation();
 			conn.simulation();
-		} catch ( InterruptedException | IOException e) {
-			e.printStackTrace();
+		} catch (InterruptedException | IOException exception) {
+			exception.printStackTrace();
 		}
-
 	}
 }

@@ -7,29 +7,28 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-//TODO Clasă pentru ordinea acțiunilor (de preferat cea din pdf-ul cu reguli)
 public class TurnFlow {
-    public FSM f;
+    public FSM fsm;
     public final Game game;
 
     TurnFlow(Game game) throws IOException, SAXException, ParserConfigurationException {
-    f = new FSM("stateConfig.xml", new FSMAction() {
-        @Override
-        public boolean action(String curState, String message, String nextState, Object args) {
-            return true;
-        }
-    });
-    this.game=game;
-    f.setAction("endTurn", new FSMAction() {
-        @Override
-        public boolean action(String curState, String message, String nextState, Object args) {
-            return game.changeTurn();
-        }
-    });
-    System.out.println(f.getCurrentState());
-    f.ProcessFSM("rollNotASeven");
-    System.out.println(f.getCurrentState());
-    f.ProcessFSM("tradeBetweenPlayers");
-    System.out.println(f.getCurrentState());
+        this.game = game;
+        fsm = new FSM("stateConfig.xml", new FSMAction() {
+            @Override
+            public boolean action(String curState, String message, String nextState, Object args) {
+                return true;
+            }
+        });
+        fsm.setAction("endTurn", new FSMAction() {
+            @Override
+            public boolean action(String curState, String message, String nextState, Object args) {
+                return game.changeTurn();
+            }
+        });
+        System.out.println(fsm.getCurrentState());
+        fsm.ProcessFSM("rollNotASeven");
+        System.out.println(fsm.getCurrentState());
+        fsm.ProcessFSM("tradeBetweenPlayers");
+        System.out.println(fsm.getCurrentState());
     }
 }

@@ -1,119 +1,123 @@
 package catan.game;
 
+import catan.game.card.Bank;
 import catan.game.enumeration.ResourceType;
 import catan.game.board.Board;
 import javafx.util.Pair;
 
 import java.util.*;
 
-
 public class Game {
-    private Map<String,Player> players;
-    private int maxPlayers;
+    private Bank bank;
     private Board board;
-    private String playerTurn;
-    private List<String> playersOrder = new ArrayList<>();
-
-
+    private Map<String, Player> players;
+    private List<String> playerOrder;
+    private String currentPlayer;
+    private int maxPlayers;
 
     public Game() {
-        players=new HashMap<>();
-        board =new Board();
+        board = new Board();
+        players = new HashMap<>();
+        playerOrder = new ArrayList<>();
     }
+
     //region Getters
 
     public Map<String, Player> getPlayers() {
         return players;
     }
 
-
     public int getMaxPlayers() {
         return maxPlayers;
     }
+
     //endregion
+
     //region Setters
+
     public void setPlayers(Map<String, Player> players) {
         this.players = players;
     }
+
     public void setMaxPlayers(int maxPlayers) {
         this.maxPlayers = maxPlayers;
     }
+
     //endregion
+
     //region Custom Functions
-    public void addPlayerOrder(String userID){
-        playersOrder.add(userID);
+
+    public void addNextPlayer(String userID){
+        playerOrder.add(userID);
     }
-    public boolean changeTurn(){
-        int i=0;
-        for (String set:
-                playersOrder) {
-            if(set.equals(playerTurn))
-                break;
-            i++;
-        }
-        if(i==playersOrder.size()-1)
-            i=0;
+
+    public boolean changeTurn() {
+        int i = playerOrder.indexOf(currentPlayer);
+        if (i == playerOrder.size() - 1)
+            i = 0;
         else
-            i=i+1;
-        playerTurn=playersOrder.get(i);
+            ++i;
+        currentPlayer = playerOrder.get(i);
         //TODO make restart go to start when necessary;
-        players.get(playerTurn).getStateAuto().f.ProcessFSM("Restart");
+        players.get(currentPlayer).getState().fsm.ProcessFSM("Restart");
         return true;
     }
 
-    public boolean playTurn(String playerId,String command){
-        if(playerId.equals(playerTurn)){
-            players.get(playerId).getStateAuto().f.ProcessFSM(command);
+    public boolean playTurn(String playerID, String command) {
+        if (playerID.equals(currentPlayer)) {
+            players.get(playerID).getState().fsm.ProcessFSM(command);
             return true;
         }
         return false;
     }
-    public boolean startGame(){
-        if(playersOrder.size()==0)
+
+    public boolean startGame() {
+        if (playerOrder.size() == 0) {
             return false;
-        playerTurn=playersOrder.get(0);
+        }
+        bank = new Bank();
+        currentPlayer = playerOrder.get(0);
         return true;
     }
 
-
-    public List<Player> playerAcceptingTrade(Player player, List<Pair<ResourceType,Integer>> offer,
-                                                    List<Pair<ResourceType,Integer>> request){
-        List<Player> playersThatAccept=new ArrayList<>();
-        for(String playerId:players.keySet()){
-            /*
-                TODO W8 players Responses
-                    if response is YES and
-                    and the below verification then we add the player to the possible pick
-             */
-            if(players.get(playerId).canMakeTrade(request)){
-                playersThatAccept.add(players.get(playerId));
+    public List<Player> getPlayersWhoAcceptTrade(Player player, List<Pair<ResourceType, Integer>> offer,
+                                                 List<Pair<ResourceType, Integer>> request) {
+        List<Player> playersThatAccept = new ArrayList<>();
+        for(String playerID : players.keySet()) {
+            // TODO W8 players's response
+            //  if response is YES and
+            //  the below verification is true, then we add the player to the possible pick
+            if (players.get(playerID).canMakeTrade(request)) {
+                playersThatAccept.add(players.get(playerID));
             }
         }
         return playersThatAccept;
     }
-    public void playerWhichTrade(Player player, Player player1, List<Pair<ResourceType, Integer>> offer,
-                                 List<Pair<ResourceType, Integer>> request) {
-        /*
-            TODO add player1 notify
-         */
-        player.tradeHappened(offer, request);
-        player1.tradeHappened(request,offer);
+
+    public void setPlayerWhoTrades(Player player, Player trader, List<Pair<ResourceType, Integer>> offer,
+                                   List<Pair<ResourceType, Integer>> request) {
+        // TODO add trader notify
+        player.updateTradeResources(offer, request);
+        trader.updateTradeResources(request, offer);
     }
 
     //endregion
-    //region Util
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Game)) return false;
         Game game = (Game) o;
-        return Objects.equals(players, game.players);
+        return getMaxPlayers() == game.getMaxPlayers() &&
+                Objects.equals(bank, game.bank) &&
+                Objects.equals(board, game.board) &&
+                Objects.equals(getPlayers(), game.getPlayers()) &&
+                Objects.equals(playerOrder, game.playerOrder) &&
+                Objects.equals(currentPlayer, game.currentPlayer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(players);
+        return Objects.hash(bank, board, getPlayers(), playerOrder, currentPlayer, getMaxPlayers());
     }
-    //endregion
-
 }

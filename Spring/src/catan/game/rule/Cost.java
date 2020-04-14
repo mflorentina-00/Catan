@@ -1,6 +1,5 @@
 package catan.game.rule;
 
-//TODO Add constants (change if found a better method).
 public class Cost {
     public static final int ROAD_BRICK = 1;
     public static final int ROAD_LUMBER = 1;

@@ -12,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-
 public class HttpClientPost {
     public static Response userPostTo(String game, GameRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -38,8 +37,8 @@ public class HttpClientPost {
             byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
         }
-        try(BufferedReader br = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+        try(BufferedReader br = new BufferedReader
+                (new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
             String responseLine;
             while ((responseLine = br.readLine()) != null) {

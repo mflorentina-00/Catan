@@ -5,7 +5,6 @@ import catan.game.enumeration.ResourceType;
 import java.util.List;
 
 public class Tile {
-    
     private int ID;
     private ResourceType resource;
     private int number;
@@ -43,16 +42,21 @@ public class Tile {
         return number;
     }
 
-    public void setResource(ResourceType resource) {
-        this.resource = resource;
-    }
-
     public ResourceType getResource() {
         return resource;
     }
 
+    public void setResource(ResourceType resource) {
+        this.resource = resource;
+    }
+
     @Override
     public String toString() {
-        return "Tile{" + "ID=" + ID + '}';
+        return "Tile{" +
+                "ID=" + ID +
+                ", resource=" + resource +
+                ", number=" + number +
+                ", neighbours=" + neighbours +
+                '}';
     }
 }

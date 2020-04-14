@@ -14,31 +14,35 @@ public class UserRequest implements GameRequest {
     public Response run() {
         Game game = Application.games.get(gameId);
         if (game==null)
-            return new Response(102, "The game does not exist.");
+            return new Response(Status.ERROR, "The game does not exist.");
         if (game.getPlayers().get(userUniqueID) == null)
-            return new Response(102,"The player does not exist.");
+            return new Response(Status.ERROR,"The player does not exist.");
         String[] tokens = command.split("[/]+");
         if (tokens[0].equalsIgnoreCase("buyRoad")) {
-            if(!game.playTurn(userUniqueID, tokens[0]))
-                return new Response(102,"Invalid request.");
-            return new Response(100, "Buying road");
+            if (game.playTurn(userUniqueID, tokens[0])) {
+                return new Response(Status.SUCCESS, "Buying road");
+            }
+            return new Response(Status.ERROR,"Invalid request");
         }
         if (tokens[0].equalsIgnoreCase("buyHouse")) {
-            if(!game.playTurn(userUniqueID, tokens[0]))
-                return new Response(102,"Invalid request.");
-            return new Response(100, "Buying house");
+            if (game.playTurn(userUniqueID, tokens[0])) {
+                return new Response(Status.SUCCESS, "Buying house");
+            }
+            return new Response(Status.ERROR,"Invalid request");
         }
         if (tokens[0].equalsIgnoreCase("buyCity")) {
-            if(!game.playTurn(userUniqueID, tokens[0]))
-                return new Response(102,"Invalid request.");
-            return new Response(100, "Buying city");
+            if (game.playTurn(userUniqueID, tokens[0])) {
+                return new Response(Status.SUCCESS, "Buying city");
+            }
+            return new Response(Status.ERROR,"Invalid request");
         }
         if (tokens[0].equalsIgnoreCase("endTurn")) {
-            if(!game.playTurn(userUniqueID, tokens[0]))
-                return new Response(102,"Invalid request.");
-            return new Response(100, "endTurn");
+            if (game.playTurn(userUniqueID, tokens[0])) {
+                return new Response(Status.SUCCESS, "endTurn");
+            }
+            return new Response(Status.ERROR,"Invalid request");
         }
-        return new Response(100, "Command Unknown");
+        return new Response(Status.SUCCESS, "Command unknown");
     }
 
     public UserRequest(String gameId, String userUniqueID, String command) {

@@ -3,18 +3,18 @@ package catan.game.property;
 import java.util.Objects;
 
 public class Intersection extends Property {
-    private int id;
+    private int ID;
 
     public Intersection() {
-        id = -1;
+        ID = -1;
     }
 
-    public int getId() {
-        return id;
+    public int getID() {
+        return ID;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     @Override
@@ -23,18 +23,18 @@ public class Intersection extends Property {
         if (!(o instanceof Intersection)) return false;
         if (!super.equals(o)) return false;
         Intersection that = (Intersection) o;
-        return getId() == that.getId();
+        return getID() == that.getID();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId());
+        return Objects.hash(super.hashCode(), getID());
     }
 
     @Override
     public String toString() {
         return "Intersection{" +
-                "id=" + id +
+                "id=" + ID +
                 '}';
     }
 }

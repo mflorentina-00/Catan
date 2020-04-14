@@ -1,33 +1,40 @@
 package catan.game.board;
 
+import catan.game.rule.Component;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IntersectionGraph {
-    private static List<List<Integer>> positions = new ArrayList<>(3);
-    private static boolean[][] adjacency;
+    private List<List<Integer>> rings;
+    private boolean[][] adjacencyMatrix;
+    private List<List<Integer>> adjacencyLists;
 
     IntersectionGraph() {
-        setPositions();
-        markAdjacentIntersections();
-        // printAdjacency();
+        rings = new ArrayList<>(Component.RINGS);
+        adjacencyMatrix = new boolean[Component.INTERSECTIONS][Component.INTERSECTIONS];
+        adjacencyLists = new ArrayList<>(Component.INTERSECTIONS);
+        setIndexes();
+        createAdjacencyMatrix();
+        createAdjacencyLists();
+        printAdjacencyLists();
     }
 
-    public static boolean areAdjacent(int source, int target) {
-        return adjacency[source][target];
+    public List<Integer> getRing(Integer ring) {
+        return rings.get(ring);
     }
 
-    public static void printAdjacency() {
-        for (int i = 0; i < 54; i++) {
-            System.out.print(i + " : ");
-            for (int j = 0; j < 54; j++)
-                if (adjacency[i][j])
-                    System.out.print(j + " ");
-            System.out.println();
-        }
+    public List<Integer> getNeighborIntersections(Integer intersection) {
+        return adjacencyLists.get(intersection);
     }
 
-    private static void setPositions() {
+    public boolean areAdjacent(int source, int target) {
+        return adjacencyMatrix[source][target];
+    }
+
+    private void setIndexes() {
         List<Integer> list1 = new ArrayList<>(6);
         List<Integer> list2 = new ArrayList<>(18);
         List<Integer> list3 = new ArrayList<>(30);
@@ -35,25 +42,18 @@ public class IntersectionGraph {
             list1.add(i);
         for (int i = 6; i < 24; i++)
             list2.add(i);
-        for (int i = 24; i < 54; i++)
+        for (int i = 24; i < Component.INTERSECTIONS; i++)
             list3.add(i);
-        positions.add(list1);
-        positions.add(list2);
-        positions.add(list3);
+        rings.add(list1);
+        rings.add(list2);
+        rings.add(list3);
     }
 
-    private static void markAdjacentIntersections() {
-        int noIntersections = 54;
-        // matrice pentru stabilirea adiacentei dintre pozitii
-        adjacency = new boolean[noIntersections][noIntersections];
-        // o initializam pe toata cu false mai intai
-        for (int i = 0; i < noIntersections; i++)
-            for (int j = 0; j < noIntersections; j++)
-                adjacency[i][j] = false;
+    private void createAdjacencyMatrix() {
         // for-ul este pentru iterarea prin fiecare inel
         for (int i = 0; i < 3; i++) {
             // extragem fiecare inel din lista
-            List<Integer> ring = positions.get(i);
+            List<Integer> ring = rings.get(i);
             int ringSize = ring.size();
             int difference = -1;
             int wait = 0;
@@ -65,7 +65,7 @@ public class IntersectionGraph {
                 int followingRingSize;
                 // ultimul inel se invecineaza cu marea
                 if (i + 1 < 3) {
-                    followingRing = positions.get(i+1);
+                    followingRing = rings.get(i+1);
                     followingRingSize = followingRing.size();
                 }
                 else {
@@ -75,16 +75,16 @@ public class IntersectionGraph {
                 int index = ring.get(j % ringSize);
                 int neighbourIndex = ring.get((j + 1) % ringSize);
                 // ne ocupam de adiacenta celor de pe acelasi inel
-                adjacency[index][neighbourIndex] = true;
-                adjacency[neighbourIndex][index] = true;
+                adjacencyMatrix[index][neighbourIndex] = true;
+                adjacencyMatrix[neighbourIndex][index] = true;
                 // urmeaza adiacenta cu intersectia de pe celalalt inel
                 if (hasNextLink) {
                     int index1;
                     if (j + difference < followingRingSize) {
                         assert followingRing != null;
                         index1 = followingRing.get(j + difference);
-                        adjacency[index][index1] = true;
-                        adjacency[index1][index] = true;
+                        adjacencyMatrix[index][index1] = true;
+                        adjacencyMatrix[index1][index] = true;
                     }
                     if (wait == 0) {
                         wait = i;
@@ -102,7 +102,28 @@ public class IntersectionGraph {
         }
     }
 
-    public static List<Integer> getPositions(Integer index) {
-        return positions.get(index);
+    private void createAdjacencyLists() {
+        for (int i = 0; i < Component.INTERSECTIONS; i++) {
+            List<Integer> neighbors = new ArrayList<>();
+            for (int j = 0; j < Component.INTERSECTIONS; j++)
+                if (adjacencyMatrix[i][j])
+                    neighbors.add(j);
+            adjacencyLists.add(neighbors);
+        }
+    }
+
+    public void printAdjacencyLists() {
+        try {
+            FileWriter fileWriter = new FileWriter("resources/IntersectionsAdjacency.txt");
+            for (int i = 0; i < Component.INTERSECTIONS; i++) {
+                fileWriter.write(i + " : ");
+                for (int j = 0; j < adjacencyLists.get(i).size(); j++)
+                    fileWriter.write(adjacencyLists.get(i).get(j) + " ");
+                fileWriter.write('\n');
+            }
+            fileWriter.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }

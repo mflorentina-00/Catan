@@ -3,25 +3,27 @@ package catan;
 import catan.API.Response;
 import catan.API.HttpClientPost;
 import catan.API.request.ManagerRequest;
+import catan.API.request.Status;
 import catan.API.request.UserRequest;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Thread.sleep;
 
 public class ConnectivitySimulation {
     String username = "silviu";
     String password = "1234";
-    Vector<String> playersId = new Vector<>();
-    String gameId = null;
+    String gameID = null;
+    List<String> playersID = new ArrayList<>();
 
     // region Manager Commands
 
     public String createGame() throws IOException {
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "newGame"));
-        if (response.getCode() == 102)
+        if (response.getCode() == Status.ERROR)
             return null;
         else
             return response.getStatus();
@@ -29,8 +31,9 @@ public class ConnectivitySimulation {
 
     public String startGame(String gameId) throws IOException {
         Response response;
-        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "startGame/"+gameId));
-        if (response.getCode() == 102)
+        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
+                "startGame/"  + gameId));
+        if (response.getCode() == Status.ERROR)
             return null;
         else
             return response.getStatus();
@@ -39,14 +42,14 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
                 "setMaxPlayers/" + gameId + "/" + no));
-        return response.getCode() != 102;
+        return response.getCode() != Status.ERROR;
     }
 
     public String addPlayer(String gameId) throws IOException {
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
                 "addPlayer/" + gameId));
-        if (response.getCode() == 102)
+        if (response.getCode() == Status.ERROR)
             return null;
         else
             return response.getStatus();
@@ -60,48 +63,48 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
                 "buyRoad/" + spot));
-        return response.getCode() != 102;
+        return response.getCode() != Status.ERROR;
     }
     public boolean endTurn(String gameId, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
                 "endTurn"));
-        return response.getCode() != 102;
+        return response.getCode() != Status.ERROR;
     }
     public boolean buyHouse(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
                 "buyHouse/" + spot));
-        return response.getCode() != 102;
+        return response.getCode() != Status.ERROR;
     }
     public boolean buyCity(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
                 "buyCity/" + spot));
-        return response.getCode() != 102;
+        return response.getCode() != Status.ERROR;
     }
 
     //endregion
 
     public void simulation() throws IOException, InterruptedException {
         // Configure the game
-        gameId = createGame();
-        setNoPlayers(gameId, 2);
-        playersId.add(addPlayer(gameId));
-        playersId.add(addPlayer(gameId));
-        playersId.add(addPlayer(gameId));
-        setNoPlayers(gameId,1);
-        startGame(gameId);
+        gameID = createGame();
+        setNoPlayers(gameID, 2);
+        playersID.add(addPlayer(gameID));
+        playersID.add(addPlayer(gameID));
+        playersID.add(addPlayer(gameID));
+        setNoPlayers(gameID,1);
+        startGame(gameID);
         // Run the game
         while (true) {
-            buyCity(gameId, playersId.elementAt(0), 20);
+            buyCity(gameID, playersID.get(0), 20);
             sleep(100);
-            buyRoad(gameId, playersId.elementAt(1), 42);
-            endTurn(gameId, playersId.elementAt(0));
+            buyRoad(gameID, playersID.get(1), 42);
+            endTurn(gameID, playersID.get(0));
             sleep(100);
-            buyHouse(gameId, playersId.elementAt(1), 14);
+            buyHouse(gameID, playersID.get(1), 14);
             sleep(100);
-            endTurn(gameId, playersId.elementAt(1));
+            endTurn(gameID, playersID.get(1));
         }
     }
 }
