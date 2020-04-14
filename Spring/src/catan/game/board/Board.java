@@ -3,11 +3,12 @@ package catan.game.board;
 import catan.game.enumeration.ResourceType;
 import catan.game.rule.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.util.Pair;
+
 import java.util.*;
 
-//TODO Add TileGraph
-//TODO Add ResourceShuffle
-//TODO Generate MapJSON
 public class Board {
     Vector<Tile> tiles;
     IntersectionGraph iG = new IntersectionGraph();
@@ -19,8 +20,24 @@ public class Board {
         tiles = new Vector<>();
         generateRandomTiles();
         mappingTilesWithIntersections();
-       // printTileMap();
-       // printIntersectionMap();
+        System.out.println(getBoardJSON());
+        printTileMap();
+        printIntersectionMap();
+    }
+
+    public String getBoardJSON() {
+        List<Pair<ResourceType, Integer>> tilesInformation = new ArrayList<>();
+        for (Tile tile : tiles) {
+            tilesInformation.add(new Pair<ResourceType, Integer>(tile.getResource(), tile.getID()));
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String boardJSON = objectMapper.writeValueAsString(tilesInformation);
+            return boardJSON.replaceAll("key", "resource");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void printTileMap() {
