@@ -1,5 +1,6 @@
 package catan.game.board;
 
+import catan.game.enumeration.PortType;
 import catan.game.enumeration.ResourceType;
 import catan.game.rule.Component;
 
@@ -15,6 +16,7 @@ public class Board {
     TileGraph tG = new TileGraph();
     private static ArrayList<ArrayList<Integer>> tileMap;
     private static ArrayList<ArrayList<Integer>> intersectionMap;
+    private static Map<Integer, PortType> portsMap;
 
     public Board() {
         tiles = new Vector<>();
@@ -23,6 +25,8 @@ public class Board {
         System.out.println(getBoardJSON());
         printTileMap();
         printIntersectionMap();
+        setPortsMap();
+        printPortsMap();
     }
 
     public String getBoardJSON() {
@@ -212,5 +216,37 @@ private void mappingTilesWithIntersections() {
     intersectionMap.get(5).add(0);
     Collections.sort(intersectionMap.get(5));
 }
+    public void setPortsMap() {
+        portsMap = new HashMap<Integer, PortType>();
+        int frequency[] = {3, 1, 1, 1, 1, 1};
+        int counter = 0;
+        int max = 5;
+        int min = 0;
+        int random = 0;
+        int sum = 0;
+        for (Integer index : iG.getPositions(2)) {
+            sum = 0;
+            random = (int) (Math.random() * ((max - min) + 1)) + min;
+            for (int i = 0; i < frequency.length; i++)
+                sum += frequency[i];
+            if (counter % 4 == 0 && sum != 0) {
+                while (frequency[random] <= 0) {
+                    random = (int) (Math.random() * ((max - min) + 1)) + min;
+                }
+                portsMap.put(index, PortType.values()[random]);
+                Integer nextIndex = index+1;
+                portsMap.put(nextIndex, PortType.values()[random]);
+                frequency[random]--;
+            }
+            counter++;
+        }
+
+    }
+
+    public void printPortsMap() {
+        System.out.println(portsMap);
+
+    }
+
 
 }
