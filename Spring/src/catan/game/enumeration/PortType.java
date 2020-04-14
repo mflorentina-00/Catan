@@ -1,5 +1,6 @@
 package catan.game.enumeration;
 
+// Resource ports are two for one.
 public enum PortType {
-    ThreeInOne, Lumber, Wool, Grain, Brick, Ore
+    ThreeForOne, Lumber, Wool, Grain, Brick, Ore, None
 }

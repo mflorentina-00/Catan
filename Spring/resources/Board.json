@@ -1,57 +1,57 @@
 [ {
-  "resource" : "Brick",
-  "number" : 11
-}, {
-  "resource" : "Ore",
-  "number" : 8
-}, {
-  "resource" : "Wool",
-  "number" : 12
-}, {
-  "resource" : "Brick",
-  "number" : 6
+  "resource" : "Grain",
+  "number" : 2
 }, {
   "resource" : "Wool",
   "number" : 3
 }, {
+  "resource" : "Brick",
+  "number" : 9
+}, {
   "resource" : "Wool",
+  "number" : 5
+}, {
+  "resource" : "Grain",
   "number" : 4
 }, {
   "resource" : "Wool",
   "number" : 5
 }, {
-  "resource" : "Lumber",
-  "number" : 5
-}, {
-  "resource" : "Lumber",
-  "number" : 11
-}, {
-  "resource" : "Lumber",
-  "number" : 6
+  "resource" : "Ore",
+  "number" : 3
 }, {
   "resource" : "Ore",
-  "number" : 9
+  "number" : 8
+}, {
+  "resource" : "Lumber",
+  "number" : 10
+}, {
+  "resource" : "Grain",
+  "number" : 6
+}, {
+  "resource" : "Brick",
+  "number" : 4
+}, {
+  "resource" : "Wool",
+  "number" : 11
 }, {
   "resource" : "Desert",
   "number" : 0
 }, {
-  "resource" : "Brick",
+  "resource" : "Ore",
+  "number" : 6
+}, {
+  "resource" : "Lumber",
+  "number" : 12
+}, {
+  "resource" : "Grain",
   "number" : 9
 }, {
-  "resource" : "Ore",
-  "number" : 3
-}, {
-  "resource" : "Grain",
+  "resource" : "Lumber",
   "number" : 8
 }, {
-  "resource" : "Grain",
-  "number" : 4
-}, {
-  "resource" : "Grain",
-  "number" : 2
-}, {
-  "resource" : "Grain",
-  "number" : 10
+  "resource" : "Brick",
+  "number" : 11
 }, {
   "resource" : "Lumber",
   "number" : 10

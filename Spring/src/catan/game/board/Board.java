@@ -1,5 +1,6 @@
 package catan.game.board;
 
+import catan.game.enumeration.PortType;
 import catan.game.enumeration.ResourceType;
 import catan.game.property.Intersection;
 import catan.game.rule.Component;
@@ -20,6 +21,7 @@ public class Board {
     private IntersectionGraph intersectionGraph = new IntersectionGraph();
     private ArrayList<ArrayList<Integer>> tileBuildingAdjacency;
     private ArrayList<ArrayList<Integer>> buildingTileAdjacency;
+    private List<PortType> ports;
 
     public Board() {
         buildings = new ArrayList<>();
@@ -28,11 +30,17 @@ public class Board {
             tiles.add(new Tile(i));
         tileBuildingAdjacency = new ArrayList<>(Component.TILES);
         buildingTileAdjacency = new ArrayList<>(Component.INTERSECTIONS);
+        ports = new ArrayList<>();
+        for (int index = 0; index < Component.INTERSECTIONS; ++index) {
+            ports.add(PortType.None);
+        }
         generateRandomTiles();
         createMapping();
+        setPorts();
         printTileBuildingAdjacency();
         printBuildingTileAdjacency();
         printBoardJSON();
+        printPorts();
     }
 
     public List<Intersection> getBuildings() {
@@ -159,6 +167,7 @@ public class Board {
                 }
             }
         }
+
         tileBuildingAdjacency.get(0).add(3);
         tileBuildingAdjacency.get(0).add(4);
         tileBuildingAdjacency.get(0).add(5);
@@ -168,6 +177,31 @@ public class Board {
         Collections.sort(buildingTileAdjacency.get(4));
         buildingTileAdjacency.get(5).add(0);
         Collections.sort(buildingTileAdjacency.get(5));
+    }
+
+    // TODO: Sunt 9 porturi, nu 8, si nu sunt multipli de 4, pasul e cam 3, 4, 3, 4, 3, 3, 3, 3.
+    public void setPorts() {
+        int[] frequency = {3, 1, 1, 1, 1, 1};
+        int counter = 0;
+        int max = 5;
+        int min = 0;
+        int random;
+        int sum;
+        for (Integer index : intersectionGraph.getRing(2)) {
+            sum = 0;
+            random = (int) (Math.random() * ((max - min) + 1)) + min;
+            for (int value : frequency) sum += value;
+            if (counter % 4 == 0 && sum != 0) {
+                while (frequency[random] <= 0) {
+                    random = (int) (Math.random() * ((max - min) + 1)) + min;
+                }
+                ports.add(index, PortType.values()[random]);
+                int nextIndex = index + 1;
+                ports.add(nextIndex, PortType.values()[random]);
+                frequency[random]--;
+            }
+            counter++;
+        }
     }
 
     public String getBoardJSON() {
@@ -221,6 +255,18 @@ public class Board {
         try {
             FileWriter fileWriter = new FileWriter("resources/Board.json");
             fileWriter.write(getBoardJSON());
+            fileWriter.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void printPorts() {
+        try {
+            FileWriter fileWriter = new FileWriter("resources/PortTypes.txt");
+            for (int i = 0; i < Component.INTERSECTIONS; i++) {
+                fileWriter.write(i + " : " + ports.get(i) + "\n");
+            }
             fileWriter.close();
         } catch (IOException exception) {
             exception.printStackTrace();
