@@ -47,6 +47,14 @@ public class ManagerRequest implements GameRequest {
             Application.games.put(gameKey,new Game());
             return new Response(100,gameKey);
         }
+        if (tokens[0].equalsIgnoreCase("startGame")) {
+            String gameKey = tokens[1];
+            if (Application.games.get(gameKey) == null)
+                return new Response(102, "The game does not exist.");
+            if(Application.games.get(gameKey).startGame())
+                return new Response(100,"Game started");
+            return new Response(102,"Game couldn't start");
+        }
         else if (tokens[0].equalsIgnoreCase("addPlayer")) {
             String gameKey = tokens[1];
             String userId = randString.nextString();
@@ -54,7 +62,8 @@ public class ManagerRequest implements GameRequest {
                 return new Response(102, "The game does not exist.");
             if (Application.games.get(gameKey).getPlayers().size() == Application.games.get(gameKey).getMaxPlayers())
                 return new Response(102, "There is no room left.");
-            Application.games.get(gameKey).getPlayers().put(userId, new Player(Application.games.get(gameKey)));
+            Application.games.get(gameKey).getPlayers().put(userId, new Player(userId,Application.games.get(gameKey)));
+            Application.games.get(gameKey).addPlayerOrder(userId);
             return new Response(100, userId);
         }
         else if(tokens[0].equalsIgnoreCase("setMaxPlayers")) {

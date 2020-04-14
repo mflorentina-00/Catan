@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FSM>
+ <STATE id="Start" type="ID">
+  <MESSAGE id="rollASeven" action="rollASeven" nextState="TakingResources"/>
+  <MESSAGE id="rollNotASeven" action="rollNotASeven" nextState="Trading"/>
+ </STATE>
+ <STATE id="TakingResources">
+  <MESSAGE id="giveResource" action="giveResource" nextState="MovingRobber"/>
+ </STATE>
+ <STATE id="MovingRobber">
+  <MESSAGE id="moveRobber" action="moveRobber" nextState="TakingAResource"/>
+ </STATE>
+ <STATE id="TakingAResourceFromPlayer">
+  <MESSAGE id="giveSelectedResource" action="giveSelectedResource" nextState="Trading"/>
+ </STATE>
+ <STATE id="Trading">
+  <MESSAGE id="tradeBetweenPlayers" action="tradeBetweenPlayers" nextState="Buying"/>
+ </STATE>
+ <STATE id="Buying">
+  <MESSAGE id="buildRoad" action="buildRoad" nextState="Buying"/>
+  <MESSAGE id="buildHouse" action="buildHouse" nextState="Buying"/>
+  <MESSAGE id="buildCity" action="buildCity" nextState="Buying"/>
+  <MESSAGE id="endTurn" action="endTurn" nextState="End"/>
+ </STATE>
+ <STATE id="End">
+  <MESSAGE id="Restart" action="Restart" nextState="Buying"/>
+ </STATE>
+</FSM>

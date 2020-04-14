@@ -27,6 +27,14 @@ public class ConnectivitySimulation {
             return response.getStatus();
     }
 
+    public String startGame(String gameId) throws IOException {
+        Response response;
+        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "startGame/"+gameId));
+        if (response.getCode() == 102)
+            return null;
+        else
+            return response.getStatus();
+    }
     public boolean setNoPlayers(String gameId, Integer no) throws IOException {
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
@@ -54,6 +62,12 @@ public class ConnectivitySimulation {
                 "buyRoad/" + spot));
         return response.getCode() != 102;
     }
+    public boolean endTurn(String gameId, String playerId) throws IOException {
+        Response response;
+        response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
+                "endTurn"));
+        return response.getCode() != 102;
+    }
     public boolean buyHouse(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
@@ -77,14 +91,17 @@ public class ConnectivitySimulation {
         playersId.add(addPlayer(gameId));
         playersId.add(addPlayer(gameId));
         setNoPlayers(gameId,1);
+        startGame(gameId);
         // Run the game
         while (true) {
             buyCity(gameId, playersId.elementAt(0), 20);
-            sleep(1000);
+            sleep(100);
             buyRoad(gameId, playersId.elementAt(1), 42);
-            sleep(1000);
-            buyHouse(gameId, playersId.elementAt(2), 14);
-            sleep(1000);
+            endTurn(gameId, playersId.elementAt(0));
+            sleep(100);
+            buyHouse(gameId, playersId.elementAt(1), 14);
+            sleep(100);
+            endTurn(gameId, playersId.elementAt(1));
         }
     }
 }
