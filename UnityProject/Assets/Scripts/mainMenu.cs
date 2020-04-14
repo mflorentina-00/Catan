@@ -20,7 +20,7 @@ public class mainMenu : MonoBehaviour
 
     public void playOnline()
     {
-        SceneManager.LoadScene("LobbyScene");
+        SceneManager.LoadScene("LobbySceneUpdate");
     }
 
     public void playSinglePlayer()
