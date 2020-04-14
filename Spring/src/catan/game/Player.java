@@ -11,16 +11,22 @@ import catan.game.property.Road;
 import catan.game.rule.Component;
 import catan.game.rule.Cost;
 import catan.game.rule.VictoryPoint;
+import com.github.ankzz.dynamicfsm.action.FSMAction;
+import com.github.ankzz.dynamicfsm.fsm.FSM;
 import javafx.util.Pair;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.*;
 
 public class Player {
 
     /* Fields */
 
-    private int id;
+    private String id;
     public final Game game;
+    private TurnFlow stateAuto;
 
     private List<Road> roads;
     private List<Intersection> settlements;
@@ -46,15 +52,16 @@ public class Player {
     private int publicVP;
     private int hiddenVP;
 
-    /* Constructors */
+    // region Constructors
 
-    public Player(Game game) {
-        this.game = game;
-    }
-
-    public Player(int id,Game game) {
+    public Player(String id,Game game) {
         this.game=game;
         this.id = id;
+        try {
+            stateAuto=new TurnFlow(game);
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
         roads = new ArrayList<>(Component.ROADS);
         settlements = new ArrayList<>(Component.SETTLEMENTS);
         cities = new ArrayList<>(Component.CITIES);
@@ -76,11 +83,16 @@ public class Player {
         hasLongestRoad = false;
         hasLargestArmy = false;
     }
+    //endregion
+    //region Getters
 
-    /* Getters */
+    public String getId() {
+        return id;
+    }
 
-    public int getId() { return id; }
-
+    public TurnFlow getStateAuto() {
+        return stateAuto;
+    }
     public List<Road> getRoads() { return roads; }
     public List<Intersection> getSettlements() { return settlements; }
     public List<Intersection> getCities() { return cities; }
@@ -126,6 +138,7 @@ public class Player {
     public int getPublicVP() { return publicVP; }
     public int getVP() { return publicVP + hiddenVP; }
 
+    //endregion
     //TODO REMINDER: The GAME class verifies if the id is free
     public boolean canBuildRoad() {
         return (roads.size() < Component.ROADS) &&

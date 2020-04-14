@@ -19,16 +19,24 @@ public class UserRequest implements GameRequest {
             return new Response(102,"The player does not exist.");
         String[] tokens = command.split("[/]+");
         if (tokens[0].equalsIgnoreCase("buyRoad")) {
-            //TODO implement the logic
+            if(!game.playTurn(userUniqueID, tokens[0]))
+                return new Response(102,"Invalid request.");
             return new Response(100, "Buying road");
         }
-        if (tokens[0].equalsIgnoreCase("buySettlement")) {
-            //TODO implement the logic
-            return new Response(100, "Buying settlement");
+        if (tokens[0].equalsIgnoreCase("buyHouse")) {
+            if(!game.playTurn(userUniqueID, tokens[0]))
+                return new Response(102,"Invalid request.");
+            return new Response(100, "Buying house");
         }
         if (tokens[0].equalsIgnoreCase("buyCity")) {
-            //TODO implement the logic
+            if(!game.playTurn(userUniqueID, tokens[0]))
+                return new Response(102,"Invalid request.");
             return new Response(100, "Buying city");
+        }
+        if (tokens[0].equalsIgnoreCase("endTurn")) {
+            if(!game.playTurn(userUniqueID, tokens[0]))
+                return new Response(102,"Invalid request.");
+            return new Response(100, "endTurn");
         }
         return new Response(100, "Command Unknown");
     }
