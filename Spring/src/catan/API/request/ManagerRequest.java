@@ -9,12 +9,15 @@ public class ManagerRequest implements GameRequest {
     private String managerId;
     private String managerPass;
     private String command;
+    private String jsonArgs;
 
-    public ManagerRequest(String managerId, String managerPass, String command) {
+    public ManagerRequest(String managerId, String managerPass, String command, String jsonArgs) {
         this.managerId = managerId;
         this.managerPass = managerPass;
         this.command = command;
+        this.jsonArgs = jsonArgs;
     }
+
 
     public String getManagerId() {
         return managerId;

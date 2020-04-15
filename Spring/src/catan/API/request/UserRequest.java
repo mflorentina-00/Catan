@@ -10,6 +10,7 @@ public class UserRequest implements GameRequest {
     private String gameId;
     private String userUniqueID;
     private String command;
+    private String jsonArgs;
 
     public Response run() {
         Game game = Application.games.get(gameId);
@@ -18,38 +19,17 @@ public class UserRequest implements GameRequest {
         if (game.getPlayers().get(userUniqueID) == null)
             return new Response(Status.ERROR,"The player does not exist.");
         String[] tokens = command.split("[/]+");
-        if (tokens[0].equalsIgnoreCase("buyRoad")) {
-            if (game.playTurn(userUniqueID, tokens[0])) {
-                return new Response(Status.SUCCESS, "Buying road");
-            }
-            return new Response(Status.ERROR,"Invalid request");
-        }
-        if (tokens[0].equalsIgnoreCase("buyHouse")) {
-            if (game.playTurn(userUniqueID, tokens[0])) {
-                return new Response(Status.SUCCESS, "Buying house");
-            }
-            return new Response(Status.ERROR,"Invalid request");
-        }
-        if (tokens[0].equalsIgnoreCase("buyCity")) {
-            if (game.playTurn(userUniqueID, tokens[0])) {
-                return new Response(Status.SUCCESS, "Buying city");
-            }
-            return new Response(Status.ERROR,"Invalid request");
-        }
-        if (tokens[0].equalsIgnoreCase("endTurn")) {
-            if (game.playTurn(userUniqueID, tokens[0])) {
-                return new Response(Status.SUCCESS, "endTurn");
-            }
-            return new Response(Status.ERROR,"Invalid request");
-        }
-        return new Response(Status.SUCCESS, "Command unknown");
+
+        return game.playTurn(userUniqueID, tokens[0],jsonArgs);
     }
 
-    public UserRequest(String gameId, String userUniqueID, String command) {
+    public UserRequest(String gameId, String userUniqueID, String command, String jsonArgs) {
         this.gameId = gameId;
         this.userUniqueID = userUniqueID;
         this.command = command;
+        this.jsonArgs = jsonArgs;
     }
+
 
     public String getGameId() {
         return gameId;

@@ -22,7 +22,7 @@ public class ConnectivitySimulation {
 
     public String createGame() throws IOException {
         Response response;
-        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "newGame"));
+        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "newGame",""));
         if (response.getCode() == Status.ERROR)
             return null;
         else
@@ -32,7 +32,7 @@ public class ConnectivitySimulation {
     public String startGame(String gameId) throws IOException {
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
-                "startGame/"  + gameId));
+                "startGame/"  + gameId,""));
         if (response.getCode() == Status.ERROR)
             return null;
         else
@@ -41,14 +41,14 @@ public class ConnectivitySimulation {
     public boolean setNoPlayers(String gameId, Integer no) throws IOException {
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
-                "setMaxPlayers/" + gameId + "/" + no));
+                "setMaxPlayers/" + gameId + "/" + no,""));
         return response.getCode() != Status.ERROR;
     }
 
     public String addPlayer(String gameId) throws IOException {
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
-                "addPlayer/" + gameId));
+                "addPlayer/" + gameId,""));
         if (response.getCode() == Status.ERROR)
             return null;
         else
@@ -62,27 +62,35 @@ public class ConnectivitySimulation {
     public boolean buyRoad(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
-                "buyRoad/" + spot));
+                "buyRoad/" + spot,""));
         return response.getCode() != Status.ERROR;
     }
     public boolean endTurn(String gameId, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
-                "endTurn"));
+                "endTurn",""));
         return response.getCode() != Status.ERROR;
     }
     public boolean buyHouse(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
-                "buyHouse/" + spot));
+                "buyHouse/" + spot,""));
         return response.getCode() != Status.ERROR;
     }
     public boolean buyCity(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
-                "buyCity/" + spot));
+                "buyCity/" + spot,""));
         return response.getCode() != Status.ERROR;
     }
+    public boolean playDevCard(String gameId, String playerId, Integer spot) throws IOException {
+        Response response;
+        response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
+                "playDevCard/" + spot,""));
+        return response.getCode() != Status.ERROR;
+    }
+
+
 
     //endregion
 
@@ -100,6 +108,7 @@ public class ConnectivitySimulation {
             buyCity(gameID, playersID.get(0), 20);
             sleep(100);
             buyRoad(gameID, playersID.get(1), 42);
+            playDevCard(gameID,playersID.get(0),20);
             endTurn(gameID, playersID.get(0));
             sleep(100);
             buyHouse(gameID, playersID.get(1), 14);
