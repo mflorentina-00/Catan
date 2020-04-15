@@ -181,27 +181,36 @@ public class Board {
 
     // TODO: Sunt 9 porturi, nu 8, si nu sunt multipli de 4, pasul e cam 3, 4, 3, 4, 3, 3, 3, 3.
     public void setPorts() {
-        int[] frequency = {3, 1, 1, 1, 1, 1};
+        int frequency[] = {4, 1, 1, 1, 1, 1};
         int counter = 0;
         int max = 5;
         int min = 0;
-        int random;
-        int sum;
-        for (Integer index : intersectionGraph.getRing(2)) {
+        int random = 0;
+        int sum = 0;
+        int addValue=0;
+        Integer index = 26;
+        while (index.intValue() < 54) {
             sum = 0;
+            counter++;
+            if (counter == 1 || counter == 3 || counter == 5 || counter == 6 || counter == 7 || counter == 8)
+                addValue = 3;
+            if (counter == 2 || counter == 4)
+                addValue = 4;
             random = (int) (Math.random() * ((max - min) + 1)) + min;
-            for (int value : frequency) sum += value;
-            if (counter % 4 == 0 && sum != 0) {
+            for (int i = 0; i < frequency.length; i++)
+                sum += frequency[i];
+            if (sum != 0) {
                 while (frequency[random] <= 0) {
                     random = (int) (Math.random() * ((max - min) + 1)) + min;
                 }
                 ports.add(index, PortType.values()[random]);
-                int nextIndex = index + 1;
+                Integer nextIndex = index + 1;
                 ports.add(nextIndex, PortType.values()[random]);
                 frequency[random]--;
             }
-            counter++;
+            index += addValue;
         }
+
     }
 
     public String getBoardJSON() {
