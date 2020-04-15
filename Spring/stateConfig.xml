@@ -20,7 +20,7 @@
  </STATE>
  <STATE id="Buying">
   <MESSAGE id="playDevCard" action="playDevCard" nextState="Buying"/>
-  <MESSAGE id="buyRoad" action="buydRoad" nextState="Buying"/>
+  <MESSAGE id="buyRoad" action="buyRoad" nextState="Buying"/>
   <MESSAGE id="buyHouse" action="buyHouse" nextState="Buying"/>
   <MESSAGE id="buyCity" action="buyCity" nextState="Buying"/>
   <MESSAGE id="endTurn" action="endTurn" nextState="End"/>

@@ -93,9 +93,6 @@ public class TurnFlow {
                 return true;
             }
         });
-
-
-
         fsm.setAction("endTurn", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
