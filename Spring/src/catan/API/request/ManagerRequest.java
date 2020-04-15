@@ -18,7 +18,6 @@ public class ManagerRequest implements GameRequest {
         this.jsonArgs = jsonArgs;
     }
 
-
     public String getManagerId() {
         return managerId;
     }
@@ -58,7 +57,7 @@ public class ManagerRequest implements GameRequest {
                 return new Response(Status.SUCCESS,"Game started");
             return new Response(Status.ERROR,"Game couldn't start.");
         }
-        else if(tokens[0].equalsIgnoreCase("setMaxPlayers")) {
+        else if (tokens[0].equalsIgnoreCase("setMaxPlayers")) {
             String gameKey = tokens[1];
             int playersNum = Integer.parseInt(tokens[2]);
             if (Application.games.get(gameKey) == null)

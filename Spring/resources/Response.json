@@ -1,49 +1,34 @@
 [
   {
-    "type": "manager",
-    "username" : "username",
-    "password" : "password",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "newGame",
-    "arguments" : [ "gameID" ]
-  },
-  {
-    "type": "manager",
-    "username" : "username",
-    "password" : "password",
-    "status" : "message (success or error type)",
-    "command" : "maxNoPlayers",
     "arguments" : []
   },
   {
-    "type": "manager",
-    "username" : "username",
-    "password" : "password",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "addPlayer",
-    "arguments" : []
+    "arguments" : [ "game ID" ]
   },
   {
-    "type": "manager",
-    "username" : "username",
-    "password" : "password",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "startGame",
-    "arguments" : []
+    "arguments" : [ "player ID" ]
   },
   {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "rollDice",
+    "arguments" : [ "Board.json", "Ports.json" ]
+  },
+  {
+    "code" : "a number",
+    "status" : "message (success or error type)",
     "arguments" :
     [
       {
         "dice": "a number between 2 and 12"
       },
       {
-        "playerID" : "playerID",
+        "playerID" : "player ID",
         "lumber" : "number of received lumbers",
         "wool" : "number of received wools",
         "grain" : "number of received grains",
@@ -53,67 +38,41 @@
     ]
   },
   {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "moveRobber",
-    "arguments" : [ "playerID", "playerID" ]
+    "arguments" : [ "list of player IDs from which to steal a resource" ]
   },
   {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "stealResource",
-    "arguments" : [ "resource" ]
+    "arguments" : [ "stolen resource" ]
   },
   {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "playerTrade",
-    "arguments" : []
+    "arguments" :
+    [
+      {
+        "playerID" : "list of player ID who have the requested resource",
+        "resourceNumber" : "number of stolen resources"
+      }
+    ]
   },
   {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
+    "code" : "a number",
     "status" : "message (success or error type)",
-    "command" : "wantToTrade",
-    "arguments" : []
-  },
-  {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
-    "status" : "message (success or error type)",
-    "command" : "selectTrade",
-    "arguments" : []
-  },
-  {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
-    "status" : "message (success or error type)",
-    "command" : "acceptTrade",
-    "arguments" : []
-  },
-  {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
-    "status" : "message (success or error type)",
-    "command" : "bankTrade",
-    "arguments" : []
-  },
-  {
-    "type": "user",
-    "gameID" : "gameID",
-    "playerID" : "playerID",
-    "status" : "message (success or error type)",
-    "command" : "portTrade",
-    "arguments" : []
+    "arguments" :
+    [
+      {
+        "foundWinner" : "true or false"
+      },
+      {
+        "playerID" : "list of all player IDs",
+        "publicScore" : "number of public Victory Points",
+        "hiddenScore" : "number of public Victory Points + Victory Point developments",
+        "hasLargestArmy" : "true or false",
+        "hasLongestRoad" : "true or false"
+      }
+    ]
   }
 ]

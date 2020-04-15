@@ -1,55 +1,53 @@
 [
   {
-    "type": "manager",
     "username" : "username",
     "password" : "password",
     "command" : "newGame",
-    "arguments" : []
+    "arguments" : [ "wanted scenario" ]
   },
   {
-    "type": "manager",
     "username" : "username",
     "password" : "password",
     "command" : "maxNoPlayers",
-    "arguments" : [ "gameID", "3, 4, 5 or 6" ]
+    "arguments" : [ "game ID", "3, 4, 5 or 6" ]
   },
   {
-    "type": "manager",
     "username" : "username",
     "password" : "password",
     "command" : "addPlayer",
-    "arguments" : [ "gameID" ]
+    "arguments" : [ "game ID" ]
   },
   {
-    "type": "manager",
     "username" : "username",
     "password" : "password",
     "command" : "startGame",
-    "arguments" : [ "gameID" ]
+    "arguments" : [ "game ID" ]
   },
   {
-    "type": "user",
+    "username" : "username",
+    "password" : "password",
+    "command" : "startTurn",
+    "arguments" : [ "player ID" ]
+  },
+  {
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "rollDice",
     "arguments" : []
   },
   {
-    "type": "user",
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "moveRobber",
-    "arguments" : [ "tileNumber" ]
+    "arguments" : [ "number of tile" ]
   },
   {
-    "type": "user",
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "stealResource",
-    "arguments" : [ "playerID" ]
+    "arguments" : [ "player ID" ]
   },
   {
-    "type": "user",
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "playerTrade",
@@ -74,7 +72,6 @@
     ]
   },
   {
-    "type": "user",
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "wantToTrade",
@@ -99,13 +96,12 @@
     ]
   },
   {
-    "type": "user",
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "selectTrade",
     "arguments" :
     [
-      "playerId",
+      "player ID",
       {
         "lumber" : "number of offered lumbers",
         "wool" : "number of offered wools",
@@ -116,7 +112,6 @@
     ]
   },
   {
-    "type": "user",
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "acceptTrade",
@@ -132,17 +127,75 @@
     ]
   },
   {
-    "type": "user",
     "gameID": "gameID",
     "playerID": "playerID",
     "command": "bankTrade",
-    "arguments": [ "offeredResource", "requestedResource" ]
+    "arguments": [ "offered resource", "requested resource" ]
   },
   {
-    "type": "user",
     "gameID": "gameID",
     "playerID": "playerID",
     "command": "portTrade",
-    "arguments": [ "intersectionNumber", "offeredResource", "requestedResource" ]
+    "arguments": [ "intersection number", "offered resource", "requested resource" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "buildRoad",
+    "arguments": [ "number of first intersection", "number of second intersection" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "buildSettlement",
+    "arguments": [ "number of intersection" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "buildCity",
+    "arguments": [ "number of intersection" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "buyDevelopment",
+    "arguments": [ "wanted development" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "buyDevelopment",
+    "arguments": [ "wanted development" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "useKnight",
+    "arguments": [ "number of tile" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "useMonopoly",
+    "arguments": [ "requested resource" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "useRoadBuilding",
+    "arguments": [ "number of first intersection", "number of second intersection" ]
+  },
+  {
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "useYearOfPlenty",
+    "arguments": [ "first resource", "second resource" ]
+  },
+  {
+    "username" : "username",
+    "password" : "password",
+    "command" : "endTurn",
+    "arguments" : []
   }
 ]

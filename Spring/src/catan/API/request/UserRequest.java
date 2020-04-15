@@ -14,12 +14,11 @@ public class UserRequest implements GameRequest {
 
     public Response run() {
         Game game = Application.games.get(gameId);
-        if (game==null)
+        if (game == null)
             return new Response(Status.ERROR, "The game does not exist.");
         if (game.getPlayers().get(userUniqueID) == null)
             return new Response(Status.ERROR,"The player does not exist.");
         String[] tokens = command.split("[/]+");
-
         return game.playTurn(userUniqueID, tokens[0],jsonArgs);
     }
 
@@ -29,7 +28,6 @@ public class UserRequest implements GameRequest {
         this.command = command;
         this.jsonArgs = jsonArgs;
     }
-
 
     public String getGameId() {
         return gameId;

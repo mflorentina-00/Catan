@@ -1,9 +1,10 @@
 package catan.game;
 
 import catan.API.Response;
+import catan.API.request.Status;
+import catan.game.board.Board;
 import catan.game.card.Bank;
 import catan.game.enumeration.ResourceType;
-import catan.game.board.Board;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -66,12 +67,11 @@ public class Game {
 
     public Response playTurn(String playerID, String command, String jsonArgs) {
         if (playerID.equals(currentPlayer)) {
-
             players.get(playerID).getState().fsm.setShareData(jsonArgs);
             players.get(playerID).getState().fsm.ProcessFSM(command);
             return players.get(playerID).getState().response;
         }
-        return new Response(102,"Not your turn!");
+        return new Response(Status.ERROR,"Not your turn!");
     }
 
     public boolean startGame() {

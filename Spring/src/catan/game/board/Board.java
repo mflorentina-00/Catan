@@ -4,15 +4,16 @@ import catan.game.enumeration.PortType;
 import catan.game.enumeration.ResourceType;
 import catan.game.property.Intersection;
 import catan.game.rule.Component;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import javafx.util.Pair;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Board {
     private List<Intersection> buildings;
@@ -179,17 +180,16 @@ public class Board {
         Collections.sort(buildingTileAdjacency.get(5));
     }
 
-    // TODO: Sunt 9 porturi, nu 8, si nu sunt multipli de 4, pasul e cam 3, 4, 3, 4, 3, 3, 3, 3.
     public void setPorts() {
-        int frequency[] = {4, 1, 1, 1, 1, 1};
+        int[] frequency = {4, 1, 1, 1, 1, 1};
         int counter = 0;
         int max = 5;
         int min = 0;
-        int random = 0;
-        int sum = 0;
-        int addValue=0;
-        Integer index = 26;
-        while (index.intValue() < 54) {
+        int random;
+        int sum;
+        int addValue = 0;
+        int index = 26;
+        while (index < 54) {
             sum = 0;
             counter++;
             if (counter == 1 || counter == 3 || counter == 5 || counter == 6 || counter == 7 || counter == 8)
@@ -197,20 +197,18 @@ public class Board {
             if (counter == 2 || counter == 4)
                 addValue = 4;
             random = (int) (Math.random() * ((max - min) + 1)) + min;
-            for (int i = 0; i < frequency.length; i++)
-                sum += frequency[i];
+            for (int value : frequency) sum += value;
             if (sum != 0) {
                 while (frequency[random] <= 0) {
                     random = (int) (Math.random() * ((max - min) + 1)) + min;
                 }
                 ports.add(index, PortType.values()[random]);
-                Integer nextIndex = index + 1;
+                int nextIndex = index + 1;
                 ports.add(nextIndex, PortType.values()[random]);
                 frequency[random]--;
             }
             index += addValue;
         }
-
     }
 
     public String getBoardJSON() {
@@ -220,12 +218,11 @@ public class Board {
         }
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            PropertyNamingStrategy propertyNamingStrategy = new PropertyNamingStrategy();
             String boardJSON = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tilesInformation);
             return boardJSON.replaceAll("key", "resource")
                     .replaceAll("value", "number");
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
         }
         return null;
     }
@@ -262,8 +259,10 @@ public class Board {
 
     public void printBoardJSON() {
         try {
-            FileWriter fileWriter = new FileWriter("resources/Board.json");
-            fileWriter.write(getBoardJSON());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String portsJSON = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(ports);
+            FileWriter fileWriter = new FileWriter("resources/Ports.json");
+            fileWriter.write("{ \"ports\" : " + portsJSON + " }");
             fileWriter.close();
         } catch (IOException exception) {
             exception.printStackTrace();
