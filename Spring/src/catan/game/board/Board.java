@@ -41,7 +41,6 @@ public class Board {
         printTileBuildingAdjacency();
         printBuildingTileAdjacency();
         printBoardJSON();
-        printPorts();
     }
 
     public List<Intersection> getBuildings() {
@@ -263,18 +262,6 @@ public class Board {
             String portsJSON = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(ports);
             FileWriter fileWriter = new FileWriter("resources/Ports.json");
             fileWriter.write("{ \"ports\" : " + portsJSON + " }");
-            fileWriter.close();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void printPorts() {
-        try {
-            FileWriter fileWriter = new FileWriter("resources/PortTypes.txt");
-            for (int i = 0; i < Component.INTERSECTIONS; i++) {
-                fileWriter.write(i + " : " + ports.get(i) + "\n");
-            }
             fileWriter.close();
         } catch (IOException exception) {
             exception.printStackTrace();

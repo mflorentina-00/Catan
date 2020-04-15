@@ -6,10 +6,10 @@
   <MESSAGE id="rollNotASeven" action="rollNotASeven" nextState="Trading"/>
  </STATE>
  <STATE id="TakingResources">
-  <MESSAGE id="giveResource" action="giveResource" nextState="MovingRobber"/>
+  <MESSAGE id="giveResources" action="giveResources" nextState="MovingRobber"/>
  </STATE>
  <STATE id="MovingRobber">
-  <MESSAGE id="moveRobber" action="moveRobber" nextState="TakingAResourceFromPlayer"/>
+  <MESSAGE id="moveRobber" action="moveRobber" nextState="TakingAResourceFromAPlayer"/>
  </STATE>
  <STATE id="TakingAResourceFromPlayer">
   <MESSAGE id="giveSelectedResource" action="giveSelectedResource" nextState="Trading"/>
