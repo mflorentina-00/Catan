@@ -8,35 +8,6 @@ using System.Linq;
 
 public class mainMenu : MonoBehaviour
 {
-    public void quit()
-    {
-        Application.Quit();
-    }
-
-    public void goToSettings()
-    {
-        SceneManager.LoadScene("SettingsScene");
-    }
-
-    public void playOnline()
-    {
-        SceneManager.LoadScene("LobbySceneUpdate");
-    }
-
-    public void playSinglePlayer()
-    {
-        //Nothing yet
-    }
-
-    public void goToProfile()
-    {
-        SceneManager.LoadScene("ProfileSettingsScene");
-    }
-
-    public void goBackToMenu()
-    {
-        SceneManager.LoadScene("MenuScene");
-    }
 
     public AudioMixer audioMixer;
     public void SetVolume (float volume)
