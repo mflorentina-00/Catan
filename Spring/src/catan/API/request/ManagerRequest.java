@@ -55,6 +55,15 @@ public class ManagerRequest implements GameRequest {
                 return new Response(Status.SUCCESS,"Game started");
             return new Response(Status.ERROR,"Game couldn't start.");
         }
+        else if(tokens[0].equalsIgnoreCase("setMaxPlayers")) {
+            String gameKey = tokens[1];
+            int playersNum = Integer.parseInt(tokens[2]);
+            if (Application.games.get(gameKey) == null)
+                return new Response(Status.ERROR, "The game does not exist.");
+            if (Application.games.get(gameKey).getPlayers().size()>playersNum)
+                return new Response(Status.ERROR, "There are already to many players.");
+            Application.games.get(gameKey).setMaxPlayers(playersNum);
+        }
         else if (tokens[0].equalsIgnoreCase("addPlayer")) {
             String gameKey = tokens[1];
             String userId = randString.nextString();
@@ -65,15 +74,6 @@ public class ManagerRequest implements GameRequest {
             Application.games.get(gameKey).getPlayers().put(userId, new Player(userId,Application.games.get(gameKey)));
             Application.games.get(gameKey).addNextPlayer(userId);
             return new Response(Status.SUCCESS, userId);
-        }
-        else if(tokens[0].equalsIgnoreCase("setMaxPlayers")) {
-            String gameKey = tokens[1];
-            int playersNum = Integer.parseInt(tokens[2]);
-            if (Application.games.get(gameKey) == null)
-                return new Response(Status.ERROR, "The game does not exist.");
-            if (Application.games.get(gameKey).getPlayers().size()>playersNum)
-                return new Response(Status.ERROR, "There are already to many players.");
-            Application.games.get(gameKey).setMaxPlayers(playersNum);
         }
         return new Response(Status.SUCCESS, command);
     }

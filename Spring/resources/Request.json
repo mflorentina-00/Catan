@@ -1,0 +1,148 @@
+[
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "command" : "newGame",
+    "arguments" : []
+  },
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "command" : "maxNoPlayers",
+    "arguments" : [ "gameID", "3, 4, 5 or 6" ]
+  },
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "command" : "addPlayer",
+    "arguments" : [ "gameID" ]
+  },
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "command" : "startGame",
+    "arguments" : [ "gameID" ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "command" : "rollDice",
+    "arguments" : []
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "command" : "moveRobber",
+    "arguments" : [ "tileNumber" ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "command" : "stealResource",
+    "arguments" : [ "playerID" ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "command" : "playerTrade",
+    "arguments" :
+    [
+      {
+        "type" : "offer",
+        "lumber" : "number of lumbers to offer",
+        "wool" : "number of wools to offer",
+        "grain" : "number of grains to offer",
+        "brick" : "number of bricks to offer",
+        "ore" : "number of ores to offer"
+      },
+      {
+        "type" : "request",
+        "lumber" : "number of requested lumbers",
+        "wool" : "number of requested wools",
+        "grain" : "number of requested grains",
+        "brick" : "number of requested bricks",
+        "ore" : "number of requested ores"
+      }
+    ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "command" : "wantToTrade",
+    "arguments" :
+    [
+      {
+        "type" : "offer",
+        "lumber" : "number of lumbers to offer",
+        "wool" : "number of wools to offer",
+        "grain" : "number of grains to offer",
+        "brick" : "number of bricks to offer",
+        "ore" : "number of ores to offer"
+      },
+      {
+        "type" : "request",
+        "lumber" : "number of requested lumbers",
+        "wool" : "number of requested wools",
+        "grain" : "number of requested grains",
+        "brick" : "number of requested bricks",
+        "ore" : "number of requested ores"
+      }
+    ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "command" : "selectTrade",
+    "arguments" :
+    [
+      "playerId",
+      {
+        "lumber" : "number of offered lumbers",
+        "wool" : "number of offered wools",
+        "grain" : "number of offered grains",
+        "brick" : "number of offered bricks",
+        "ore" : "number of offered ores"
+      }
+    ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "command" : "acceptTrade",
+    "arguments" :
+    [
+      {
+        "lumber" : "number of offered lumbers",
+        "wool" : "number of offered wools",
+        "grain" : "number of offered grains",
+        "brick" : "number of offered bricks",
+        "ore" : "number of offered ores"
+      }
+    ]
+  },
+  {
+    "type": "user",
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "bankTrade",
+    "arguments": [ "offeredResource", "requestedResource" ]
+  },
+  {
+    "type": "user",
+    "gameID": "gameID",
+    "playerID": "playerID",
+    "command": "portTrade",
+    "arguments": [ "intersectionNumber", "offeredResource", "requestedResource" ]
+  }
+]

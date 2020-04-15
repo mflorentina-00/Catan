@@ -1,0 +1,119 @@
+[
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "status" : "message (success or error type)",
+    "command" : "newGame",
+    "arguments" : [ "gameID" ]
+  },
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "status" : "message (success or error type)",
+    "command" : "maxNoPlayers",
+    "arguments" : []
+  },
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "status" : "message (success or error type)",
+    "command" : "addPlayer",
+    "arguments" : []
+  },
+  {
+    "type": "manager",
+    "username" : "username",
+    "password" : "password",
+    "status" : "message (success or error type)",
+    "command" : "startGame",
+    "arguments" : []
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "rollDice",
+    "arguments" :
+    [
+      {
+        "dice": "a number between 2 and 12"
+      },
+      {
+        "playerID" : "playerID",
+        "lumber" : "number of received lumbers",
+        "wool" : "number of received wools",
+        "grain" : "number of received grains",
+        "brick" : "number of received bricks",
+        "ore" : "number of received ores"
+      }
+    ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "moveRobber",
+    "arguments" : [ "playerID", "playerID" ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "stealResource",
+    "arguments" : [ "resource" ]
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "playerTrade",
+    "arguments" : []
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "wantToTrade",
+    "arguments" : []
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "selectTrade",
+    "arguments" : []
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "acceptTrade",
+    "arguments" : []
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "bankTrade",
+    "arguments" : []
+  },
+  {
+    "type": "user",
+    "gameID" : "gameID",
+    "playerID" : "playerID",
+    "status" : "message (success or error type)",
+    "command" : "portTrade",
+    "arguments" : []
+  }
+]
