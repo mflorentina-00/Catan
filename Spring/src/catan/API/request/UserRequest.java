@@ -50,4 +50,8 @@ public class UserRequest implements GameRequest {
     public void setCommand(String command) {
         this.command = command;
     }
+
+    public String getJsonArgs() {
+        return jsonArgs;
+    }
 }

@@ -77,7 +77,10 @@ public class TurnFlow {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
                 response = new Response(Status.SUCCESS,"Buy house successfully!");
+                if(!game.buySettlement(Integer.parseInt((String) o)))
+                    response=new Response(Status.ERROR,"Buying house not possible!");
                 return true;
+
             }
         });
         fsm.setAction("buyCity", new FSMAction() {

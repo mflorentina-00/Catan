@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Intersection extends Property {
     private int ID;
 
+    public Intersection(int id){this.ID=id;}
     public Intersection() {
         ID = -1;
     }

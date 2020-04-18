@@ -1,5 +1,6 @@
 package catan.API;
 
+import catan.API.request.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import catan.API.request.GameRequest;
 
@@ -15,7 +16,7 @@ import java.util.HashMap;
 public class HttpClientPost {
     public static Response userPostTo(String game, GameRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonInputString = objectMapper.writeValueAsString(request);
+        String jsonInputString = objectMapper.writeValueAsString(((UserRequest)request));
         URL url = new URL("http://localhost:8080/Catan/userRequest?key=" + game);
         return postTo(url, jsonInputString);
     }

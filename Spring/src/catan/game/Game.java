@@ -5,6 +5,8 @@ import catan.API.request.Status;
 import catan.game.board.Board;
 import catan.game.card.Bank;
 import catan.game.enumeration.ResourceType;
+import catan.game.property.Intersection;
+import catan.game.property.Road;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -79,9 +81,71 @@ public class Game {
             return false;
         }
         bank = new Bank();
+        System.out.println();
         currentPlayer = playerOrder.get(0);
         return true;
     }
+
+    //region buy_properties
+    private int currentPlayerIndex() {
+        for(int i=0;i<playerOrder.size();i++){
+            if(playerOrder.get(i).equals(currentPlayer))
+                return i;
+        }
+        return -1;
+    }
+    private boolean isTwoRoadsDistance(Intersection intersection) {
+        List<Integer> neighborIntersections=board.getIntersectionGraph().getNeighborIntersections(intersection.getID());
+        for(Integer neighbour:neighborIntersections){
+            if(board.getBuildings().get(neighbour).getOwner()!=null)
+                return false;
+        }
+        return true;
+    }
+    public boolean buySettlement(int intersectionId){
+
+        Player player=players.get(currentPlayer);
+        Intersection intersection=board.getBuildings().get(intersectionId);
+        if(intersection==null||intersection.getOwner()!=null ||!isTwoRoadsDistance(intersection))
+            return false;
+
+        Intersection settlement=bank.getSettlement(player,currentPlayerIndex());
+        if(settlement==null||!player.buildSettlement(settlement))
+            return false;
+
+        board.getBuildings().get(intersectionId).setOwner(player);
+        return true;
+    }
+    public boolean buyCity(int intersectionId){
+        Player player=players.get(currentPlayer);
+        Intersection intersection=board.getBuildings().get(intersectionId);
+
+        if(intersection==null||!intersection.getOwner().equals(player))
+            return false;
+
+        Intersection city=bank.getCity(player,currentPlayerIndex());
+        if(city==null)
+            return false;
+        return player.buildCity(city);
+    }
+    public boolean buyRoad(int intersectionId1,int intersectionId2){
+        Player player=players.get(currentPlayer);
+       Intersection firstIntersection=board.getBuildings().get(intersectionId1);
+       Intersection secondIntersection=board.getBuildings().get(intersectionId2);
+
+        if(firstIntersection==null||secondIntersection==null)
+            return false;
+        if(!((firstIntersection.getOwner()==null||firstIntersection.getOwner().equals(player))&&
+                (secondIntersection.getOwner()==null||secondIntersection.getOwner().equals(player)) ))
+            return false;
+        Road road=bank.getRoad(player,currentPlayerIndex());
+        if(road==null)
+            return false;
+        return player.buildRoad(road);
+    }
+
+    //endregion
+
 
     public List<Player> getPlayersWhoAcceptTrade(Player player, List<Pair<ResourceType, Integer>> offer,
                                                  List<Pair<ResourceType, Integer>> request) {

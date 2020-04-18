@@ -29,6 +29,8 @@ public class Board {
         tiles = new ArrayList<>();
         for (int i = 0; i < Component.TILES; i++)
             tiles.add(new Tile(i));
+        for(int i=0;i<Component.INTERSECTIONS;i++)
+            buildings.add(new Intersection(i));
         tileBuildingAdjacency = new ArrayList<>(Component.TILES);
         buildingTileAdjacency = new ArrayList<>(Component.INTERSECTIONS);
         ports = new ArrayList<>();
@@ -41,6 +43,14 @@ public class Board {
         printTileBuildingAdjacency();
         printBuildingTileAdjacency();
         printBoardJSON();
+    }
+
+    public IntersectionGraph getIntersectionGraph() {
+        return intersectionGraph;
+    }
+
+    public List<Tile> getTiles() {
+        return tiles;
     }
 
     public List<Intersection> getBuildings() {

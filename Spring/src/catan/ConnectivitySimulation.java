@@ -74,7 +74,7 @@ public class ConnectivitySimulation {
     public boolean buyHouse(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
-                "buyHouse/" + spot,""));
+                "buyHouse/",spot.toString()));
         return response.getCode() != Status.ERROR;
     }
     public boolean buyCity(String gameId, String playerId, Integer spot) throws IOException {
@@ -105,13 +105,13 @@ public class ConnectivitySimulation {
         startGame(gameID);
         // Run the game
         while (true) {
-            buyCity(gameID, playersID.get(0), 20);
+            buyHouse(gameID, playersID.get(0), 20);
             sleep(100);
             buyRoad(gameID, playersID.get(1), 42);
             playDevCard(gameID,playersID.get(0),20);
             endTurn(gameID, playersID.get(0));
             sleep(100);
-            buyHouse(gameID, playersID.get(1), 14);
+            buyHouse(gameID, playersID.get(1), 22);
             sleep(100);
             endTurn(gameID, playersID.get(1));
         }
