@@ -165,7 +165,8 @@ public abstract class Game {
 
             if(!bank.getResource(tile.getResource()))
                 return false;
-
+            if(board.getRobberPosition().getID()==tile.getID())
+                continue;
             List<Intersection> intersections=board.getIntersectionListFromTile(tile);
             for(Intersection intersection:intersections){
                 if(!(intersection.getOwner()==null)){
@@ -261,6 +262,25 @@ public abstract class Game {
         // TODO add trader notify
         player.updateTradeResources(offer, request);
         trader.updateTradeResources(request, offer);
+    }
+    //endregion
+
+    //region Robber
+    public boolean giveResources(List<Pair<String,Map<ResourceType,Integer>>> playersRes){
+        for(Pair<String,Map<ResourceType,Integer>> pair :playersRes){
+            players.get(pair.getKey()).removeResources(pair.getValue());
+        }
+        return true;
+
+    }
+    public boolean moveRobber(int tileId){
+        board.setRobberPosition(board.getTiles().get(tileId));
+        return true;
+    }
+    public boolean giveSelectedResource(Pair<String,String> playerPair){
+        ResourceType type=players.get(playerPair.getValue()).removeRandomResources();
+        players.get(playerPair.getValue()).addResource(type);
+        return true;
     }
     //endregion
 

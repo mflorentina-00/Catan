@@ -138,6 +138,37 @@ public class Player {
 
     // endregion
 
+    //region Remove
+    public boolean removeResources(Map<ResourceType,Integer> playerResources){
+        for(ResourceType type:playerResources.keySet()) {
+            int previousResources = resources.get(type);
+            if (previousResources < playerResources.get(type))
+                return false;
+            resources.put(type, previousResources - playerResources.get(type));
+        }
+        return true;
+    }
+    public boolean removeResource(ResourceType type){
+        int previousResources = resources.get(type);
+        if (previousResources <= 0 )
+            return false;
+        resources.put(type, previousResources - 1);
+        return true;
+    }
+    public ResourceType removeRandomResources(){
+        ResourceType[] resourceTypes=ResourceType.values();
+        Random random=new Random();
+        int i=random.nextInt(resourceTypes.length);
+        while(getResourceNumber(resourceTypes[i])<=0) {
+            i=random.nextInt(resourceTypes.length);
+        }
+        if(removeResource(resourceTypes[i])){
+            return resourceTypes[i];
+        }
+        return null;
+    }
+    //endregion
+
     // region Road
 
     // TODO REMINDER: This is used by GAME class

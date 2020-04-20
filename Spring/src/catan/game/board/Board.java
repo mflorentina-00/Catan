@@ -24,6 +24,7 @@ public class Board {
     private ArrayList<ArrayList<Integer>> tileBuildingAdjacency;
     private ArrayList<ArrayList<Integer>> buildingTileAdjacency;
     private List<PortType> ports;
+    private Tile robberPosition;
 
     public Board() {
         buildings = new ArrayList<>();
@@ -38,6 +39,7 @@ public class Board {
         for (int index = 0; index < Component.INTERSECTIONS; ++index) {
             ports.add(PortType.None);
         }
+        robberPosition=tiles.get(0);
         generateRandomTiles();
         createMapping();
         setPorts();
@@ -68,6 +70,13 @@ public class Board {
             intersectionList.add(buildings.get(id));
         }
         return intersectionList;
+    }
+
+    public Tile getRobberPosition() {
+        return robberPosition;
+    }
+    public void setRobberPosition(Tile robberPosition) {
+        this.robberPosition = robberPosition;
     }
 
     public void setBuildings(List<Intersection> buildings) {
