@@ -59,6 +59,11 @@ public class ConnectivitySimulation {
 
     // region User Commands
 
+    public boolean rollDice(String gameID,String playerId) throws  IOException{
+        Response response;
+        response=HttpClientPost.userPostTo("SHARED_KEY",new UserRequest(gameID,playerId,"rollDice/",""));
+        return response.getCode()!=Status.ERROR;
+    }
     public boolean buyRoad(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo("SHARED_KEY", new UserRequest(gameId, playerId,
@@ -105,12 +110,14 @@ public class ConnectivitySimulation {
         startGame(gameID);
         // Run the game
         while (true) {
+            rollDice(gameID,playersID.get(0));
             buyHouse(gameID, playersID.get(0), 20);
             sleep(100);
             buyRoad(gameID, playersID.get(1), 42);
             playDevCard(gameID,playersID.get(0),20);
             endTurn(gameID, playersID.get(0));
             sleep(100);
+            rollDice(gameID,playersID.get(1));
             buyHouse(gameID, playersID.get(1), 22);
             sleep(100);
             endTurn(gameID, playersID.get(1));

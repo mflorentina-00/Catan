@@ -59,11 +59,11 @@ public class Player {
         cities = new ArrayList<>();
 
         resources = new HashMap<>();
-        resources.put(ResourceType.Ore,0);
-        resources.put(ResourceType.Wool,0);
-        resources.put(ResourceType.Grain,0);
-        resources.put(ResourceType.Lumber,0);
-        resources.put(ResourceType.Brick,0);
+        resources.put(ResourceType.Ore,5);
+        resources.put(ResourceType.Wool,5);
+        resources.put(ResourceType.Grain,5);
+        resources.put(ResourceType.Lumber,5);
+        resources.put(ResourceType.Brick,5);
 
         knights = new ArrayList<>();
         monopolies = new ArrayList<>();

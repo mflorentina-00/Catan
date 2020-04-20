@@ -18,6 +18,7 @@ import java.util.List;
 public class Board {
     private List<Intersection> buildings;
     private List<Tile> tiles;
+    private List<List<Tile>> numberedTiles=new ArrayList<>(13);
     private TileGraph tileGraph = new TileGraph();
     private IntersectionGraph intersectionGraph = new IntersectionGraph();
     private ArrayList<ArrayList<Integer>> tileBuildingAdjacency;
@@ -55,6 +56,18 @@ public class Board {
 
     public List<Intersection> getBuildings() {
         return buildings;
+    }
+
+    public List<Tile> getTilesFromNumbers(int i) {
+        return numberedTiles.get(i);
+    }
+    public List<Intersection> getIntersectionListFromTile(Tile tile){
+        List<Intersection> intersectionList=new ArrayList<>();
+        List<Integer> intersectionsId=tileBuildingAdjacency.get(tile.getID());
+        for(Integer id:intersectionsId){
+            intersectionList.add(buildings.get(id));
+        }
+        return intersectionList;
     }
 
     public void setBuildings(List<Intersection> buildings) {
@@ -119,6 +132,13 @@ public class Board {
                 }
             }
         }
+        for(int i=0;i<=12;i++)
+            numberedTiles.add(new ArrayList<>());
+        for(Tile tile:tiles){
+            numberedTiles.get(tile.getNumber()).add(tile);
+        }
+
+        System.out.println(numberedTiles);
     }
 
     private void createMapping() {

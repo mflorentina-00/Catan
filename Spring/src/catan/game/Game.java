@@ -3,6 +3,7 @@ package catan.game;
 import catan.API.Response;
 import catan.API.request.Status;
 import catan.game.board.Board;
+import catan.game.board.Tile;
 import catan.game.card.Bank;
 import catan.game.enumeration.ResourceType;
 import catan.game.property.Intersection;
@@ -85,6 +86,48 @@ public class Game {
         currentPlayer = playerOrder.get(0);
         return true;
     }
+
+    //region give resources+roll dice
+    public boolean rollDice(){
+        Random dice=new Random();
+        int firstDice=dice.nextInt(6)+1;
+        int secondDice=dice.nextInt(6)+1;
+        int diceSum=firstDice+secondDice;
+
+        if(diceSum!=7){
+            if(giveResourcesFromDice(diceSum)){
+                players.get(currentPlayer).getState().fsm.ProcessFSM("rollNotASeven");
+                return true;
+            }
+            return false;
+        }
+        else{
+            players.get(currentPlayer).getState().fsm.ProcessFSM("rollASeven");
+            return true;
+        }
+
+    }
+
+    public boolean giveResourcesFromDice(int diceSum) {
+        List<Tile> tiles=board.getTilesFromNumbers(diceSum);
+        for(Tile tile:tiles){
+
+            if(!bank.getResource(tile.getResource()))
+                return false;
+
+            List<Intersection> intersections=board.getIntersectionListFromTile(tile);
+            for(Intersection intersection:intersections){
+                if(!(intersection.getOwner()==null)){
+                    Player owner=intersection.getOwner();
+                    players.get(owner.getID()).addResource(tile.getResource());
+                }
+            }
+        }
+
+        return true;
+    }
+
+    //endregion
 
     //region buy_properties
     private int currentPlayerIndex() {
