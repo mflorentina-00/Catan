@@ -5,6 +5,7 @@ import catan.game.card.development.Monopoly;
 import catan.game.card.development.RoadBuilding;
 import catan.game.card.development.YearOfPlenty;
 import catan.game.enumeration.ResourceType;
+import catan.game.gameType.Game;
 import catan.game.property.Intersection;
 import catan.game.property.Road;
 import catan.game.rule.Component;

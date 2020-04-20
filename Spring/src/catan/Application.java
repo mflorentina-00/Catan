@@ -1,8 +1,6 @@
 package catan;
 
-import catan.game.Game;
-import catan.game.board.Board;
-import catan.game.board.TileGraph;
+import catan.game.gameType.Game;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

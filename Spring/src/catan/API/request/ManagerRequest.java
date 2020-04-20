@@ -2,8 +2,8 @@ package catan.API.request;
 
 import catan.API.Response;
 import catan.Application;
-import catan.game.Game;
 import catan.game.Player;
+import catan.game.gameType.BaseGame;
 
 public class ManagerRequest implements GameRequest {
     private String managerId;
@@ -46,7 +46,7 @@ public class ManagerRequest implements GameRequest {
         String[] tokens = command.split("[/]+");
         if (tokens[0].equalsIgnoreCase("newGame")) {
             String gameKey = randString.nextString();
-            Application.games.put(gameKey, new Game());
+            Application.games.put(gameKey, new BaseGame());
             return new Response(Status.SUCCESS, gameKey);
         }
         if (tokens[0].equalsIgnoreCase("startGame")) {

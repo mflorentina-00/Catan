@@ -1,7 +1,8 @@
-package catan.game;
+package catan.game.gameType;
 
 import catan.API.Response;
 import catan.API.request.Status;
+import catan.game.Player;
 import catan.game.board.Board;
 import catan.game.board.Tile;
 import catan.game.card.Bank;
@@ -9,21 +10,20 @@ import catan.game.enumeration.ResourceType;
 import catan.game.property.Intersection;
 import catan.game.property.Road;
 import catan.game.rule.Component;
-import catan.game.rule.Cost;
 import catan.game.rule.VictoryPoint;
 import javafx.util.Pair;
 
 import java.util.*;
 
-public class Game {
-    private Bank bank;
-    private Board board;
-    private Pair<String,Integer> currentLargestArmy;
-    private Pair<String,Integer> currentLongestRoad;
-    private Map<String, Player> players;
-    private List<String> playerOrder;
-    private String currentPlayer;
-    private int maxPlayers;
+public abstract class Game {
+    protected Bank bank;
+    protected Board board;
+    protected Pair<String,Integer> currentLargestArmy=null;
+    protected Pair<String,Integer> currentLongestRoad=null;
+    protected Map<String, Player> players;
+    protected List<String> playerOrder;
+    protected String currentPlayer;
+    protected int maxPlayers;
 
     public Game() {
         board = new Board();
@@ -78,23 +78,42 @@ public class Game {
         return true;
     }
 
-    private boolean checkWin() {
+    protected boolean checkWin() {
         if(players.get(currentPlayer).getVP()>= VictoryPoint.FINISH_VICTORY_POINTS)
             return true;
         return false;
     }
 
-    private void updateBonusPoints() {
-        if(players.get(currentPlayer).getLargestArmy()>currentLargestArmy.getValue()&&
-           !(currentPlayer.equals(currentLargestArmy.getKey()))){
+    protected void updateBonusPoints() {
+        if(currentLargestArmy==null){
+            if(players.get(currentPlayer).getLargestArmy()>=Component.ROADS_FOR_LONGEST_ROAD){
+                players.get(currentPlayer).takeLargestArmy();
+                currentLargestArmy=new Pair<>(currentPlayer,players.get(currentPlayer).getLargestArmy());
+            }
+        }
+        else if(players.get(currentPlayer).getLargestArmy()>currentLargestArmy.getValue()&&
+                !(currentPlayer.equals(currentLargestArmy.getKey()))
+            ){
+
             players.get(currentLargestArmy.getKey()).giveLargestArmy();
             players.get(currentPlayer).takeLargestArmy();
+            currentLargestArmy=new Pair<>(currentPlayer,players.get(currentPlayer).getLargestArmy());
         }
 
-        if(players.get(currentPlayer).getLongestRoad()>currentLongestRoad.getValue()&&
-                !(currentPlayer.equals(currentLongestRoad.getKey()))){
+        int longestRoad=players.get(currentPlayer).getLongestRoad();
+        if(currentLongestRoad==null){
+            if(longestRoad>=Component.ARMY_FOR_LARGEST_ARMY) {
+                players.get(currentPlayer).takeLongestRoad();
+                currentLongestRoad = new Pair<>(currentPlayer, longestRoad);
+            }
+        }
+        else if(longestRoad>currentLongestRoad.getValue()&&
+                !(currentPlayer.equals(currentLongestRoad.getKey()))
+                ) {
+
             players.get(currentLongestRoad.getKey()).giveLongestRoad();
             players.get(currentPlayer).takeLongestRoad();
+            currentLongestRoad=new Pair<>(currentPlayer,longestRoad);
         }
 
     }
@@ -162,14 +181,14 @@ public class Game {
     //endregion
 
     //region buy_properties
-    private int currentPlayerIndex() {
+    protected int currentPlayerIndex() {
         for(int i=0;i<playerOrder.size();i++){
             if(playerOrder.get(i).equals(currentPlayer))
                 return i;
         }
         return -1;
     }
-    private boolean isTwoRoadsDistance(Intersection intersection) {
+    protected boolean isTwoRoadsDistance(Intersection intersection) {
         List<Integer> neighborIntersections=board.getIntersectionGraph().getNeighborIntersections(intersection.getID());
         for(Integer neighbour:neighborIntersections){
             if(board.getBuildings().get(neighbour).getOwner()!=null)

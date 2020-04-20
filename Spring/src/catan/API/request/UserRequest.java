@@ -2,7 +2,7 @@ package catan.API.request;
 
 import catan.API.Response;
 import catan.Application;
-import catan.game.Game;
+import catan.game.gameType.Game;
 
 //TODO Create function or class for every request (Command Pattern style)
 //TODO Add request to give resources when the turn starts (kind of manager request I think)

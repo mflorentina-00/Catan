@@ -2,6 +2,7 @@ package catan.game;
 
 import catan.API.Response;
 import catan.API.request.Status;
+import catan.game.gameType.Game;
 import com.github.ankzz.dynamicfsm.action.FSMAction;
 import com.github.ankzz.dynamicfsm.fsm.FSM;
 import org.xml.sax.SAXException;
