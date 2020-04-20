@@ -8,6 +8,9 @@ import catan.game.card.Bank;
 import catan.game.enumeration.ResourceType;
 import catan.game.property.Intersection;
 import catan.game.property.Road;
+import catan.game.rule.Component;
+import catan.game.rule.Cost;
+import catan.game.rule.VictoryPoint;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -15,6 +18,8 @@ import java.util.*;
 public class Game {
     private Bank bank;
     private Board board;
+    private Pair<String,Integer> currentLargestArmy;
+    private Pair<String,Integer> currentLongestRoad;
     private Map<String, Player> players;
     private List<String> playerOrder;
     private String currentPlayer;
@@ -52,20 +57,46 @@ public class Game {
 
     //region Custom Functions
 
+    //region turn
+
     public void addNextPlayer(String userID){
         playerOrder.add(userID);
     }
 
     public boolean changeTurn() {
+        updateBonusPoints();
+        //TODO use checkWin return value that ends the game
+        checkWin();
+
         int i = playerOrder.indexOf(currentPlayer);
         if (i == playerOrder.size() - 1)
             i = 0;
         else
             ++i;
         currentPlayer = playerOrder.get(i);
-        //TODO make restart go to start when necessary;
         players.get(currentPlayer).getState().fsm.ProcessFSM("Restart");
         return true;
+    }
+
+    private boolean checkWin() {
+        if(players.get(currentPlayer).getVP()>= VictoryPoint.FINISH_VICTORY_POINTS)
+            return true;
+        return false;
+    }
+
+    private void updateBonusPoints() {
+        if(players.get(currentPlayer).getLargestArmy()>currentLargestArmy.getValue()&&
+           !(currentPlayer.equals(currentLargestArmy.getKey()))){
+            players.get(currentLargestArmy.getKey()).giveLargestArmy();
+            players.get(currentPlayer).takeLargestArmy();
+        }
+
+        if(players.get(currentPlayer).getLongestRoad()>currentLongestRoad.getValue()&&
+                !(currentPlayer.equals(currentLongestRoad.getKey()))){
+            players.get(currentLongestRoad.getKey()).giveLongestRoad();
+            players.get(currentPlayer).takeLongestRoad();
+        }
+
     }
 
     public Response playTurn(String playerID, String command, String jsonArgs) {
@@ -86,6 +117,7 @@ public class Game {
         currentPlayer = playerOrder.get(0);
         return true;
     }
+    //endregion
 
     //region give resources+roll dice
     public boolean rollDice(){
@@ -189,6 +221,7 @@ public class Game {
 
     //endregion
 
+    //region trade
 
     public List<Player> getPlayersWhoAcceptTrade(Player player, List<Pair<ResourceType, Integer>> offer,
                                                  List<Pair<ResourceType, Integer>> request) {
@@ -210,6 +243,7 @@ public class Game {
         player.updateTradeResources(offer, request);
         trader.updateTradeResources(request, offer);
     }
+    //endregion
 
     //endregion
 

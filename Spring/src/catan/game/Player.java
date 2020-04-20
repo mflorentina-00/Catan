@@ -334,6 +334,31 @@ public class Player {
     
     // endregion
 
+    //region Longest Road
+    public int getLongestRoad(){
+        int maxRoadLength=0;
+        roads.sort(new Comparator<Road>() {
+            @Override
+            public int compare(Road road1, Road road2) {
+                return road1.getStart().getID() - road2.getStart().getID();
+            }
+        });
+        List<Integer> roadsMax=new ArrayList<>(roads.size());
+        Collections.fill(roadsMax,1);
+        for(int i=1;i<roads.size();i++){
+            for(int j=i-1;j>=0;j--){
+                if(roads.get(i).getStart().getID()==roads.get(j).getEnd().getID()) {
+                    roadsMax.add(i,roadsMax.get(j)+1);
+                    break;
+                }
+            }
+            if(roadsMax.get(i)>maxRoadLength)
+                maxRoadLength=roadsMax.get(i);
+        }
+       return maxRoadLength;
+    }
+    //endregion
+
     // region Bonus Victory Points
 
     public void takeLongestRoad() {

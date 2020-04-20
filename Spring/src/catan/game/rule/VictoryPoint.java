@@ -8,4 +8,6 @@ public class VictoryPoint {
 
     public static final int LONGEST_ROAD = 2;
     public static final int LARGEST_ARMY = 2;
+
+    public static final int FINISH_VICTORY_POINTS=10;
 }
