@@ -3,6 +3,7 @@ package catan.API.request;
 import catan.API.Response;
 import catan.Application;
 import catan.game.gameType.Game;
+import java.util.HashMap;
 
 //TODO Create function or class for every request (Command Pattern style)
 //TODO Add request to give resources when the turn starts (kind of manager request I think)
@@ -15,11 +16,13 @@ public class UserRequest implements GameRequest {
     public Response run() {
         Game game = Application.games.get(gameId);
         if (game == null)
-            return new Response(Status.ERROR, "The game does not exist.");
+            return new Response(Status.ERROR, "The game does not exist.","");
         if (game.getPlayers().get(userUniqueID) == null)
-            return new Response(Status.ERROR,"The player does not exist.");
-        String[] tokens = command.split("[/]+");
-        return game.playTurn(userUniqueID, tokens[0],jsonArgs);
+            return new Response(Status.ERROR,"The player does not exist.","");
+        HashMap<String,String> args=null;
+        if(!jsonArgs.equals(""))
+            args=GameRequest.getMapFromData(jsonArgs);
+        return game.playTurn(userUniqueID, command,args);
     }
 
     public UserRequest(String gameId, String userUniqueID, String command, String jsonArgs) {

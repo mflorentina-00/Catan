@@ -14,10 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class HttpClientPost {
-    public static Response userPostTo(String game, GameRequest request) throws IOException {
+    public static Response userPostTo(GameRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonInputString = objectMapper.writeValueAsString(((UserRequest)request));
-        URL url = new URL("http://localhost:8080/Catan/userRequest?key=" + game);
+        URL url = new URL("http://localhost:8080/Catan/userRequest");
         return postTo(url, jsonInputString);
     }
 
@@ -47,7 +47,7 @@ public class HttpClientPost {
             }
             HashMap<?, ?> result = new ObjectMapper().readValue(response.toString(), HashMap.class);
             System.out.println(result);
-            return new Response(Integer.valueOf(result.get("code").toString()), result.get("status").toString());
+            return new Response(Integer.valueOf(result.get("code").toString()), result.get("status").toString(), result.get("data").toString());
         }
     }
 }

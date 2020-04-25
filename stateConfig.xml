@@ -2,6 +2,7 @@
 
 <FSM>
  <STATE id="Start" type="ID">
+  <MESSAGE id="rollDice" action="rollDice" nextState="Start"/>
   <MESSAGE id="rollASeven" action="rollASeven" nextState="TakingResources"/>
   <MESSAGE id="rollNotASeven" action="rollNotASeven" nextState="Trading"/>
  </STATE>
@@ -26,6 +27,6 @@
   <MESSAGE id="endTurn" action="endTurn" nextState="End"/>
  </STATE>
  <STATE id="End">
-  <MESSAGE id="Restart" action="Restart" nextState="Buying"/>
+  <MESSAGE id="Restart" action="Restart" nextState="Start"/>
  </STATE>
 </FSM>

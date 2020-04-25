@@ -79,9 +79,7 @@ public abstract class Game {
     }
 
     protected boolean checkWin() {
-        if(players.get(currentPlayer).getVP()>= VictoryPoint.FINISH_VICTORY_POINTS)
-            return true;
-        return false;
+        return players.get(currentPlayer).getVP() >= VictoryPoint.FINISH_VICTORY_POINTS;
     }
 
     protected void updateBonusPoints() {
@@ -118,13 +116,16 @@ public abstract class Game {
 
     }
 
-    public Response playTurn(String playerID, String command, String jsonArgs) {
+    public Response playTurn(String playerID, String command, Map<String,String> jsonArgs) {
         if (playerID.equals(currentPlayer)) {
             players.get(playerID).getState().fsm.setShareData(jsonArgs);
             players.get(playerID).getState().fsm.ProcessFSM(command);
-            return players.get(playerID).getState().response;
+            Response response =  players.get(playerID).getState().response;
+            //Reset player response in case that the state does not have the command | the command does not exist
+            players.get(playerID).getState().response = new Response(Status.ERROR,"Wrong Command","");
+            return response;
         }
-        return new Response(Status.ERROR,"Not your turn!");
+        return new Response(Status.ERROR,"Not your turn!","");
     }
 
     public boolean startGame() {

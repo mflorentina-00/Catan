@@ -4,6 +4,11 @@ import catan.API.Response;
 import catan.Application;
 import catan.game.Player;
 import catan.game.gameType.BaseGame;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ManagerRequest implements GameRequest {
     private String managerId;
@@ -42,41 +47,56 @@ public class ManagerRequest implements GameRequest {
         this.command = command;
     }
 
-    public Response run() {
-        String[] tokens = command.split("[/]+");
-        if (tokens[0].equalsIgnoreCase("newGame")) {
+    public String getJsonArgs() {
+        return jsonArgs;
+    }
+
+
+    public Response run() throws JsonProcessingException {
+        HashMap<String,String> args=null;
+        if(!jsonArgs.equals(""))
+            args=GameRequest.getMapFromData(jsonArgs);
+
+        if (command.equalsIgnoreCase("newGame")) {
             String gameKey = randString.nextString();
             Application.games.put(gameKey, new BaseGame());
-            return new Response(Status.SUCCESS, gameKey);
+            Map<String,String> payload = new HashMap<>();
+            payload.put("gameId",gameKey);
+            String jsonArgs = new ObjectMapper().writeValueAsString(payload);
+            return new Response(Status.SUCCESS, "Game created successfully",jsonArgs);
         }
-        if (tokens[0].equalsIgnoreCase("startGame")) {
-            String gameKey = tokens[1];
+        if (command.equalsIgnoreCase("startGame")) {
+            String gameKey =  args.get("gameId");
             if (Application.games.get(gameKey) == null)
-                return new Response(Status.ERROR, "The game does not exist.");
+                return new Response(Status.ERROR, "The game does not exist.","");
             if (Application.games.get(gameKey).startGame())
-                return new Response(Status.SUCCESS,"Game started");
-            return new Response(Status.ERROR,"Game couldn't start.");
+                return new Response(Status.SUCCESS,"Game started","");
+            return new Response(Status.ERROR,"Game couldn't start.","");
         }
-        else if (tokens[0].equalsIgnoreCase("setMaxPlayers")) {
-            String gameKey = tokens[1];
-            int playersNum = Integer.parseInt(tokens[2]);
+        else if (command.equalsIgnoreCase("setMaxPlayers")) {
+            String gameKey = args.get("gameId");
+            int playersNum = Integer.parseInt(args.get("nrPlayers"));
             if (Application.games.get(gameKey) == null)
-                return new Response(Status.ERROR, "The game does not exist.");
+                return new Response(Status.ERROR, "The game does not exist.","");
             if (Application.games.get(gameKey).getPlayers().size()>playersNum)
-                return new Response(Status.ERROR, "There are already to many players.");
+                return new Response(Status.ERROR, "There are already to many players.","");
             Application.games.get(gameKey).setMaxPlayers(playersNum);
+            return  new Response(Status.ERROR, "Size fixed successfully.","");
         }
-        else if (tokens[0].equalsIgnoreCase("addPlayer")) {
-            String gameKey = tokens[1];
+        else if (command.equalsIgnoreCase("addPlayer")) {
+            String gameKey = args.get("gameId");
             String userId = randString.nextString();
             if (Application.games.get(gameKey) == null)
-                return new Response(Status.ERROR, "The game does not exist.");
+                return new Response(Status.ERROR, "The game does not exist.","");
             if (Application.games.get(gameKey).getPlayers().size() == Application.games.get(gameKey).getMaxPlayers())
-                return new Response(Status.ERROR, "There is no room left.");
+                return new Response(Status.ERROR, "There is no room left.","");
             Application.games.get(gameKey).getPlayers().put(userId, new Player(userId,Application.games.get(gameKey)));
             Application.games.get(gameKey).addNextPlayer(userId);
-            return new Response(Status.SUCCESS, userId);
+            Map<String,String> payload = new HashMap<>();
+            payload.put("playerId",userId);
+            String jsonArgs = new ObjectMapper().writeValueAsString(payload);
+            return new Response(Status.SUCCESS, "Successfully added player",jsonArgs);
         }
-        return new Response(Status.SUCCESS, command);
+        return new Response(Status.SUCCESS,"Guess it's ok?", command);
     }
 }
