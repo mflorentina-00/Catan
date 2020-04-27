@@ -25,11 +25,17 @@ public abstract class Game {
     protected String currentPlayer;
     protected int maxPlayers;
 
+    public Board getBoard() {
+        return board;
+    }
+
     public Game() {
         board = new Board();
         players = new HashMap<>();
         playerOrder = new ArrayList<>();
     }
+
+
 
     //region Getters
 

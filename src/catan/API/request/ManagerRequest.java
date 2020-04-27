@@ -68,9 +68,16 @@ public class ManagerRequest implements GameRequest {
         if (command.equalsIgnoreCase("startGame")) {
             String gameKey =  args.get("gameId");
             if (Application.games.get(gameKey) == null)
+            {
                 return new Response(Status.ERROR, "The game does not exist.","");
-            if (Application.games.get(gameKey).startGame())
-                return new Response(Status.SUCCESS,"Game started","");
+            }
+            if (Application.games.get(gameKey).startGame()) {
+                Map <String, String> arguments = new HashMap<>();
+                arguments.put("board", Application.games.get(gameKey).getBoard().getBoardJSON());
+                arguments.put("ports", Application.games.get(gameKey).getBoard().getPortsJSON());
+                String json = new ObjectMapper().writeValueAsString(arguments);
+                return new Response(Status.SUCCESS, "Game started.", json);
+            }
             return new Response(Status.ERROR,"Game couldn't start.","");
         }
         else if (command.equalsIgnoreCase("setMaxPlayers")) {

@@ -256,10 +256,19 @@ public class Board {
         }
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String boardJSON = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tilesInformation);
+            String boardJSON = objectMapper.writeValueAsString(tilesInformation);
             return boardJSON.replaceAll("key", "resource")
                     .replaceAll("value", "number");
         } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getPortsJSON() {
+        try {
+            return new ObjectMapper().writeValueAsString(ports);
+        } catch (IOException exception) {
             exception.printStackTrace();
         }
         return null;
