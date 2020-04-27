@@ -773,8 +773,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 4.5999756, y: -47.799957}
-  m_SizeDelta: {x: -50.9, y: -268.2}
+  m_AnchoredPosition: {x: 4.5999756, y: -54.62503}
+  m_SizeDelta: {x: -50.9, y: -708.55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &181220694
 MonoBehaviour:
@@ -788,7 +788,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
+  m_ShowMaskGraphic: 0
 --- !u!114 &181220695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1122,8 +1122,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 150679100}
   m_HandleRect: {fileID: 150679099}
   m_Direction: 2
-  m_Value: 0.99988174
-  m_Size: 0.15114412
+  m_Value: 0.999882
+  m_Size: 0.15114413
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2780,7 +2780,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 278079612}
   m_Direction: 2
   m_Value: 0.9998591
-  m_Size: 0.0959358
+  m_Size: 0.09593579
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6683,8 +6683,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 528052909}
   m_HandleRect: {fileID: 528052908}
   m_Direction: 2
-  m_Value: 0.99984276
-  m_Size: 0.10592208
+  m_Value: 0.99984264
+  m_Size: 0.10592207
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7476,8 +7476,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.2999878, y: -47.799957}
-  m_SizeDelta: {x: -58.6, y: -268.2}
+  m_AnchoredPosition: {x: 3.2999878, y: -55.6}
+  m_SizeDelta: {x: -58.6, y: -690.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1959095565
 MonoBehaviour:
@@ -7491,7 +7491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
+  m_ShowMaskGraphic: 0
 --- !u!114 &1959095566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7955,7 +7955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
+  m_ShowMaskGraphic: 0
 --- !u!114 &2007359549
 MonoBehaviour:
   m_ObjectHideFlags: 0
