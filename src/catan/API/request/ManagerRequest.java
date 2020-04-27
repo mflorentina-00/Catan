@@ -93,7 +93,7 @@ public class ManagerRequest implements GameRequest {
             if (Application.games.get(gameKey).getPlayers().size()>playersNum)
                 return new Response(Status.ERROR, "There are already to many players.","");
             Application.games.get(gameKey).setMaxPlayers(playersNum);
-            return  new Response(Status.ERROR, "Size fixed successfully.","");
+            return new Response(Status.SUCCESS, "Size fixed successfully.","");
         }
         else if (command.equalsIgnoreCase("addPlayer")) {
             String gameKey = args.get("gameId");

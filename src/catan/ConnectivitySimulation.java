@@ -47,7 +47,7 @@ public class ConnectivitySimulation {
         else
             return response.getStatus();
     }
-    public boolean setNoPlayers(String gameId, Integer no) throws IOException {
+    public boolean setMaxPlayers(String gameId, Integer no) throws IOException {
         Map<String,String> payload = new HashMap<>();
         payload.put("gameId",gameId);
         payload.put("maxPlayers",no.toString());
@@ -135,11 +135,11 @@ public class ConnectivitySimulation {
     public void simulation() throws IOException, InterruptedException {
         // Configure the game
         gameID = createGame();
-        setNoPlayers(gameID, 2);
+        setMaxPlayers(gameID, 2);
         playersID.add(addPlayer(gameID));
         playersID.add(addPlayer(gameID));
         playersID.add(addPlayer(gameID));
-        setNoPlayers(gameID,1);
+        setMaxPlayers(gameID,1);
         startGame(gameID);
         // Run the game
         while (true) {
