@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,7 +21,7 @@ public class Controller {
     @RequestMapping (value = "/managerRequest", method = RequestMethod.POST)
     public Response sendResponse(@RequestBody ManagerRequest request) {
         // Check if the username and password are good.
-        if (request.getManagerId().equals("silviu") && request.getManagerPass().equals("1234")) {
+        if (request.getUsername().equals("catan") && request.getPassword().equals("catan")) {
             try {
                 return request.run();
             } catch (JsonProcessingException e) {

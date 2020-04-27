@@ -11,32 +11,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ManagerRequest implements GameRequest {
-    private String managerId;
-    private String managerPass;
+    private String username;
+    private String password;
     private String command;
-    private String jsonArgs;
+    private String arguments;
 
-    public ManagerRequest(String managerId, String managerPass, String command, String jsonArgs) {
-        this.managerId = managerId;
-        this.managerPass = managerPass;
+    public ManagerRequest(String username, String password, String command, String arguments) {
+        this.username = username;
+        this.password = password;
         this.command = command;
-        this.jsonArgs = jsonArgs;
+        this.arguments = arguments;
     }
 
-    public String getManagerId() {
-        return managerId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setManagerId(String managerId) {
-        this.managerId = managerId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getManagerPass() {
-        return managerPass;
+    public String getPassword() {
+        return password;
     }
 
-    public void setManagerPass(String managerPass) {
-        this.managerPass = managerPass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCommand() {
@@ -47,23 +47,28 @@ public class ManagerRequest implements GameRequest {
         this.command = command;
     }
 
-    public String getJsonArgs() {
-        return jsonArgs;
+    public String getArguments() {
+        return arguments;
     }
 
 
     public Response run() throws JsonProcessingException {
         HashMap<String,String> args=null;
-        if(!jsonArgs.equals(""))
-            args=GameRequest.getMapFromData(jsonArgs);
+        if(!arguments.equals(""))
+            args=GameRequest.getMapFromData(arguments);
 
         if (command.equalsIgnoreCase("newGame")) {
             String gameKey = randString.nextString();
-            Application.games.put(gameKey, new BaseGame());
-            Map<String,String> payload = new HashMap<>();
-            payload.put("gameId",gameKey);
-            String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-            return new Response(Status.SUCCESS, "Game created successfully",jsonArgs);
+            if (arguments.equalsIgnoreCase("{\"scenario\": \"SettlersOfCatan\"}")) {
+                Application.games.put(gameKey, new BaseGame());
+                Map<String,String> payload = new HashMap<>();
+                payload.put("gameId",gameKey);
+                String jsonArgs = new ObjectMapper().writeValueAsString(payload);
+                return new Response(Status.SUCCESS, "Game created successfully",jsonArgs);
+            }
+            else {
+                return new Response(Status.ERROR, "The scenario is not implemented.","");
+            }
         }
         if (command.equalsIgnoreCase("startGame")) {
             String gameKey =  args.get("gameId");
@@ -82,7 +87,7 @@ public class ManagerRequest implements GameRequest {
         }
         else if (command.equalsIgnoreCase("setMaxPlayers")) {
             String gameKey = args.get("gameId");
-            int playersNum = Integer.parseInt(args.get("nrPlayers"));
+            int playersNum = Integer.parseInt(args.get("maxPlayers"));
             if (Application.games.get(gameKey) == null)
                 return new Response(Status.ERROR, "The game does not exist.","");
             if (Application.games.get(gameKey).getPlayers().size()>playersNum)

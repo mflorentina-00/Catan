@@ -17,8 +17,8 @@ import java.util.Map;
 import static java.lang.Thread.sleep;
 
 public class ConnectivitySimulation {
-    String username = "silviu";
-    String password = "1234";
+    String username = "catan";
+    String password = "catan";
     String gameID = null;
     List<String> playersID = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class ConnectivitySimulation {
 
     public String createGame() throws IOException {
         Response response;
-        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "newGame",""));
+        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "newGame","{\"scenario\": \"SettlersOfCatan\"}"));
         if (response.getCode() == Status.ERROR)
             return null;
         else {
@@ -50,7 +50,7 @@ public class ConnectivitySimulation {
     public boolean setNoPlayers(String gameId, Integer no) throws IOException {
         Map<String,String> payload = new HashMap<>();
         payload.put("gameId",gameId);
-        payload.put("nrPlayers",no.toString());
+        payload.put("maxPlayers",no.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,

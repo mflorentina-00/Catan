@@ -17,14 +17,14 @@ public class HttpClientPost {
     public static Response userPostTo(GameRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonInputString = objectMapper.writeValueAsString(((UserRequest)request));
-        URL url = new URL("http://localhost:8080/Catan/userRequest");
+        URL url = new URL("http://localhost:8080/Catan/userRequest/");
         return postTo(url, jsonInputString);
     }
 
     public static Response managerPostTo(GameRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonInputString = objectMapper.writeValueAsString(request);
-        URL url = new URL("http://localhost:8080/Catan/managerRequest");
+        URL url = new URL("http://localhost:8080/Catan/managerRequest/");
         return postTo(url, jsonInputString);
     }
 
