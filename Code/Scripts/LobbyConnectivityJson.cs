@@ -9,12 +9,8 @@ using Proyecto26;
 ///  This class is used for serialization, for attaching a JSON to the Body of the POST request
 /// </summary>
 [Serializable]
-public class Lobby
+public class LobbyConnectivityJson
 {
-    public int lobbyid;   
-
-    public Lobby(int lobbyid)
-    {
-        this.lobbyid = lobbyid;
-    }
+    public String lobbyid;
+    public String gameid;
 }

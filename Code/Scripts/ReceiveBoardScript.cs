@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine.UI;
 using UnityEditor;
 using UnityEngine;
@@ -9,18 +10,33 @@ using UnityEngine.SceneManagement;
 
 public class ReceiveBoardScript : MonoBehaviour
 {
-    public Hexagon[] RequestBoard(int lobbyid)
+    BoardConnectivityJson ReceivedBoard = new BoardConnectivityJson();
+
+    public void getGameBoard(string ReceivedGameID)
     {
-        string URL = "http://localhost:5000/board";
-        Lobby lobby = new Lobby(lobbyid);
-        RestClient.PostArray<Hexagon>(URL,lobby).Then(board => {
-            foreach(Hexagon hexagon in board)
-            {
-                Debug.Log(hexagon.resource + " " + hexagon.number);
-            }
-            return board;
+        GameIDConnectivityJson gameid = new GameIDConnectivityJson();
+        gameid.gameid = ReceivedGameID;
+        RestClient.Post<BoardConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/startgame", gameid).Then(board =>
+        {
+            ReceivedBoard.ports = board.ports;
+            ReceivedBoard.board = board.board;
+            Debug.Log(JsonUtility.ToJson(ReceivedBoard));
         }).Catch(err => { Debug.Log(err); });
-       return null;
+    }
+
+    public string sendSerializedBoardJson()
+    {
+        return JsonUtility.ToJson(ReceivedBoard);
+    }
+
+    public void RequestLobbyidAndGameid()
+    {
+        UnityConnectivityCommand command = new UnityConnectivityCommand();
+        command.username = "abcdef";
+        RestClient.Post<LobbyConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/add", command).Then(ReceivedLobby =>
+        {
+            getGameBoard(ReceivedLobby.gameid);
+        }).Catch(err => { Debug.Log(err); });
     }
 
 }
