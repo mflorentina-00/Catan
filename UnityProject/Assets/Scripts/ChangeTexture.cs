@@ -22,7 +22,7 @@ public class ChangeTexture : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
         string str = "";
         str = getNumber(nr);
         text.text = str;
@@ -57,16 +57,18 @@ public class ChangeTexture : MonoBehaviour
     public string getResource(int index)
     {
         string st = File.ReadAllText("board.json");
-        st = trim(st);
+       st = trim(st);
         int k=0;
         string[] words = st.Split(' ');
         for (int i = 0; i < words.Length; i++)
         {
+            
             if (words[i] == "resource")
             {
-               
+                
                 if(index==k)
                 return(words[i + 1]);
+         
                 k++;
             }
             
@@ -88,7 +90,8 @@ public class ChangeTexture : MonoBehaviour
             {
                
                 if (index == k)
-                    return (words[i + 1]); 
+                    return (words[i + 1]);
+             
                 k++;
             }
 
@@ -101,10 +104,13 @@ public class ChangeTexture : MonoBehaviour
         var sb = "";
         foreach (char c in st)
         {
-            if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')|| c == ' '||c=='\'')
+            if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ' || c == '\'')
             {
                 sb = sb + c;
             }
+            else
+                if(c=='{'||c=='}'||c==':'||c==',')
+                sb = sb + " ";
         }
         return (sb.ToString());
     }
