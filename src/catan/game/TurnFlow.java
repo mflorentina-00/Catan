@@ -73,10 +73,24 @@ public class TurnFlow {
                 return true;
             }
         });
-        fsm.setAction("tradeBetweenPlayers", new FSMAction() {
+        fsm.setAction("startTrade", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response=new Response(Status.SUCCESS,"Trade between player","");
+                response=new Response(Status.SUCCESS,"Started Trading","");
+                return true;
+            }
+        });
+        fsm.setAction("selectPartner", new FSMAction() {
+            @Override
+            public boolean action(String s, String s1, String s2, Object o) {
+                response=new Response(Status.SUCCESS,"Selected Partner","");
+                return true;
+            }
+        });
+        fsm.setAction("endTrade", new FSMAction() {
+            @Override
+            public boolean action(String s, String s1, String s2, Object o) {
+                response=new Response(Status.SUCCESS,"Ended Trading","");
                 return true;
             }
         });

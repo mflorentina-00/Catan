@@ -52,79 +52,56 @@
     "playerID" : "playerID",
     "command" : "playerTrade",
     "arguments" :
-    [
-      {
-        "type" : "offer",
-        "lumber" : "number of lumbers to offer",
-        "wool" : "number of wools to offer",
-        "grain" : "number of grains to offer",
-        "brick" : "number of bricks to offer",
-        "ore" : "number of ores to offer"
-      },
-      {
-        "type" : "request",
-        "lumber" : "number of requested lumbers",
-        "wool" : "number of requested wools",
-        "grain" : "number of requested grains",
-        "brick" : "number of requested bricks",
-        "ore" : "number of requested ores"
-      }
-    ]
+    {
+      "lumber_o" : "number of lumbers to offer",
+      "wool_o" : "number of wools to offer",
+      "grain_o" : "number of grains to offer",
+      "brick_o" : "number of bricks to offer",
+      "ore_o" : "number of ores to offer",
+      "lumber_r" : "number of requested lumbers",
+      "wool_r" : "number of requested wools",
+      "grain_r" : "number of requested grains",
+      "brick_r" : "number of requested bricks",
+      "ore_r" : "number of requested ores"
+    }
   },
   {
     "gameID" : "gameID",
     "playerID" : "playerID",
     "command" : "wantToTrade",
     "arguments" :
-    [
-      {
-        "type" : "offer",
-        "lumber" : "number of lumbers to offer",
-        "wool" : "number of wools to offer",
-        "grain" : "number of grains to offer",
-        "brick" : "number of bricks to offer",
-        "ore" : "number of ores to offer"
-      },
-      {
-        "type" : "request",
-        "lumber" : "number of requested lumbers",
-        "wool" : "number of requested wools",
-        "grain" : "number of requested grains",
-        "brick" : "number of requested bricks",
-        "ore" : "number of requested ores"
-      }
-    ]
+    {
+      "answer" : "yes or no",
+      "lumber_o" : "number of lumbers to offer",
+      "wool_o" : "number of wools to offer",
+      "grain_o" : "number of grains to offer",
+      "brick_o" : "number of bricks to offer",
+      "ore_o" : "number of ores to offer",
+      "lumber_r" : "number of requested lumbers",
+      "wool_r" : "number of requested wools",
+      "grain_r" : "number of requested grains",
+      "brick_r" : "number of requested bricks",
+      "ore_r" : "number of requested ores"
+    }
   },
   {
     "gameID" : "gameID",
     "playerID" : "playerID",
-    "command" : "selectTrade",
+    "command" : "selectPartner",
     "arguments" :
-    [
-      "player ID",
-      {
-        "lumber" : "number of offered lumbers",
-        "wool" : "number of offered wools",
-        "grain" : "number of offered grains",
-        "brick" : "number of offered bricks",
-        "ore" : "number of offered ores"
-      }
-    ]
-  },
-  {
-    "gameID" : "gameID",
-    "playerID" : "playerID",
-    "command" : "acceptTrade",
-    "arguments" :
-    [
-      {
-        "lumber" : "number of offered lumbers",
-        "wool" : "number of offered wools",
-        "grain" : "number of offered grains",
-        "brick" : "number of offered bricks",
-        "ore" : "number of offered ores"
-      }
-    ]
+    {
+      "playerID": "player ID",
+      "lumber_o" : "number of lumbers to offer",
+      "wool_o" : "number of wools to offer",
+      "grain_o" : "number of grains to offer",
+      "brick_o" : "number of bricks to offer",
+      "ore_o" : "number of ores to offer",
+      "lumber_r" : "number of requested lumbers",
+      "wool_r" : "number of requested wools",
+      "grain_r" : "number of requested grains",
+      "brick_r" : "number of requested bricks",
+      "ore_r" : "number of requested ores"
+    }
   },
   {
     "gameID": "gameID",

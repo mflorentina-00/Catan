@@ -24,6 +24,19 @@ public abstract class Game {
     protected List<String> playerOrder;
     protected String currentPlayer;
     protected int maxPlayers;
+    protected List<Pair<ResourceType, Integer>> currentPlayerOffer;
+    protected List<Pair<ResourceType, Integer>> currentPlayerRequest;
+
+    public Map<String, List<Pair<ResourceType, Integer>>> getOpponentsOffers() {
+        return opponentsOffers;
+    }
+
+    public Map<String, List<Pair<ResourceType, Integer>>> getOpponentsRequest() {
+        return opponentsRequest;
+    }
+
+    protected Map<String, List<Pair<ResourceType, Integer>>> opponentsOffers;
+    protected Map<String, List<Pair<ResourceType, Integer>>> opponentsRequest;
 
     public Board getBoard() {
         return board;
@@ -130,6 +143,12 @@ public abstract class Game {
             //Reset player response in case that the state does not have the command | the command does not exist
             players.get(playerID).getState().response = new Response(Status.ERROR,"Wrong Command","");
             return response;
+        }
+        else{
+                if(command.equals("wantToTrade") && currentPlayerOffer!= null )
+            {
+
+            }
         }
         return new Response(Status.ERROR,"Not your turn!","");
     }
@@ -250,24 +269,30 @@ public abstract class Game {
 
     //region trade
 
-    public List<Player> getPlayersWhoAcceptTrade(Player player, List<Pair<ResourceType, Integer>> offer,
-                                                 List<Pair<ResourceType, Integer>> request) {
-        List<Player> playersThatAccept = new ArrayList<>();
-        for(String playerID : players.keySet()) {
-            // TODO W8 players's response
-            //  if response is YES and
-            //  the below verification is true, then we add the player to the possible pick
-            if (players.get(playerID).canMakeTrade(request)) {
-                playersThatAccept.add(players.get(playerID));
-            }
-        }
-        return playersThatAccept;
+    public void addCurrentPlayerOffer(List<Pair<ResourceType, Integer>> offer){
+        currentPlayerOffer = offer;
     }
 
-    public void setPlayerWhoTrades(Player player, Player trader, List<Pair<ResourceType, Integer>> offer,
+    public void addCurrentPlayerRequest(List<Pair<ResourceType, Integer>> request){
+        currentPlayerOffer = request;
+    }
+
+    public void addOponentOffer(String playerID, List<Pair<ResourceType, Integer>> offer){
+        opponentsOffers.put(playerID, offer);
+    }
+
+    public void addOponentRequest(String playerID, List<Pair<ResourceType, Integer>> request){
+        opponentsRequest.put(playerID, request);
+    }
+
+
+    public void makeTrade(List<Player> playersThatAccepted, List<Pair<ResourceType, Integer>> offer,
                                    List<Pair<ResourceType, Integer>> request) {
-        // TODO add trader notify
-        player.updateTradeResources(offer, request);
+        Player traderPlayer = players.get(currentPlayer);
+        Random rand = new Random();
+        int index = rand.nextInt(playersThatAccepted.size());
+        Player trader = playersThatAccepted.get(index);
+        traderPlayer.updateTradeResources(offer, request);
         trader.updateTradeResources(request, offer);
     }
     //endregion

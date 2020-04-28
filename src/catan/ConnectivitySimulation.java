@@ -121,10 +121,22 @@ public class ConnectivitySimulation {
                 "playDevCard",""));
         return response.getCode() != Status.ERROR;
     }
-    public boolean tradeBetweenPlayers(String gameId, String playerId) throws IOException {
+    public boolean selectPartner(String gameId, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPostTo( new UserRequest(gameId, playerId,
-                "tradeBetweenPlayers",""));
+                "selectPartner",""));
+        return response.getCode() != Status.ERROR;
+    }
+    public boolean endTrade(String gameId, String playerId) throws IOException {
+        Response response;
+        response = HttpClientPost.userPostTo( new UserRequest(gameId, playerId,
+                "endTrade",""));
+        return response.getCode() != Status.ERROR;
+    }
+    public boolean startTrade(String gameId, String playerId) throws IOException {
+        Response response;
+        response = HttpClientPost.userPostTo( new UserRequest(gameId, playerId,
+                "startTrade",""));
         return response.getCode() != Status.ERROR;
     }
 
@@ -144,7 +156,9 @@ public class ConnectivitySimulation {
         // Run the game
         while (true) {
             rollDice(gameID,playersID.get(0));
-            tradeBetweenPlayers(gameID,playersID.get(0));
+            startTrade(gameID,playersID.get(0));
+            selectPartner(gameID, playersID.get(0));
+            endTrade(gameID,playersID.get(0));
             buyHouse(gameID, playersID.get(0), 20);
             rollDice(gameID,playersID.get(0));
             sleep(100);
@@ -153,7 +167,9 @@ public class ConnectivitySimulation {
             endTurn(gameID, playersID.get(0));
             sleep(100);
             rollDice(gameID,playersID.get(1));
-            tradeBetweenPlayers(gameID,playersID.get(1));
+            startTrade(gameID,playersID.get(1));
+            selectPartner(gameID, playersID.get(1));
+            endTrade(gameID,playersID.get(1));
             buyHouse(gameID, playersID.get(1), 22);
             sleep(100);
             endTurn(gameID, playersID.get(1));
