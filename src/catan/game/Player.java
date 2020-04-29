@@ -343,18 +343,7 @@ public class Player {
 
     // region Trade
 
-    // TODO: understand were to implement playerAcceptingTrade and playerWhichTrade
-    public boolean makeTrade(List<Pair<ResourceType, Integer>> offer, List<Pair<ResourceType, Integer>> request) {
-        if (!canMakeTrade(offer)) { return false; }
-        List<Player> acceptTrade = game.getPlayersWhoAcceptTrade(this, offer, request);
-        if (acceptTrade.size() == 0)
-            return false;
-        else {
-            // TODO: wait player's choice of trade partner
-            game.setPlayerWhoTrades(this, acceptTrade.get(0), offer, request);
-            return true;
-        }
-    }
+
 
     public boolean canMakeTrade(List<Pair<ResourceType, Integer>> offer) {
         for (Pair<ResourceType, Integer> pair : offer) {
@@ -363,6 +352,39 @@ public class Player {
                 return false;
         }
         return true;
+    }
+
+    public boolean startTrade(List<Pair<ResourceType, Integer>> offer, List<Pair<ResourceType, Integer>> request) {
+        if (canMakeTrade(offer)) {
+            game.addCurrentPlayerOffer(offer);
+            game.addCurrentPlayerRequest(request);
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean wantToTrade(String answer, List<Pair<ResourceType, Integer>> initialRequest, List<Pair<ResourceType, Integer>> offer, List<Pair<ResourceType, Integer>> request) {
+        if (canMakeTrade(initialRequest))
+            if (answer.equals("yes")) {
+                game.addOponentOffer(ID, offer);
+                game.addOponentRequest(ID, request);
+                return true;
+            }
+            else
+                return false;
+        return false;
+    }
+
+    public boolean selectPartner(String partnerId){
+        if(partnerId != null) {
+            List<Pair<ResourceType, Integer>> request = game.getOpponentsOffers().get(partnerId);
+            List<Pair<ResourceType, Integer>> offer = game.getOpponentsOffers().get(partnerId);
+            updateTradeResources(offer, request);
+            game.getPlayers().get(partnerId).updateTradeResources(request, offer);
+            return true;
+        }
+        return false;
     }
 
     public void updateTradeResources(List<Pair<ResourceType, Integer>> offer,

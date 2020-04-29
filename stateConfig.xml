@@ -16,7 +16,9 @@
   <MESSAGE id="giveSelectedResource" action="giveSelectedResource" nextState="Trading"/>
  </STATE>
  <STATE id="Trading">
-  <MESSAGE id="tradeBetweenPlayers" action="tradeBetweenPlayers" nextState="Buying"/>
+  <MESSAGE id="startTrade" action="startTrade" nextState="Trading"/>
+  <MESSAGE id="selectPartner" action="selectPartner" nextState="Trading"/>
+  <MESSAGE id="endTrade" action="endTrade" nextState="Buying"/>
   <MESSAGE id="playDevCard" action="playDevCard" nextState="Trading"/>
  </STATE>
  <STATE id="Buying">
