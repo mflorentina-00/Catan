@@ -76,21 +76,21 @@ public class TurnFlow {
         fsm.setAction("startTrade", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response=new Response(Status.SUCCESS,"Started Trading","");
+                response=new Response(Status.SUCCESS,"Started trading","");
                 return true;
             }
         });
-        fsm.setAction("selectPartner", new FSMAction() {
+        fsm.setAction("selectOpponent", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response=new Response(Status.SUCCESS,"Selected Partner","");
+                response=new Response(Status.SUCCESS,"Selected opponent","");
                 return true;
             }
         });
         fsm.setAction("endTrade", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response=new Response(Status.SUCCESS,"Ended Trading","");
+                response=new Response(Status.SUCCESS,"Ended trading","");
                 return true;
             }
         });

@@ -17,7 +17,7 @@
  </STATE>
  <STATE id="Trading">
   <MESSAGE id="startTrade" action="startTrade" nextState="Trading"/>
-  <MESSAGE id="selectPartner" action="selectPartner" nextState="Trading"/>
+  <MESSAGE id="selectOpponent" action="selectOpponent" nextState="Trading"/>
   <MESSAGE id="endTrade" action="endTrade" nextState="Buying"/>
   <MESSAGE id="playDevCard" action="playDevCard" nextState="Trading"/>
  </STATE>
