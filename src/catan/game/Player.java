@@ -364,7 +364,7 @@ public class Player {
     public boolean selectPartner(String partnerId){
         if(partnerId != null) {
             List<Pair<ResourceType, Integer>> request = game.getOpponentsOffers().get(partnerId);
-            List<Pair<ResourceType, Integer>> offer = game.getOpponentsOffers().get(partnerId);
+            List<Pair<ResourceType, Integer>> offer = game.getOpponentsRequest().get(partnerId);
             updateTradeResources(offer, request);
             game.getPlayers().get(partnerId).updateTradeResources(request, offer);
             return true;
