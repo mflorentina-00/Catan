@@ -12,25 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping ("/Catan")
 public class Controller {
-    private static final String ERROR_STATUS = "error";
+    private static final String username = "catan";
+    private static final String password = "catan";
 
     @RequestMapping (value = "/userRequest", method = RequestMethod.POST)
     public Response sendResponse(@RequestBody UserRequest request) {
             return request.run();
     }
+
     @RequestMapping (value = "/managerRequest", method = RequestMethod.POST)
     public Response sendResponse(@RequestBody ManagerRequest request) {
         // Check if the username and password are good.
-        if (request.getUsername().equals("catan") && request.getPassword().equals("catan")) {
+        if (request.getUsername().equals(username) && request.getPassword().equals(password)) {
             try {
                 return request.run();
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+            } catch (JsonProcessingException exception) {
+                exception.printStackTrace();
                 return null;
             }
         }
-        else {
-            return new Response(Status.ERROR, "Wrong credentials","");
-        }
+        return new Response(Status.ERROR, "Wrong credentials","");
     }
 }

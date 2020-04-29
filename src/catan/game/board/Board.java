@@ -16,75 +16,88 @@ import java.util.Collections;
 import java.util.List;
 
 public class Board {
-    private List<Intersection> buildings;
-    private List<Tile> tiles;
-    private List<List<Tile>> numberedTiles=new ArrayList<>(13);
+    private List<Tile> tiles = new ArrayList<>();
+    private List<List<Tile>> numberedTiles = new ArrayList<>();
+    private List<Intersection> buildings = new ArrayList<>();
     private TileGraph tileGraph = new TileGraph();
     private IntersectionGraph intersectionGraph = new IntersectionGraph();
-    private ArrayList<ArrayList<Integer>> tileBuildingAdjacency;
-    private ArrayList<ArrayList<Integer>> buildingTileAdjacency;
-    private List<PortType> ports;
-    private Tile robberPosition;
+    private ArrayList<ArrayList<Integer>> tileBuildingAdjacency = new ArrayList<>();
+    private ArrayList<ArrayList<Integer>> buildingTileAdjacency = new ArrayList<>();
+    private List<PortType> ports = new ArrayList<>();
+    private Tile robberPosition = null;
 
     public Board() {
-        buildings = new ArrayList<>();
-        tiles = new ArrayList<>();
-        for (int i = 0; i < Component.TILES; i++)
+        for (int i = 0; i < Component.TILES; i++) {
             tiles.add(new Tile(i));
-        for(int i=0;i<Component.INTERSECTIONS;i++)
+        }
+        for (int i = 0; i < Component.INTERSECTIONS; i++) {
             buildings.add(new Intersection(i));
-        tileBuildingAdjacency = new ArrayList<>(Component.TILES);
-        buildingTileAdjacency = new ArrayList<>(Component.INTERSECTIONS);
-        ports = new ArrayList<>();
+        }
         for (int index = 0; index < Component.INTERSECTIONS; ++index) {
             ports.add(PortType.None);
         }
-        robberPosition=tiles.get(0);
         generateRandomTiles();
         createMapping();
         setPorts();
         printTileBuildingAdjacency();
         printBuildingTileAdjacency();
-        printBoardJSON();
-    }
-
-    public IntersectionGraph getIntersectionGraph() {
-        return intersectionGraph;
     }
 
     public List<Tile> getTiles() {
         return tiles;
     }
 
+    public List<List<Tile>> getNumberedTiles() {
+        return numberedTiles;
+    }
+
+    public List<Tile> getTilesFromNumber(int i) {
+        return numberedTiles.get(i);
+    }
+
     public List<Intersection> getBuildings() {
         return buildings;
     }
 
-    public List<Tile> getTilesFromNumbers(int i) {
-        return numberedTiles.get(i);
+    public void addBuilding(Intersection building) {
+        buildings.add(building);
     }
-    public List<Intersection> getIntersectionListFromTile(Tile tile){
-        List<Intersection> intersectionList=new ArrayList<>();
-        List<Integer> intersectionsId=tileBuildingAdjacency.get(tile.getID());
-        for(Integer id:intersectionsId){
-            intersectionList.add(buildings.get(id));
-        }
-        return intersectionList;
+
+    public TileGraph getTileGraph() {
+        return tileGraph;
+    }
+
+    public IntersectionGraph getIntersectionGraph() {
+        return intersectionGraph;
+    }
+
+    public ArrayList<ArrayList<Integer>> getTileBuildingAdjacency() {
+        return tileBuildingAdjacency;
+    }
+
+    public ArrayList<ArrayList<Integer>> getBuildingTileAdjacency() {
+        return buildingTileAdjacency;
+    }
+
+    public List<PortType> getPorts() {
+        return ports;
     }
 
     public Tile getRobberPosition() {
         return robberPosition;
     }
+
     public void setRobberPosition(Tile robberPosition) {
         this.robberPosition = robberPosition;
     }
 
-    public void setBuildings(List<Intersection> buildings) {
-        this.buildings = buildings;
-    }
-
-    public void addBuilding(Intersection building) {
-        buildings.add(building);
+    public List<Intersection> getIntersectionsFromTile(Tile tile) {
+        List<Intersection> intersections = new ArrayList<>();
+        List<Integer> intersectionsId = tileBuildingAdjacency.get(tile.getId());
+        for (Integer id : intersectionsId) {
+            intersections.add(buildings.get(id));
+        }
+        return intersections;
     }
 
     public void generateRandomTiles() {
@@ -112,6 +125,9 @@ public class Board {
         int i = 0;
         for (Tile tile : tiles) {
             tile.setResource(resources.get(i++));
+            if (tile.getResource() == ResourceType.Desert) {
+                setRobberPosition(tile);
+            }
         }
     }
 
@@ -128,10 +144,13 @@ public class Board {
                     tile.setNumber(numberList.get(i));
                     i++;
                 }
+                else {
+                    tile.setNumber(0);
+                }
             }
             for (Tile tile : tiles) {
                 if (tile.getNumber() == 6 || tile.getNumber() == 8) {
-                    List<Integer> neighbors = tileGraph.getNeighborTiles(tile.getID());
+                    List<Integer> neighbors = tileGraph.getNeighborTiles(tile.getId());
                     for (Integer neighbor : neighbors) {
                         if (tile.getNumber() + tiles.get(neighbor).getNumber() == 14) {
                             sixNearEight = true;
@@ -141,13 +160,13 @@ public class Board {
                 }
             }
         }
-        for(int i=0;i<=12;i++)
+
+        for (int i = 0; i <= 12; i++) {
             numberedTiles.add(new ArrayList<>());
-        for(Tile tile:tiles){
+        }
+        for (Tile tile : tiles) {
             numberedTiles.get(tile.getNumber()).add(tile);
         }
-
-        System.out.println(numberedTiles);
     }
 
     private void createMapping() {
@@ -249,7 +268,7 @@ public class Board {
         }
     }
 
-    public String getBoardJSON() {
+    public String getBoardJson() {
         List<Pair<ResourceType, Integer>> tilesInformation = new ArrayList<>();
         for (Tile tile : tiles) {
             tilesInformation.add(new Pair<>(tile.getResource(), tile.getNumber()));
@@ -265,7 +284,7 @@ public class Board {
         return null;
     }
 
-    public String getPortsJSON() {
+    public String getPortsJson() {
         try {
             return new ObjectMapper().writeValueAsString(ports);
         } catch (IOException exception) {
@@ -298,18 +317,6 @@ public class Board {
                     fileWriter.write(buildingTileAdjacency.get(i).get(j) + " ");
                 fileWriter.write('\n');
             }
-            fileWriter.close();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void printBoardJSON() {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String portsJSON = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(ports);
-            FileWriter fileWriter = new FileWriter("resources/Ports.json");
-            fileWriter.write("{ \"ports\" : " + portsJSON + " }");
             fileWriter.close();
         } catch (IOException exception) {
             exception.printStackTrace();

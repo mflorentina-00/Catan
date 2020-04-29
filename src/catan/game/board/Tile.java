@@ -5,21 +5,21 @@ import catan.game.enumeration.ResourceType;
 import java.util.List;
 
 public class Tile {
-    private int ID;
+    private int id;
     private ResourceType resource;
     private int number;
     private List<Tile> neighbours;
     
-    Tile(int ID){
-        this.ID = ID;
+    Tile(int id){
+        this.id = id;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public List<Tile> getNeighbours() {
@@ -53,7 +53,7 @@ public class Tile {
     @Override
     public String toString() {
         return "Tile{" +
-                "ID=" + ID +
+                "ID=" + id +
                 ", resource=" + resource +
                 ", number=" + number +
                 ", neighbours=" + neighbours +

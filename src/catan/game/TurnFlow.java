@@ -108,6 +108,7 @@ public class TurnFlow {
         fsm.setAction("playDevCard", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
+
                 response = new Response(Status.SUCCESS,"Dev Card played successfully!","");
                 return true;
             }
@@ -119,6 +120,5 @@ public class TurnFlow {
                 return game.changeTurn();
             }
         });
-        System.out.println(fsm.getCurrentState());
     }
 }

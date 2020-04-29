@@ -3,6 +3,7 @@ package catan.API.request;
 import catan.API.Response;
 import catan.API.util.RandomString;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -10,17 +11,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface GameRequest {
-    RandomString randString = new RandomString();
+    RandomString randomString = new RandomString();
+
     Response run() throws JsonProcessingException;
-    static HashMap<String,String> getMapFromData(String data){
+
+    static Map<String, String> getMapFromData(String data) {
         ObjectMapper mapper = new ObjectMapper();
-        HashMap<String, String> args=null;
         try {
-            if(!data.equals(""))
-                args = (HashMap<String, String>) mapper.readValue(data, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (data != null && !data.equals("")) {
+                return mapper.readValue(data, new TypeReference<HashMap<String, String>>(){});
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
-        return args;
+        return null;
     }
 }

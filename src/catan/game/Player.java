@@ -118,7 +118,13 @@ public class Player {
 
     // region Setters and Adders
 
-    public void addResource(ResourceType type)  { resources.put(type, resources.get(type) + 1); }
+    public void addResource(ResourceType resourceType) {
+        resources.put(resourceType, resources.get(resourceType) + 1);
+    }
+
+    public void addResource(ResourceType resourceType, int resourceNumber) {
+        resources.put(resourceType, resources.get(resourceType) + resourceNumber);
+    }
 
     public void addKnight(Knight knight){
         knights.add(knight);
@@ -148,11 +154,20 @@ public class Player {
         }
         return true;
     }
-    public boolean removeResource(ResourceType type){
+    public boolean removeResource(ResourceType type) {
         int previousResources = resources.get(type);
-        if (previousResources <= 0 )
+        if (previousResources < 1) {
             return false;
+        }
         resources.put(type, previousResources - 1);
+        return true;
+    }
+    public boolean removeResource(ResourceType type, int resourceNumber) {
+        int previousResources = resources.get(type);
+        if (previousResources < resourceNumber) {
+            return false;
+        }
+        resources.put(type, previousResources - resourceNumber);
         return true;
     }
     public ResourceType removeRandomResources(){
@@ -419,5 +434,18 @@ public class Player {
         return "Player{" +
                 "id=" + ID +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+        Player player = (Player) o;
+        return Objects.equals(getID(), player.getID());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getID());
     }
 }

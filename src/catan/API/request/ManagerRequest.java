@@ -4,6 +4,7 @@ import catan.API.Response;
 import catan.Application;
 import catan.game.Player;
 import catan.game.gameType.BaseGame;
+import catan.game.gameType.Game;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,64 +52,73 @@ public class ManagerRequest implements GameRequest {
         return arguments;
     }
 
+    public void setArguments(String arguments) { this.arguments = arguments; }
 
     public Response run() throws JsonProcessingException {
-        HashMap<String,String> args=null;
-        if(!arguments.equals(""))
-            args=GameRequest.getMapFromData(arguments);
+        Map<String, String> requestJson = GameRequest.getMapFromData(arguments);
 
         if (command.equalsIgnoreCase("newGame")) {
-            String gameKey = randString.nextString();
-            if (arguments.equalsIgnoreCase("{\"scenario\": \"SettlersOfCatan\"}")) {
+            String gameKey = randomString.nextString();
+            if (this.arguments.equalsIgnoreCase("{\"scenario\": \"SettlersOfCatan\"}")) {
                 Application.games.put(gameKey, new BaseGame());
-                Map<String,String> payload = new HashMap<>();
-                payload.put("gameId",gameKey);
-                String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-                return new Response(Status.SUCCESS, "Game created successfully",jsonArgs);
+                Map<String, String> payload = new HashMap<>();
+                payload.put("gameId", gameKey);
+                String responseJson = new ObjectMapper().writeValueAsString(payload);
+                return new Response(Status.SUCCESS, "Game created successfully.", responseJson);
             }
-            else {
-                return new Response(Status.ERROR, "The scenario is not implemented.","");
-            }
+            return new Response(Status.ERROR, "The scenario is not implemented.", "");
         }
-        if (command.equalsIgnoreCase("startGame")) {
-            String gameKey =  args.get("gameId");
-            if (Application.games.get(gameKey) == null)
-            {
-                return new Response(Status.ERROR, "The game does not exist.","");
+        else if (command.equalsIgnoreCase("startGame")) {
+            if (requestJson != null){
+                String gameKey =  requestJson.get("gameId");
+                Game game = Application.games.get(gameKey);
+                if (game == null) {
+                    return new Response(Status.ERROR, "The game does not exist.", "");
+                }
+                if (game.startGame()) {
+                    Map<String, String> payload = new HashMap<>();
+                    payload.put("board", game.getBoard().getBoardJson());
+                    payload.put("ports", game.getBoard().getPortsJson());
+                    String responseJson = new ObjectMapper().writeValueAsString(payload);
+                    return new Response(Status.SUCCESS, "Game has started.", responseJson);
+                }
             }
-            if (Application.games.get(gameKey).startGame()) {
-                Map <String, String> arguments = new HashMap<>();
-                arguments.put("board", Application.games.get(gameKey).getBoard().getBoardJSON());
-                arguments.put("ports", Application.games.get(gameKey).getBoard().getPortsJSON());
-                String json = new ObjectMapper().writeValueAsString(arguments);
-                return new Response(Status.SUCCESS, "Game started.", json);
-            }
-            return new Response(Status.ERROR,"Game couldn't start.","");
+            return new Response(Status.ERROR, "Game can not start without players.","");
         }
         else if (command.equalsIgnoreCase("setMaxPlayers")) {
-            String gameKey = args.get("gameId");
-            int playersNum = Integer.parseInt(args.get("maxPlayers"));
-            if (Application.games.get(gameKey) == null)
-                return new Response(Status.ERROR, "The game does not exist.","");
-            if (Application.games.get(gameKey).getPlayers().size()>playersNum)
-                return new Response(Status.ERROR, "There are already to many players.","");
-            Application.games.get(gameKey).setMaxPlayers(playersNum);
-            return new Response(Status.SUCCESS, "Size fixed successfully.","");
+            if (requestJson != null) {
+                String gameKey = requestJson.get("gameId");
+                Game game = Application.games.get(gameKey);
+                if (game == null) {
+                    return new Response(Status.ERROR, "The game does not exist.", "");
+                }
+                int maxPlayers = Integer.parseInt(requestJson.get("maxPlayers"));
+                if (game.getNoPlayers() > maxPlayers) {
+                    return new Response(Status.ERROR, "There are already more players.", "");
+                }
+                game.setMaxPlayers(maxPlayers);
+                return new Response(Status.SUCCESS, "The maximum number of players was set successfully.", "");
+            }
         }
         else if (command.equalsIgnoreCase("addPlayer")) {
-            String gameKey = args.get("gameId");
-            String userId = randString.nextString();
-            if (Application.games.get(gameKey) == null)
-                return new Response(Status.ERROR, "The game does not exist.","");
-            if (Application.games.get(gameKey).getPlayers().size() == Application.games.get(gameKey).getMaxPlayers())
-                return new Response(Status.ERROR, "There is no room left.","");
-            Application.games.get(gameKey).getPlayers().put(userId, new Player(userId,Application.games.get(gameKey)));
-            Application.games.get(gameKey).addNextPlayer(userId);
-            Map<String,String> payload = new HashMap<>();
-            payload.put("playerId",userId);
-            String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-            return new Response(Status.SUCCESS, "Successfully added player",jsonArgs);
+            if (requestJson != null) {
+                String gameKey = requestJson.get("gameId");
+                Game game = Application.games.get(gameKey);
+                if (game == null) {
+                    return new Response(Status.ERROR, "The game does not exist.", "");
+                }
+                if (game.getNoPlayers() == game.getMaxPlayers()) {
+                    return new Response(Status.ERROR, "There is no room left.","");
+                }
+                String playerId = randomString.nextString();
+                game.addPlayer(playerId, new Player(playerId, Application.games.get(gameKey)));
+                game.addNextPlayer(playerId);
+                Map<String, String> payload = new HashMap<>();
+                payload.put("playerId", playerId);
+                String responseJson = new ObjectMapper().writeValueAsString(payload);
+                return new Response(Status.SUCCESS, "The player was added successfully.", responseJson);
+            }
         }
-        return new Response(Status.SUCCESS,"Guess it's ok?", command);
+        return new Response(Status.ERROR,"The command was not implemented", command);
     }
 }

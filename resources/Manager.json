@@ -1,0 +1,78 @@
+[
+  {
+    "username": "username",
+    "password": "password",
+    "command": "newGame",
+    "arguments":
+    {
+      "scenario": "SettlersOfCatan"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "gameId": "gameId"
+    }
+  },
+
+
+
+  {
+    "username": "username",
+    "password": "password",
+    "command": "setMaxPlayers",
+    "arguments":
+    {
+      "gameId": "gameId",
+      "maxPlayers": "a number between 3 and 6"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "username": "username",
+    "password": "password",
+    "command": "addPlayer",
+    "arguments":
+    {
+      "gameId": "gameId"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "playerId": "playerId"
+    }
+  },
+
+
+
+  {
+    "username": "username",
+    "password": "password",
+    "command": "startGame",
+    "arguments":
+    {
+      "gameId": "gameId"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "board": "array of tiles",
+      "ports": "array of intersections"
+    }
+  }
+]

@@ -2,28 +2,27 @@ package catan.game.card;
 
 import catan.game.Player;
 import catan.game.card.development.*;
-
 import catan.game.enumeration.ResourceType;
+import catan.game.property.Intersection;
+import catan.game.property.Road;
+import catan.game.rule.Component;
 
 import java.util.*;
 
-import catan.game.property.Intersection;
-import catan.game.property.Road;
-
-import catan.game.rule.Component;
-
 public class Bank {
+    private List<Player> players;
     private Map<ResourceType, Integer> resources;
     private Stack<Knight> knights;
     private Stack<Monopoly> monopolies;
     private Stack<RoadBuilding> roadBuildings;
     private Stack<VictoryPoint> victoryPoints;
     private Stack<YearOfPlenty> yearsOfPlenty;
-    private List<Stack<Road>> roads;
-    private List<Stack<Intersection>> settlements;
-    private List<Stack<Intersection>> cities;
+    private Map<Player, Stack<Road>> roads;
+    private Map<Player, Stack<Intersection>> settlements;
+    private Map<Player, Stack<Intersection>> cities;
 
-    public Bank() {
+    public Bank(List<Player> players) {
+        this.players = players;
         createResources();
         createDevelopments();
         createProperties();
@@ -43,85 +42,85 @@ public class Bank {
     }
 
     public Knight getKnight(Player player) {
-        if (!knights.isEmpty()) {
-            Knight knight = knights.pop();
-            knight.setOwner(player);
-            return knight;
+        if (knights.isEmpty()) {
+            return null;
         }
-        return null;
+        Knight knight = knights.pop();
+        knight.setOwner(player);
+        return knight;
     }
 
     public Monopoly getMonopoly(Player player) {
-        if (!monopolies.isEmpty()) {
-            Monopoly monopoly = monopolies.pop();
-            monopoly.setOwner(player);
-            return monopoly;
+        if (monopolies.isEmpty()) {
+            return null;
         }
-        return null;
+        Monopoly monopoly = monopolies.pop();
+        monopoly.setOwner(player);
+        return monopoly;
     }
 
     public RoadBuilding getRoadBuilding(Player player) {
-        if (!roadBuildings.isEmpty()) {
-            RoadBuilding roadBuilding = roadBuildings.pop();
-            roadBuilding.setOwner(player);
-            return roadBuilding;
+        if (roadBuildings.isEmpty()) {
+            return null;
         }
-        return null;
+        RoadBuilding roadBuilding = roadBuildings.pop();
+        roadBuilding.setOwner(player);
+        return roadBuilding;
     }
 
     public VictoryPoint getVictoryPoint(Player player) {
-        if (!victoryPoints.isEmpty()) {
-            VictoryPoint victoryPoint = victoryPoints.pop();
-            victoryPoint.setOwner(player);
-            return victoryPoint;
+        if (victoryPoints.isEmpty()) {
+            return null;
         }
-        return null;
+        VictoryPoint victoryPoint = victoryPoints.pop();
+        victoryPoint.setOwner(player);
+        return victoryPoint;
     }
 
     public YearOfPlenty getYearOfPlenty(Player player) {
-        if (!yearsOfPlenty.isEmpty()) {
-            YearOfPlenty yearOfPlenty = yearsOfPlenty.pop();
-            yearOfPlenty.setOwner(player);
-            return yearOfPlenty;
+        if (yearsOfPlenty.isEmpty()) {
+            return null;
         }
-        return null;
+        YearOfPlenty yearOfPlenty = yearsOfPlenty.pop();
+        yearOfPlenty.setOwner(player);
+        return yearOfPlenty;
     }
 
-    public Road getRoad(Player player, int index) {
-        Stack<Road> playerRoads = roads.get(index);
-        if (!playerRoads.isEmpty()) {
-            Road road = playerRoads.pop();
-            road.setOwner(player);
-            return road;
+    public Road getRoad(Player player) {
+        Stack<Road> playerRoads = roads.get(player);
+        if (playerRoads.isEmpty()) {
+            return null;
         }
-        return null;
+        Road road = playerRoads.pop();
+        road.setOwner(player);
+        return road;
     }
 
-    public Intersection getSettlement(Player player, int index) {
-        Stack<Intersection> playerSettlements = settlements.get(index);
-        if (!playerSettlements.isEmpty()) {
-            Intersection settlement = playerSettlements.pop();
-            settlement.setOwner(player);
-            return settlement;
+    public Intersection getSettlement(Player player) {
+        Stack<Intersection> playerSettlements = settlements.get(player);
+        if (playerSettlements.isEmpty()) {
+            return null;
         }
-        return null;
+        Intersection settlement = playerSettlements.pop();
+        settlement.setOwner(player);
+        return settlement;
     }
 
-    public Intersection getCity(Player player, int index) {
-        Stack<Intersection> playerCities = cities.get(index);
-        if (!playerCities.isEmpty()) {
-            Intersection city = playerCities.pop();
-            city.setOwner(player);
-            return city;
+    public Intersection getCity(Player player) {
+        Stack<Intersection> playerCities = cities.get(player);
+        if (playerCities.isEmpty()) {
+            return null;
         }
-        return null;
+        Intersection city = playerCities.pop();
+        city.setOwner(player);
+        return city;
     }
 
-    public void restoreSettlement(Player player, int playerIndex, Intersection intersection) {
+    public void restoreSettlement(Player player, Intersection intersection) {
         intersection.setOwner(null);
-        Stack<Intersection> playerSettlements = settlements.get(playerIndex);
+        Stack<Intersection> playerSettlements = settlements.get(player);
         playerSettlements.push(intersection);
-        settlements.add(playerIndex, playerSettlements);
+        settlements.put(player, playerSettlements);
     }
 
     private void createResources() {
@@ -181,35 +180,35 @@ public class Bank {
     }
 
     private void createRoads() {
-        roads = new ArrayList<>(Component.NO_OF_PLAYERS);
-        for (int playerIndex = 0; playerIndex < Component.NO_OF_PLAYERS; ++playerIndex) {
+        roads = new HashMap<>();
+        for (Player player : players) {
             Stack<Road> playerRoads = new Stack<>();
             for (int index = 0; index < Component.ROADS; ++index) {
                 playerRoads.push(new Road());
             }
-            roads.add(playerIndex, playerRoads);
+            roads.put(player, playerRoads);
         }
     }
 
     private void createSettlements() {
-        settlements = new ArrayList<>(Component.NO_OF_PLAYERS);
-        for (int playerIndex = 0; playerIndex < Component.NO_OF_PLAYERS; ++playerIndex) {
+        settlements = new HashMap<>();
+        for (Player player : players) {
             Stack<Intersection> playerSettlements = new Stack<>();
             for (int index = 0; index < Component.SETTLEMENTS; ++index) {
                 playerSettlements.push(new Intersection());
             }
-            settlements.add(playerIndex, playerSettlements);
+            settlements.put(player, playerSettlements);
         }
     }
 
     private void createCities() {
-        cities = new ArrayList<>(Component.NO_OF_PLAYERS);
-        for (int playerIndex = 0; playerIndex < Component.NO_OF_PLAYERS; ++playerIndex) {
+        cities = new HashMap<>();
+        for (Player player : players) {
             Stack<Intersection> playerCities = new Stack<>();
             for (int index = 0; index < Component.CITIES; ++index) {
                 playerCities.push(new Intersection());
             }
-            cities.add(playerIndex, playerCities);
+            cities.put(player, playerCities);
         }
     }
 }

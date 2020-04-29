@@ -3,33 +3,18 @@ package catan.API.request;
 import catan.API.Response;
 import catan.Application;
 import catan.game.gameType.Game;
-import java.util.HashMap;
 
-//TODO Create function or class for every request (Command Pattern style)
-//TODO Add request to give resources when the turn starts (kind of manager request I think)
 public class UserRequest implements GameRequest {
     private String gameId;
-    private String userUniqueID;
+    private String playerId;
     private String command;
-    private String jsonArgs;
+    private String arguments;
 
-    public Response run() {
-        Game game = Application.games.get(gameId);
-        if (game == null)
-            return new Response(Status.ERROR, "The game does not exist.","");
-        if (game.getPlayers().get(userUniqueID) == null)
-            return new Response(Status.ERROR,"The player does not exist.","");
-        HashMap<String,String> args=null;
-        if(!jsonArgs.equals(""))
-            args=GameRequest.getMapFromData(jsonArgs);
-        return game.playTurn(userUniqueID, command,args);
-    }
-
-    public UserRequest(String gameId, String userUniqueID, String command, String jsonArgs) {
+    public UserRequest(String gameId, String playerId, String command, String arguments) {
         this.gameId = gameId;
-        this.userUniqueID = userUniqueID;
+        this.playerId = playerId;
         this.command = command;
-        this.jsonArgs = jsonArgs;
+        this.arguments = arguments;
     }
 
     public String getGameId() {
@@ -38,12 +23,12 @@ public class UserRequest implements GameRequest {
 
     public void setGameId(String gameId) { this.gameId = gameId; }
 
-    public String getUserUniqueID() {
-        return userUniqueID;
+    public String getPlayerId() {
+        return playerId;
     }
 
-    public void setUserUniqueID(String userUniqueID) {
-        this.userUniqueID = userUniqueID;
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
     }
 
     public String getCommand() {
@@ -54,7 +39,20 @@ public class UserRequest implements GameRequest {
         this.command = command;
     }
 
-    public String getJsonArgs() {
-        return jsonArgs;
+    public String getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(String arguments) { this.arguments = arguments; }
+
+    public Response run() {
+        Game game = Application.games.get(gameId);
+        if (game == null) {
+            return new Response(Status.ERROR, "The game does not exist.","");
+        }
+        if (game.getPlayer(playerId) == null) {
+            return new Response(Status.ERROR,"The player does not exist.","");
+        }
+        return game.playTurn(playerId, command, GameRequest.getMapFromData(arguments));
     }
 }

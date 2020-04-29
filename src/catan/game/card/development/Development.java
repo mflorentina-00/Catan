@@ -3,7 +3,7 @@ package catan.game.card.development;
 import catan.game.Player;
 
 /**
- * 'use' is boolean in order to verify if it can be used
+ * "use" is boolean in order to verify if it can be used
  */
 public abstract class Development {
     protected Player owner;

@@ -1,37 +1,40 @@
 package catan.game.card.development;
 
+import catan.game.card.Bank;
 import catan.game.enumeration.ResourceType;
 
-//TODO
 public class YearOfPlenty extends Development {
-    ResourceType firstResourceType;
-    ResourceType secondResourceType;
+    private Bank bank;
+    private ResourceType resourceType;
 
     public YearOfPlenty() {
         super();
-        firstResourceType = null;
-        secondResourceType = null;
+        resourceType = null;
     }
 
-    public ResourceType getFirstResourceType() {
-        return firstResourceType;
+    public Bank getBank() {
+        return bank;
     }
 
-    public void setFirstResourceType(ResourceType firstResourceType) {
-        this.firstResourceType = firstResourceType;
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
-    public ResourceType getSecondResourceType() {
-        return secondResourceType;
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
-    public void setSecondResourceType(ResourceType secondResourceType) {
-        this.secondResourceType = secondResourceType;
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 
+    // folosim metoda "use" de doua ori, pentru a fi siguri ca primeste doua resurse
     @Override
     public boolean use() {
-        // Mutăm resursele de la bancă la player (dacă mai există).
+        if (bank == null || resourceType == null) {
+            return false;
+        }
+        owner.addResource(resourceType);
         return true;
     }
 }

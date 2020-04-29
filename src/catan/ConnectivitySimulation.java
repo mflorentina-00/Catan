@@ -26,11 +26,11 @@ public class ConnectivitySimulation {
 
     public String createGame() throws IOException {
         Response response;
-        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password, "newGame","{\"scenario\": \"SettlersOfCatan\"}"));
+        response = HttpClientPost.managerPost(new ManagerRequest(username, password, "newGame","{\"scenario\": \"SettlersOfCatan\"}"));
         if (response.getCode() == Status.ERROR)
             return null;
         else {
-            HashMap<String,String> args=GameRequest.getMapFromData(response.getData());
+            Map<String, String> args=GameRequest.getMapFromData(response.getData());
             return args.get("gameId");
         }
     }
@@ -40,7 +40,7 @@ public class ConnectivitySimulation {
         payload.put("gameId",gameId);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
+        response = HttpClientPost.managerPost(new ManagerRequest(username, password,
                 "startGame",jsonArgs));
         if (response.getCode() == Status.ERROR)
             return null;
@@ -53,7 +53,7 @@ public class ConnectivitySimulation {
         payload.put("maxPlayers",no.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
+        response = HttpClientPost.managerPost(new ManagerRequest(username, password,
                 "setMaxPlayers",jsonArgs));
         return response.getCode() != Status.ERROR;
     }
@@ -63,12 +63,12 @@ public class ConnectivitySimulation {
         payload.put("gameId",gameId);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response = HttpClientPost.managerPostTo(new ManagerRequest(username, password,
+        response = HttpClientPost.managerPost(new ManagerRequest(username, password,
                 "addPlayer",jsonArgs));
         if (response.getCode() == Status.ERROR)
             return null;
         else {
-            HashMap<String,String> args=GameRequest.getMapFromData(response.getData());
+            Map<String,String> args=GameRequest.getMapFromData(response.getData());
             return args.get("playerId");
         }
     }
@@ -79,7 +79,7 @@ public class ConnectivitySimulation {
 
     public boolean rollDice(String gameID,String playerId) throws  IOException{
         Response response;
-        response=HttpClientPost.userPostTo(new UserRequest(gameID,playerId,"rollDice",""));
+        response=HttpClientPost.userPost(new UserRequest(gameID,playerId,"rollDice",""));
         return response.getCode()!=Status.ERROR;
     }
     public boolean buyRoad(String gameId, String playerId, Integer spot) throws IOException {
@@ -87,13 +87,13 @@ public class ConnectivitySimulation {
         payload.put("spot",spot.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response = HttpClientPost.userPostTo( new UserRequest(gameId, playerId,
+        response = HttpClientPost.userPost( new UserRequest(gameId, playerId,
                 "buyRoad/" + spot,jsonArgs));
         return response.getCode() != Status.ERROR;
     }
     public boolean endTurn(String gameId, String playerId) throws IOException {
         Response response;
-        response = HttpClientPost.userPostTo(new UserRequest(gameId, playerId,
+        response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "endTurn",""));
         return response.getCode() != Status.ERROR;
     }
@@ -102,7 +102,7 @@ public class ConnectivitySimulation {
         payload.put("spot",spot.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response = HttpClientPost.userPostTo( new UserRequest(gameId, playerId,
+        response = HttpClientPost.userPost( new UserRequest(gameId, playerId,
                 "buyHouse",jsonArgs));
         return response.getCode() != Status.ERROR;
     }
@@ -111,19 +111,19 @@ public class ConnectivitySimulation {
         payload.put("spot",spot.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response = HttpClientPost.userPostTo(new UserRequest(gameId, playerId,
+        response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "buyCity",jsonArgs));
         return response.getCode() != Status.ERROR;
     }
     public boolean playDevCard(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
-        response = HttpClientPost.userPostTo(new UserRequest(gameId, playerId,
+        response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "playDevCard",""));
         return response.getCode() != Status.ERROR;
     }
     public boolean tradeBetweenPlayers(String gameId, String playerId) throws IOException {
         Response response;
-        response = HttpClientPost.userPostTo( new UserRequest(gameId, playerId,
+        response = HttpClientPost.userPost( new UserRequest(gameId, playerId,
                 "tradeBetweenPlayers",""));
         return response.getCode() != Status.ERROR;
     }

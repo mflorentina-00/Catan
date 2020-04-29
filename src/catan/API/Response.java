@@ -5,17 +5,11 @@ public class Response {
     private String status;
     private String data;
 
-    public Response(Integer code, String status) {
-        this.status = status;
-        this.code = code;
-    }
-
     public Response(Integer code, String status, String data) {
         this.code = code;
         this.status = status;
         this.data = data;
     }
-
 
     public String getData() {
         return data;

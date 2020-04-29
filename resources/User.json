@@ -1,0 +1,400 @@
+[
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "rollDice",
+    "arguments": ""
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "dice": "a number between 2 and 12",
+      "playerId_1": "playerId",
+      "lumber_1": "number of received lumbers",
+      "wool_1": "number of received wools",
+      "grain_1": "number of received grains",
+      "brick_1": "number of received bricks",
+      "ore_1": "number of received ores",
+      "playerId_2": "playerId",
+      "lumber_2": "number of received lumbers",
+      "wool_2": "number of received wools",
+      "grain_2": "number of received grains",
+      "brick_2": "number of received bricks",
+      "ore_2": "number of received ores"
+    }
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "moveRobber",
+    "arguments":
+    {
+      "tile": "a number between 0 and 18"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "1": "playerId from which to steal a resource",
+      "2": "playerId from which to steal a resource"
+    }
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "stealResource",
+    "arguments":
+    {
+      "playerId": "playerId"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "resource": "stolen resource"
+    }
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "startTrade",
+    "arguments":
+    {
+      "lumber_o": "number of lumbers to offer",
+      "wool_o": "number of wools to offer",
+      "grain_o": "number of grains to offer",
+      "brick_o": "number of bricks to offer",
+      "ore_o": "number of ores to offer",
+      "lumber_r": "number of requested lumbers",
+      "wool_r": "number of requested wools",
+      "grain_r": "number of requested grains",
+      "brick_r": "number of requested bricks",
+      "ore_r": "number of requested ores"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "wantToTrade",
+    "arguments":
+    {
+      "answer": "yes or no",
+      "lumber_o": "number of lumbers to offer",
+      "wool_o": "number of wools to offer",
+      "grain_o": "number of grains to offer",
+      "brick_o": "number of bricks to offer",
+      "ore_o": "number of ores to offer",
+      "lumber_r": "number of requested lumbers",
+      "wool_r": "number of requested wools",
+      "grain_r": "number of requested grains",
+      "brick_r": "number of requested bricks",
+      "ore_r": "number of requested ores"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "getOpponents",
+    "arguments": ""
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "playerId_1": "playerId",
+      "lumber_o_1": "number of lumbers to offer",
+      "wool_o_1": "number of wools to offer",
+      "grain_o_1": "number of grains to offer",
+      "brick_o_1": "number of bricks to offer",
+      "ore_o_1": "number of ores to offer",
+      "lumber_r_1": "number of requested lumbers",
+      "wool_r_1": "number of requested wools",
+      "grain_r_1": "number of requested grains",
+      "brick_r_1": "number of requested bricks",
+      "ore_r_1": "number of requested ores",
+      "playerId_2": "playerId",
+      "lumber_o_2": "number of lumbers to offer",
+      "wool_o_2": "number of wools to offer",
+      "grain_o_2": "number of grains to offer",
+      "brick_o_2": "number of bricks to offer",
+      "ore_o_2": "number of ores to offer",
+      "lumber_r_2": "number of requested lumbers",
+      "wool_r_2": "number of requested wools",
+      "grain_r_2": "number of requested grains",
+      "brick_r_2": "number of requested bricks",
+      "ore_r_2": "number of requested ores"
+    }
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "selectOpponent",
+    "arguments":
+    {
+      "playerId": "player Id",
+      "lumber_o": "number of given lumbers",
+      "wool_o": "number of given wools",
+      "grain_o": "number of given grains",
+      "brick_o": "number of given bricks",
+      "ore_o": "number of given ores",
+      "lumber_r": "number of offered lumbers",
+      "wool_r": "number of offered wools",
+      "grain_r": "number of offered grains",
+      "brick_r": "number of offered bricks",
+      "ore_r": "number of offered ores"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "bankTrade",
+    "arguments":
+    {
+      "offer": "offered resource",
+      "request": "requested resource"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "portTrade",
+    "arguments":
+    {
+      "intersection": "the number of the intersection of a port",
+      "offer": "offered resource",
+      "request": "requested resource"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+  
+  
+  
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "buildRoad",
+    "arguments":
+    {
+      "start": "number of first intersection",
+      "end": "number of last intersection"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+  
+  
+  
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "buildSettlement",
+    "arguments":
+    {
+      "intersection": "number of intersection"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "buildCity",
+    "arguments":
+    {
+      "intersection": "number of intersection"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+  
+  
+  
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "buyDevelopment",
+    "arguments":
+    {
+      "development": "wanted development"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+  
+  
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "useKnight",
+    "arguments":
+    {
+      "tile": "number of tile to move the robber"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "1": "playerId from which to steal a resource",
+      "2": "playerId from which to steal a resource"
+    }
+  },
+  
+  
+  
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "useMonopoly",
+    "arguments":
+    {
+      "resource": "requested resource"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "playerId_1": "playerId",
+      "noResources": "number of resources to stole"
+    }
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "useRoadBuilding",
+    "arguments":
+    {
+      "start_1": "number of first start",
+      "end_1": "number of first end",
+      "start_2": "number of second start",
+      "end_2": "number of second end"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
+    "command": "useYearOfPlenty",
+    "arguments":
+    {
+      "resource_1": "first requested resource",
+      "resource_2": "second requested resource"
+    }
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments": ""
+  },
+
+
+
+  {
+    "username": "username",
+    "password": "password",
+    "command": "endTurn",
+    "arguments": ""
+  },
+  {
+    "code": "100 for success or 102 for error",
+    "status": "message (success or error type)",
+    "arguments" :
+    {
+      "foundWinner" : "true or false",
+      "playerId_1" : "playerId",
+      "publicScore_1" : "number of public Victory Points",
+      "hiddenScore_1" : "number of public Victory Points + Victory Point developments",
+      "hasLargestArmy_1" : "true or false",
+      "hasLongestRoad_1" : "true or false",
+      "playerId_2" : "playerId",
+      "publicScore_2" : "number of public Victory Points",
+      "hiddenScore_2" : "number of public Victory Points + Victory Point developments",
+      "hasLargestArmy_2" : "true or false",
+      "hasLongestRoad_2" : "true or false"
+    }
+  }
+]

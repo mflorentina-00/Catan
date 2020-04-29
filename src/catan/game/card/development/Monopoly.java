@@ -5,7 +5,6 @@ import catan.game.enumeration.ResourceType;
 
 import java.util.List;
 
-//TODO
 public class Monopoly extends Development {
     private ResourceType resourceType;
     private List<Player> players;
@@ -34,9 +33,18 @@ public class Monopoly extends Development {
 
     @Override
     public boolean use() {
-        // foreach player in lista de playeri din lobby
-        // daca player-ul nu este player-ul curent
-        // mutam resursa de la el la player-ul curent
+        if (owner == null || resourceType == null || players == null) {
+            return false;
+        }
+        for (Player player : players) {
+            if (owner != player) {
+                int resourceNumber = player.getResourceNumber(resourceType);
+                if (resourceNumber != 0) {
+                    owner.addResource(resourceType, resourceNumber);
+                    player.removeResource(resourceType, resourceNumber);
+                }
+            }
+        }
         return true;
     }
 }

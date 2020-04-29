@@ -1,8 +1,6 @@
 package catan.game.rule;
 
 public class Component {
-    public static final int NO_OF_PLAYERS = 6;
-
     public static final int RINGS = 3;
     public static final int TILES = 19;
     public static final int INTERSECTIONS = 54;
