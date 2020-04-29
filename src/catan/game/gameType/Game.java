@@ -151,7 +151,7 @@ public abstract class Game {
             return response;
         } else {
             if (command.equals("wantToTrade") && currentPlayerOffer != null) {
-
+                //TODO parse request arguments and call wantToTrade with them
             }
         }
         return new Response(Status.ERROR, "Not your turn!", "");

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
+//TODO call proper functions for each actions and get response arguments
 public class TurnFlow {
     public FSM fsm;
     public final Game game;
@@ -23,7 +24,7 @@ public class TurnFlow {
         fsm = new FSM("stateConfig.xml", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(Status.SUCCESS,"The message has no assigned function!","");
+                response = new Response(Status.SUCCESS, "The message has no assigned function!", "");
                 return true;
             }
         });
@@ -31,7 +32,7 @@ public class TurnFlow {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
                 Random random = new Random();
-                if(random.nextInt(7)+random.nextInt(7)==7)
+                if (random.nextInt(7) + random.nextInt(7) == 7)
                     fsm.ProcessFSM("rollNotASeven");//fsm.ProcessFSM("rollASeven");}
                 else
                     fsm.ProcessFSM("rollNotASeven");
@@ -41,72 +42,72 @@ public class TurnFlow {
         fsm.setAction("rollASeven", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Rolled a seven!","");
+                response = new Response(Status.SUCCESS, "Rolled a seven!", "");
                 return true;
             }
         });
         fsm.setAction("rollNotASeven", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Rolled not a seven!","");
+                response = new Response(Status.SUCCESS, "Rolled not a seven!", "");
                 return true;
             }
         });
         fsm.setAction("giveResources", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Give resources!","");
+                response = new Response(Status.SUCCESS, "Give resources!", "");
                 return true;
             }
         });
         fsm.setAction("moveRobber", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Move robbert!","");
+                response = new Response(Status.SUCCESS, "Move robbert!", "");
                 return true;
             }
         });
         fsm.setAction("giveSelectedResource", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Give selected resource!","");
+                response = new Response(Status.SUCCESS, "Give selected resource!", "");
                 return true;
             }
         });
         fsm.setAction("startTrade", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response=new Response(Status.SUCCESS,"Started trading","");
+                response = new Response(Status.SUCCESS, "Started trading", "");
                 return true;
             }
         });
         fsm.setAction("selectOpponent", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response=new Response(Status.SUCCESS,"Selected opponent","");
+                response = new Response(Status.SUCCESS, "Selected opponent", "");
                 return true;
             }
         });
         fsm.setAction("endTrade", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response=new Response(Status.SUCCESS,"Ended trading","");
+                response = new Response(Status.SUCCESS, "Ended trading", "");
                 return true;
             }
         });
         fsm.setAction("buyRoad", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Buy road successfully!","");
+                response = new Response(Status.SUCCESS, "Buy road successfully!", "");
                 return true;
             }
         });
         fsm.setAction("buyHouse", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Buy house successfully!","");
-                if(!game.buySettlement(Integer.parseInt(((HashMap<String,String>) o).get("spot")))) {
-                    response = new Response(Status.ERROR, "Buying the house is not possible!","");
+                response = new Response(Status.SUCCESS, "Buy house successfully!", "");
+                if (!game.buySettlement(Integer.parseInt(((HashMap<String, String>) o).get("spot")))) {
+                    response = new Response(Status.ERROR, "Buying the house is not possible!", "");
                     return false;
                 }
                 return true;
@@ -115,7 +116,7 @@ public class TurnFlow {
         fsm.setAction("buyCity", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(Status.SUCCESS,"Buy City successfully!","");
+                response = new Response(Status.SUCCESS, "Buy City successfully!", "");
                 return true;
             }
         });
@@ -123,14 +124,14 @@ public class TurnFlow {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
 
-                response = new Response(Status.SUCCESS,"Dev Card played successfully!","");
+                response = new Response(Status.SUCCESS, "Dev Card played successfully!", "");
                 return true;
             }
         });
         fsm.setAction("endTurn", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(Status.SUCCESS,"Turn changed successfully!","");
+                response = new Response(Status.SUCCESS, "Turn changed successfully!", "");
                 return game.changeTurn();
             }
         });
