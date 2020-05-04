@@ -146,7 +146,8 @@ public class TurnFlow {
         fsm.setAction("playDevCard", new FSMAction() {
             @Override
             public boolean action(String s, String s1, String s2, Object o) {
-
+                // TODO: Add configuration for each development card.
+                fsm.ProcessFSM("playRoadBuilding");
                 response = new Response(HttpStatus.SC_OK, "Dev Card played successfully!", "");
                 return true;
             }
