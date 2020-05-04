@@ -9,7 +9,7 @@
     }
   },
   {
-    "code": "100 for success or 102 for error",
+    "code": "HttpStatus code",
     "status": "message (success or error type)",
     "arguments":
     {
@@ -30,7 +30,7 @@
     }
   },
   {
-    "code": "100 for success or 102 for error",
+    "code": "HttpStatus code",
     "status": "message (success or error type)",
     "arguments": ""
   },
@@ -47,7 +47,7 @@
     }
   },
   {
-    "code": "100 for success or 102 for error",
+    "code": "HttpStatus code",
     "status": "message (success or error type)",
     "arguments":
     {
@@ -67,12 +67,29 @@
     }
   },
   {
-    "code": "100 for success or 102 for error",
+    "code": "HttpStatus code",
     "status": "message (success or error type)",
     "arguments":
     {
       "board": "array of tiles",
       "ports": "array of intersections"
     }
+  },
+
+
+
+  {
+    "username": "username",
+    "password": "password",
+    "command": "endGame",
+    "arguments":
+    {
+      "gameId": "gameId"
+    }
+  },
+  {
+    "code": "HttpStatus code",
+    "status": "message (success or error type)",
+    "arguments": ""
   }
 ]

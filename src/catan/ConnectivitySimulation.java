@@ -4,9 +4,9 @@ import catan.API.Response;
 import catan.API.HttpClientPost;
 import catan.API.request.GameRequest;
 import catan.API.request.ManagerRequest;
-import catan.API.request.Status;
 import catan.API.request.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ConnectivitySimulation {
     public String createGame() throws IOException {
         Response response;
         response = HttpClientPost.managerPost(new ManagerRequest(username, password, "newGame", "{\"scenario\": \"SettlersOfCatan\"}"));
-        if (response.getCode() == Status.ERROR)
+        if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else {
             Map<String, String> args = GameRequest.getMapFromData(response.getData());
@@ -42,7 +42,7 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.managerPost(new ManagerRequest(username, password,
                 "startGame", jsonArgs));
-        if (response.getCode() == Status.ERROR)
+        if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else
             return response.getStatus();
@@ -56,7 +56,7 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.managerPost(new ManagerRequest(username, password,
                 "setMaxPlayers", jsonArgs));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public String addPlayer(String gameId) throws IOException {
@@ -66,7 +66,7 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.managerPost(new ManagerRequest(username, password,
                 "addPlayer", jsonArgs));
-        if (response.getCode() == Status.ERROR)
+        if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else {
             Map<String, String> args = GameRequest.getMapFromData(response.getData());
@@ -81,7 +81,7 @@ public class ConnectivitySimulation {
     public boolean rollDice(String gameID, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameID, playerId, "rollDice", ""));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean buyRoad(String gameId, String playerId, Integer spot) throws IOException {
@@ -91,14 +91,14 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "buyRoad/" + spot, jsonArgs));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean endTurn(String gameId, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "endTurn", ""));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean buyHouse(String gameId, String playerId, Integer spot) throws IOException {
@@ -108,7 +108,7 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "buyHouse", jsonArgs));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean buyCity(String gameId, String playerId, Integer spot) throws IOException {
@@ -118,35 +118,35 @@ public class ConnectivitySimulation {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "buyCity", jsonArgs));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean playDevCard(String gameId, String playerId, Integer spot) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "playDevCard", ""));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean selectOpponent(String gameId, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "selectOpponent", ""));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean endTrade(String gameId, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "endTrade", ""));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean startTrade(String gameId, String playerId) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "startTrade", ""));
-        return response.getCode() != Status.ERROR;
+        return response.getCode() == HttpStatus.SC_OK;
     }
 
 

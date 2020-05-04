@@ -1,17 +1,19 @@
 package catan.game;
 
+import catan.game.card.Bank;
 import catan.game.card.development.Knight;
 import catan.game.card.development.Monopoly;
 import catan.game.card.development.RoadBuilding;
 import catan.game.card.development.YearOfPlenty;
 import catan.game.enumeration.ResourceType;
-import catan.game.gameType.Game;
+import catan.game.game.Game;
 import catan.game.property.Intersection;
 import catan.game.property.Road;
 import catan.game.rule.Component;
 import catan.game.rule.Cost;
 import catan.game.rule.VictoryPoint;
 import javafx.util.Pair;
+import org.apache.http.HttpStatus;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,6 +26,7 @@ public class Player {
 
     private final String ID;
     private final Game game;
+    private Bank bank;
     private TurnFlow state;
 
     private List<Road> roads;
@@ -106,8 +109,28 @@ public class Player {
         return resources;
     }
 
-    public Integer getResourceNumber(ResourceType resource) {
-        return resources.get(resource);
+    public int getResourceNumber(ResourceType resourceType) {
+        return resources.get(resourceType);
+    }
+
+    public int getResourceNumber() {
+        int resourceNumber = 0;
+        for (ResourceType resourceType : resources.keySet()) {
+            resourceNumber += resources.get(resourceType);
+        }
+        return resourceNumber;
+    }
+
+    public ResourceType stoleResource(int resourceIndex) {
+        int resourceNumber = 0;
+        for (ResourceType resourceType : resources.keySet()) {
+            resourceNumber += resources.get(resourceType);
+            if (resourceNumber + resources.get(resourceType) > resourceIndex) {
+                resources.put(resourceType, resources.get(resourceType) - 1);
+                return resourceType;
+            }
+        }
+        return null;
     }
 
     public List<Knight> getKnights() {
@@ -141,6 +164,8 @@ public class Player {
     // endregion
 
     // region Setters and Adders
+
+    public void setBank(Bank bank) { this.bank = bank; }
 
     public void addResource(ResourceType resourceType) {
         resources.put(resourceType, resources.get(resourceType) + 1);
@@ -218,7 +243,22 @@ public class Player {
     // region Road
 
     // TODO REMINDER: This is used by GAME class
-    public boolean buildRoad(Road road) {
+
+    // Called only for the first two roads or when using RoadBuilding development.
+    public Pair<Integer, String> buildRoad(Intersection start, Intersection end) {
+        if (start.getOwner() != this && end.getOwner() != this) {
+            return new Pair<>(HttpStatus.SC_FORBIDDEN, "The road does not connect one of your roads, settlements or cities.");
+        }
+        if (!bank.hasRoad(this)) {
+            return new Pair<>(HttpStatus.SC_NOT_FOUND, "You have no more roads to build.");
+        }
+        Road road = bank.getRoad(this);
+        road.setCoordinates(start, end);
+        roads.add(road);
+        return new Pair<>(HttpStatus.SC_OK, "The road was built successfully.");
+    }
+
+    public boolean buyRoad(Road road) {
         if (!canBuildRoad(road)) {
             return false;
         }

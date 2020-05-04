@@ -28,17 +28,37 @@ public class Bank {
         createProperties();
     }
 
-    public boolean getResource(ResourceType resource) {
-        int resourceNumber = resources.get(resource);
-        if (existsResource(resource)) {
-            resources.put(resource, --resourceNumber);
+    public boolean existsResource(ResourceType resourceType, int resourceNumber) {
+        return resources.get(resourceType) >= resourceNumber;
+    }
+
+    public boolean existsResource(ResourceType resourceType) {
+        return existsResource(resourceType, 1);
+    }
+
+    public boolean hasRoad(Player player) {
+        return !roads.get(player).isEmpty();
+    }
+
+    public boolean hasSettlement(Player player) {
+        return !settlements.get(player).isEmpty();
+    }
+
+    public boolean hasCity(Player player) {
+        return !settlements.get(player).isEmpty();
+    }
+
+    public boolean getResource(ResourceType resourceType, int resourceNumber) {
+        int oldResourceNumber = resources.get(resourceType);
+        if (existsResource(resourceType, resourceNumber)) {
+            resources.put(resourceType, oldResourceNumber - resourceNumber);
             return true;
         }
         return false;
     }
 
-    public boolean existsResource(ResourceType resource) {
-        return resources.get(resource) > 0;
+    public boolean getResource(ResourceType resourceType) {
+        return getResource(resourceType, 1);
     }
 
     public Knight getKnight(Player player) {
@@ -116,7 +136,16 @@ public class Bank {
         return city;
     }
 
-    public void restoreSettlement(Player player, Intersection intersection) {
+    public void putResource(ResourceType resourceType, int resourceNumber) {
+        int oldResourceNumber = resources.get(resourceType);
+        resources.put(resourceType, oldResourceNumber + resourceNumber);
+    }
+
+    public void putResource(ResourceType resourceType) {
+        putResource(resourceType, 1);
+    }
+
+    public void putSettlement(Player player, Intersection intersection) {
         intersection.setOwner(null);
         Stack<Intersection> playerSettlements = settlements.get(player);
         playerSettlements.push(intersection);

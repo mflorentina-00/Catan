@@ -1,15 +1,39 @@
 package catan.game.card.development;
 
-//TODO
+import catan.game.Player;
+import javafx.util.Pair;
+import org.apache.http.HttpStatus;
+
+import java.util.Random;
+
 public class Knight extends Development {
+    private Player player;
+
     public Knight() {
         super();
+        player = null;
     }
 
-    public boolean use() {
-        // mutam robber-ul
-        // daca sunt asezari pe tile
-        // get random resource from chosen player
-        return true;
+    public Player getPlayer() { return player; }
+
+    public void setPlayer(Player player) { this.player = player; }
+
+    public Pair<Integer, String> moveRobber() {
+        // TODO: Add logic.
+        return new Pair<>(HttpStatus.SC_OK, "The robber was moved successfully.");
+    }
+
+    public Pair<Integer, String> stoleResource() {
+        if (owner == null || player == null) {
+            return new Pair<>(HttpStatus.SC_FORBIDDEN, "Owner or player were not set.");
+        }
+        int resourceNumber = player.getResourceNumber();
+        if (resourceNumber == 0) {
+            return new Pair<>(HttpStatus.SC_FORBIDDEN, "The selected player has no more resources.");
+        }
+        Random random = new Random();
+        int resourceIndex = random.nextInt(resourceNumber);
+        owner.addResource(player.stoleResource(resourceIndex));
+        return new Pair<>(HttpStatus.SC_OK, "The resource was stolen successfully.");
     }
 }

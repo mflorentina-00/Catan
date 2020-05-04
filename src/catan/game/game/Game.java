@@ -1,7 +1,6 @@
-package catan.game.gameType;
+package catan.game.game;
 
 import catan.API.Response;
-import catan.API.request.Status;
 import catan.game.Player;
 import catan.game.board.Board;
 import catan.game.board.Tile;
@@ -12,9 +11,12 @@ import catan.game.property.Road;
 import catan.game.rule.Component;
 import catan.game.rule.VictoryPoint;
 import javafx.util.Pair;
+import org.apache.http.HttpStatus;
 
 import java.util.*;
 
+//TODO: add functions to return available spots for buildings and roads.
+//TODO: add function to return available players to stole a resource when moving the robber.
 public abstract class Game {
     protected Bank bank;
     protected Board board;
@@ -147,14 +149,14 @@ public abstract class Game {
             players.get(playerID).getState().fsm.ProcessFSM(command);
             Response response = players.get(playerID).getState().response;
             //Reset player response in case that the state does not have the command | the command does not exist
-            players.get(playerID).getState().response = new Response(Status.ERROR, "Wrong Command", "");
+            players.get(playerID).getState().response = new Response(HttpStatus.SC_NOT_FOUND, "Wrong Command", "");
             return response;
         } else {
             if (command.equals("wantToTrade") && currentPlayerOffer != null) {
                 //TODO parse request arguments and call wantToTrade with them
             }
         }
-        return new Response(Status.ERROR, "Not your turn!", "");
+        return new Response(HttpStatus.SC_FORBIDDEN, "Not your turn!", "");
     }
 
     public boolean startGame() {
@@ -268,7 +270,7 @@ public abstract class Game {
         Road road = bank.getRoad(player);
         if (road == null)
             return false;
-        return player.buildRoad(road);
+        return player.buyRoad(road);
     }
 
     //endregion

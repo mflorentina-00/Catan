@@ -21,6 +21,10 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.github.ankzz</groupId>
 			<artifactId>dynamicfsm</artifactId>
 			<version>0.01</version>

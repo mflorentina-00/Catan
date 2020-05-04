@@ -2,6 +2,8 @@ package catan.game.card.development;
 
 import catan.game.card.Bank;
 import catan.game.enumeration.ResourceType;
+import javafx.util.Pair;
+import org.apache.http.HttpStatus;
 
 public class YearOfPlenty extends Development {
     private Bank bank;
@@ -28,13 +30,14 @@ public class YearOfPlenty extends Development {
         this.resourceType = resourceType;
     }
 
-    // folosim metoda "use" de doua ori, pentru a fi siguri ca primeste doua resurse
-    @Override
-    public boolean use() {
-        if (bank == null || resourceType == null) {
-            return false;
+    public Pair<Integer, String> getResource() {
+        if (owner == null || bank == null || resourceType == null) {
+            return new Pair<>(HttpStatus.SC_FORBIDDEN, "Owner, bank or resourceType were not set.");
+        }
+        if (!bank.existsResource(resourceType)) {
+            return new Pair<>(HttpStatus.SC_NOT_FOUND, "The bank has no more " + resourceType + ".");
         }
         owner.addResource(resourceType);
-        return true;
+        return new Pair<>(HttpStatus.SC_FORBIDDEN, "The " + resourceType + " from the bank was took successfully.");
     }
 }

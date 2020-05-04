@@ -2,7 +2,8 @@ package catan.API.request;
 
 import catan.API.Response;
 import catan.Application;
-import catan.game.gameType.Game;
+import catan.game.game.Game;
+import org.apache.http.HttpStatus;
 
 public class UserRequest implements GameRequest {
     private String gameId;
@@ -48,10 +49,10 @@ public class UserRequest implements GameRequest {
     public Response run() {
         Game game = Application.games.get(gameId);
         if (game == null) {
-            return new Response(Status.ERROR, "The game does not exist.","");
+            return new Response(HttpStatus.SC_NOT_FOUND, "The game does not exist.","");
         }
         if (game.getPlayer(playerId) == null) {
-            return new Response(Status.ERROR,"The player does not exist.","");
+            return new Response(HttpStatus.SC_NOT_FOUND,"The player does not exist.","");
         }
         return game.playTurn(playerId, command, GameRequest.getMapFromData(arguments));
     }

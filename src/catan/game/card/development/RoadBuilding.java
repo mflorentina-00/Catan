@@ -1,28 +1,17 @@
 package catan.game.card.development;
 
-import catan.game.card.Bank;
 import catan.game.property.Intersection;
-import catan.game.property.Road;
+import javafx.util.Pair;
+import org.apache.http.HttpStatus;
 
-//TODO
 public class RoadBuilding extends Development {
-    private Bank bank;
     private Intersection start;
     private Intersection end;
 
     public RoadBuilding() {
         super();
-        bank = null;
         start = null;
         end = null;
-    }
-
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
     }
 
     public Intersection getStart() {
@@ -41,18 +30,10 @@ public class RoadBuilding extends Development {
         this.end = end;
     }
 
-    // folosim metoda "use" de doua ori atunci cand jucam cartea
-    @Override
-    public boolean use() {
-        if (owner == null || bank == null || start == null || end == null) {
-            return false;
+    public Pair<Integer, String> buildRoad() {
+        if (owner == null || start == null || end == null) {
+            return new Pair<>(HttpStatus.SC_FORBIDDEN, "Owner, start or end were not set.");
         }
-        Road road = bank.getRoad(owner);
-        if (road == null) {
-            return false;
-        }
-        road.setCoordinates(start, end);
-        owner.buildRoad(road);
-        return true;
+        return owner.buildRoad(start, end);
     }
 }
