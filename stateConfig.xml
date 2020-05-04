@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <FSM>
+ <STATE id="Pre-Start-1-House">
+   <MESSAGE id="placeHouse" action="placeHouse" nextState="Pre-Start-1-Road"/>
+ </STATE>
+ <STATE id="Pre-Start-1-Road">
+   <MESSAGE id="placeRoad" action="placeRoad" nextState="Pre-Start-2-House"/>
+ </STATE>
+ <STATE id="Pre-Start-2-House">
+  <MESSAGE id="placeHouse" action="placeHouse" nextState="Pre-Start-2-Road"/>
+ </STATE>
+ <STATE id="Pre-Start-2-Road">
+  <MESSAGE id="placeRoad" action="placeRoad" nextState="Start"/>
+ </STATE>
  <STATE id="Start" type="ID">
   <MESSAGE id="rollDice" action="rollDice" nextState="Start"/>
   <MESSAGE id="rollASeven" action="rollASeven" nextState="TakingResources"/>

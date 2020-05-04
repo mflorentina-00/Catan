@@ -211,6 +211,34 @@ public abstract class Game {
 
     //endregion
 
+    //region place house and road region
+    public  boolean placeInitSettlement(int spot){
+        Player player = players.get(currentPlayer);
+        Intersection intersection = board.getBuildings().get(spot);
+        if (intersection == null || intersection.getOwner() != null || !isTwoRoadsDistance(intersection))
+            return false;
+        board.getBuildings().get(spot).setOwner(player);
+        return true;
+    }
+    public  boolean placeInitRoad(int intersectionId1,int intersectionId2){
+        Player player = players.get(currentPlayer);
+        Intersection firstIntersection = board.getBuildings().get(intersectionId1);
+        Intersection secondIntersection = board.getBuildings().get(intersectionId2);
+
+        if (firstIntersection == null || secondIntersection == null)
+            return false;
+        if (!((firstIntersection.getOwner() == null || firstIntersection.getOwner().equals(player)) &&
+                (secondIntersection.getOwner() == null || secondIntersection.getOwner().equals(player))))
+            return false;
+        if(!board.getIntersectionGraph().areAdjacent(intersectionId1,intersectionId2))
+            return false;
+        Road road = bank.getRoad(player);
+        road.setCoordinates(firstIntersection,secondIntersection);
+        return player.addRoad(road);
+    }
+
+    //endregion
+
     //region buy_properties
     protected int currentPlayerIndex() {
         for (int i = 0; i < playerOrder.size(); i++) {
@@ -267,9 +295,10 @@ public abstract class Game {
         if (!((firstIntersection.getOwner() == null || firstIntersection.getOwner().equals(player)) &&
                 (secondIntersection.getOwner() == null || secondIntersection.getOwner().equals(player))))
             return false;
-        Road road = bank.getRoad(player);
-        if (road == null)
+        if(!board.getIntersectionGraph().areAdjacent(intersectionId1,intersectionId2))
             return false;
+        Road road = bank.getRoad(player);
+        road.setCoordinates(firstIntersection,secondIntersection);
         return player.buyRoad(road);
     }
 
@@ -345,4 +374,6 @@ public abstract class Game {
     public int hashCode() {
         return Objects.hash(bank, board, getPlayers(), playerOrder, currentPlayer, getMaxPlayers());
     }
+
+
 }
