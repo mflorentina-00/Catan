@@ -45,6 +45,30 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
+    "command": "synchronize",
+    "arguments": ""
+  },
+  {
+    "code": "HttpStatus code",
+    "status": "message (success or error type)",
+    "arguments":
+    {
+      "playerId": "playerId",
+      "publicScore": "",
+      "hiddenScore": "",
+      "resources": "",
+      "developments": "",
+      "roads": "",
+      "settlements": "",
+      "cities": ""
+    }
+  },
+
+
+
+  {
+    "gameId": "gameId",
+    "playerId": "playerId",
     "command": "rollDice",
     "arguments": ""
   },
@@ -375,8 +399,11 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "useKnight",
-    "arguments": ""
+    "command": "playDevCard",
+    "arguments":
+    {
+      "devCard": "Knight"
+    }
   },
   {
     "code": "HttpStatus code",
@@ -424,10 +451,10 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "useMonopoly",
+    "command": "playDevCard",
     "arguments":
     {
-      "resource": "requested resource"
+      "devCard": "Monopoly/requested resource"
     }
   },
   {
@@ -447,8 +474,11 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "useRoadBuilding",
-    "arguments": ""
+    "command": "playDevCard",
+    "arguments":
+    {
+      "devCard": "RoadBuilding"
+    }
   },
   {
     "code": "HttpStatus code",
@@ -499,8 +529,11 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "useYearOfPlenty",
-    "arguments": ""
+    "command": "playDevCard",
+    "arguments":
+    {
+      "devCard": "YearOfPlenty"
+    }
   },
   {
     "code": "HttpStatus code",

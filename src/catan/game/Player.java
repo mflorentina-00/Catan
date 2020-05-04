@@ -121,7 +121,7 @@ public class Player {
         return resourceNumber;
     }
 
-    public ResourceType stoleResource(int resourceIndex) {
+    public ResourceType stealResource(int resourceIndex) {
         int resourceNumber = 0;
         for (ResourceType resourceType : resources.keySet()) {
             resourceNumber += resources.get(resourceType);
