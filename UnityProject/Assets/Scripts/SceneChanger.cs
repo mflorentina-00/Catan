@@ -56,6 +56,11 @@ public class SceneChanger : MonoBehaviour
         SceneManager.LoadScene("MenuScene");
     }
 
+    public void goToWaitingRoom()
+    {
+        SceneManager.LoadScene("WaitingRoom");
+    }
+
     public void quit()
     {
         Application.Quit();
