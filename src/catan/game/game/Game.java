@@ -144,6 +144,33 @@ public abstract class Game {
     }
 
     public Response playTurn(String playerID, String command, Map<String, String> jsonArgs) {
+        if(command.equals("discardResources")) {
+            Map<ResourceType, Integer> resources = new HashMap<>();
+            for (String resource : jsonArgs.keySet()) {
+                switch (resource) {
+                    case "lumber":
+                        resources.put(ResourceType.Lumber, Integer.valueOf(jsonArgs.get("lumber")));
+                        break;
+                    case "wool":
+                        resources.put(ResourceType.Wool, Integer.valueOf(jsonArgs.get("wool")));
+                        break;
+                    case "ore":
+                        resources.put(ResourceType.Ore, Integer.valueOf(jsonArgs.get("ore")));
+                        break;
+                    case "brick":
+                        resources.put(ResourceType.Brick, Integer.valueOf(jsonArgs.get("brick")));
+                        break;
+                    case "grain":
+                        resources.put(ResourceType.Grain, Integer.valueOf(jsonArgs.get("grain")));
+                        break;
+                    default:
+                        return new Response(HttpStatus.SC_NOT_FOUND, "Wrong argument.", "");
+                }
+            }
+            takeResourcesSevenDice(playerID, resources);
+            return new Response(HttpStatus.SC_OK, "Discarded resources successfully.", "");
+        }
+
         if (playerID.equals(currentPlayer)) {
             players.get(playerID).getState().fsm.setShareData(jsonArgs);
             players.get(playerID).getState().fsm.ProcessFSM(command);
@@ -206,6 +233,12 @@ public abstract class Game {
             }
         }
 
+        return true;
+    }
+
+    public boolean takeResourcesSevenDice (String playerID, Map<ResourceType, Integer> resourcesToGive) {
+            Player pl = players.get(playerID);
+            pl.removeResources(resourcesToGive);
         return true;
     }
 
