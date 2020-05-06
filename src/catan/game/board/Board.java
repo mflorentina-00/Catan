@@ -2,7 +2,7 @@ package catan.game.board;
 
 import catan.game.enumeration.PortType;
 import catan.game.enumeration.ResourceType;
-import catan.game.property.Intersection;
+import catan.game.property.Building;
 import catan.game.rule.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,11 +18,11 @@ import java.util.List;
 public class Board {
     private List<Tile> tiles = new ArrayList<>();
     private List<List<Tile>> numberedTiles = new ArrayList<>();
-    private List<Intersection> buildings = new ArrayList<>();
+    private List<Building> buildings = new ArrayList<>();
     private TileGraph tileGraph = new TileGraph();
     private IntersectionGraph intersectionGraph = new IntersectionGraph();
-    private ArrayList<ArrayList<Integer>> tileBuildingAdjacency = new ArrayList<>();
-    private ArrayList<ArrayList<Integer>> buildingTileAdjacency = new ArrayList<>();
+    private List<List<Integer>> tileBuildingAdjacency = new ArrayList<>();
+    private List<List<Integer>> buildingTileAdjacency = new ArrayList<>();
     private List<PortType> ports = new ArrayList<>();
     private Tile robberPosition = null;
 
@@ -30,18 +30,17 @@ public class Board {
         for (int i = 0; i < Component.TILES; i++) {
             tiles.add(new Tile(i));
         }
-        for (int i = 0; i < Component.INTERSECTIONS; i++) {
-            buildings.add(new Intersection(i));
-        }
         for (int index = 0; index < Component.INTERSECTIONS; ++index) {
             ports.add(PortType.None);
         }
         generateRandomTiles();
         createMapping();
-        setPorts();
+        generatePorts();
         printTileBuildingAdjacency();
         printBuildingTileAdjacency();
     }
+
+    //region Getters
 
     public List<Tile> getTiles() {
         return tiles;
@@ -55,12 +54,8 @@ public class Board {
         return numberedTiles.get(i);
     }
 
-    public List<Intersection> getBuildings() {
+    public List<Building> getBuildings() {
         return buildings;
-    }
-
-    public void addBuilding(Intersection building) {
-        buildings.add(building);
     }
 
     public TileGraph getTileGraph() {
@@ -71,11 +66,11 @@ public class Board {
         return intersectionGraph;
     }
 
-    public ArrayList<ArrayList<Integer>> getTileBuildingAdjacency() {
+    public List<List<Integer>> getTileBuildingAdjacency() {
         return tileBuildingAdjacency;
     }
 
-    public ArrayList<ArrayList<Integer>> getBuildingTileAdjacency() {
+    public List<List<Integer>> getBuildingTileAdjacency() {
         return buildingTileAdjacency;
     }
 
@@ -87,17 +82,64 @@ public class Board {
         return robberPosition;
     }
 
+    //endregion
+
+    //region Setters
+
+    public void setTiles(List<Tile> tiles) {
+        this.tiles = tiles;
+    }
+
+    public void setNumberedTiles(List<List<Tile>> numberedTiles) {
+        this.numberedTiles = numberedTiles;
+    }
+
+    public void setBuildings(List<Building> buildings) {
+        this.buildings = buildings;
+    }
+
+    public void setTileGraph(TileGraph tileGraph) {
+        this.tileGraph = tileGraph;
+    }
+
+    public void setIntersectionGraph(IntersectionGraph intersectionGraph) {
+        this.intersectionGraph = intersectionGraph;
+    }
+
+    public void setTileBuildingAdjacency(List<List<Integer>> tileBuildingAdjacency) {
+        this.tileBuildingAdjacency = tileBuildingAdjacency;
+    }
+
+    public void setBuildingTileAdjacency(List<List<Integer>> buildingTileAdjacency) {
+        this.buildingTileAdjacency = buildingTileAdjacency;
+    }
+
+    public void setPorts(List<PortType> ports) {
+        this.ports = ports;
+    }
+
     public void setRobberPosition(Tile robberPosition) {
         this.robberPosition = robberPosition;
     }
 
-    public List<Intersection> getIntersectionsFromTile(Tile tile) {
-        List<Intersection> intersections = new ArrayList<>();
-        List<Integer> intersectionsId = tileBuildingAdjacency.get(tile.getId());
-        for (Integer id : intersectionsId) {
-            intersections.add(buildings.get(id));
+    //endregion
+
+    public void addBuilding(Building building) {
+        buildings.add(building);
+    }
+
+    public List<Building> getAdjacentBuildings(Tile tile) {
+        List<Building> adjacentBuildings = new ArrayList<>();
+        List<Integer> intersections = tileBuildingAdjacency.get(tile.getId());
+        for (Integer intersection : intersections) {
+            for (Building building : buildings) {
+                if (building.getId() == intersection) {
+                    adjacentBuildings.add(building);
+                    break;
+                }
+            }
         }
-        return intersections;
+        return adjacentBuildings;
     }
 
     public void generateRandomTiles() {
@@ -109,23 +151,23 @@ public class Board {
         List<ResourceType> resources = new ArrayList<>();
 
         for (int i = 0; i < Component.FIELD_TILES; i++)
-            resources.add(ResourceType.Grain);
+            resources.add(ResourceType.grain);
         for (int i = 0; i < Component.FOREST_TILES; i++)
-            resources.add(ResourceType.Lumber);
+            resources.add(ResourceType.lumber);
         for (int i = 0; i < Component.PASTURE_TILES; i++)
-            resources.add(ResourceType.Wool);
+            resources.add(ResourceType.wool);
         for (int i = 0; i < Component.MOUNTAINS_TILES; i++)
-            resources.add(ResourceType.Ore);
+            resources.add(ResourceType.ore);
         for (int i = 0; i < Component.HILLS_TILES; i++)
-            resources.add(ResourceType.Brick);
+            resources.add(ResourceType.brick);
         for (int i = 0; i < Component.DESERT_TILES; i++)
-            resources.add(ResourceType.Desert);
+            resources.add(ResourceType.desert);
         Collections.shuffle(resources);
 
         int i = 0;
         for (Tile tile : tiles) {
             tile.setResource(resources.get(i++));
-            if (tile.getResource() == ResourceType.Desert) {
+            if (tile.getResource() == ResourceType.desert) {
                 setRobberPosition(tile);
             }
         }
@@ -140,7 +182,7 @@ public class Board {
             Collections.shuffle(numberList);
             int i = 0;
             for (Tile tile : tiles) {
-                if (tile.getResource() != ResourceType.Desert) {
+                if (tile.getResource() != ResourceType.desert) {
                     tile.setNumber(numberList.get(i));
                     i++;
                 }
@@ -237,7 +279,7 @@ public class Board {
         Collections.sort(buildingTileAdjacency.get(5));
     }
 
-    public void setPorts() {
+    public void generatePorts() {
         int[] frequency = {4, 1, 1, 1, 1, 1};
         int counter = 0;
         int max = 5;

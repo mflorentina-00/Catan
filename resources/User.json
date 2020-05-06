@@ -13,7 +13,8 @@
     "status": "message (success or error type)",
     "arguments":
     {
-      "availableSpots": [1, 2],
+      "availableSettlements": [1, 2],
+      "availableCities": [1, 2],
       "availableRoads": [[1, 2], [1, 3]]
     }
   },
@@ -35,7 +36,8 @@
     "status": "message (success or error type)",
     "arguments":
     {
-      "availableSpots": [1, 2],
+      "availableSettlements": [1, 2],
+      "availableCities": [1, 2],
       "availableRoads": [[1, 2], [1, 3]]
     }
   },
@@ -79,14 +81,14 @@
     {
       "dice_1": "a number between 1 and 6",
       "dice_2": "a number between 1 and 6",
-      "playerId_1": "playerId",
+      "player_1": "playerId",
       "lumber_1": "number of received lumbers",
       "wool_1": "number of received wools",
       "grain_1": "number of received grains",
       "brick_1": "number of received bricks",
       "ore_1": "number of received ores",
       "resourcesToDiscard_1": "0 or half (rounded down) if rolled seven and has 8 or more resources",
-      "playerId_2": "playerId",
+      "player_2": "playerId",
       "lumber_2": "number of received lumbers",
       "wool_2": "number of received wools",
       "grain_2": "number of received grains",
@@ -163,7 +165,7 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "startTrade",
+    "command": "playerTrade",
     "arguments":
     {
       "lumber_o": "number of lumbers to offer",
@@ -192,17 +194,7 @@
     "command": "wantToTrade",
     "arguments":
     {
-      "answer": "yes or no",
-      "lumber_o": "number of lumbers to offer",
-      "wool_o": "number of wools to offer",
-      "grain_o": "number of grains to offer",
-      "brick_o": "number of bricks to offer",
-      "ore_o": "number of ores to offer",
-      "lumber_r": "number of requested lumbers",
-      "wool_r": "number of requested wools",
-      "grain_r": "number of requested grains",
-      "brick_r": "number of requested bricks",
-      "ore_r": "number of requested ores"
+      "answer": "yes or no"
     }
   },
   {
@@ -216,7 +208,7 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "getOpponents",
+    "command": "sendOpponents",
     "arguments": ""
   },
   {
@@ -224,28 +216,8 @@
     "status": "message (success or error type)",
     "arguments":
     {
-      "playerId_1": "playerId",
-      "lumber_o_1": "number of lumbers to offer",
-      "wool_o_1": "number of wools to offer",
-      "grain_o_1": "number of grains to offer",
-      "brick_o_1": "number of bricks to offer",
-      "ore_o_1": "number of ores to offer",
-      "lumber_r_1": "number of requested lumbers",
-      "wool_r_1": "number of requested wools",
-      "grain_r_1": "number of requested grains",
-      "brick_r_1": "number of requested bricks",
-      "ore_r_1": "number of requested ores",
-      "playerId_2": "playerId",
-      "lumber_o_2": "number of lumbers to offer",
-      "wool_o_2": "number of wools to offer",
-      "grain_o_2": "number of grains to offer",
-      "brick_o_2": "number of bricks to offer",
-      "ore_o_2": "number of ores to offer",
-      "lumber_r_2": "number of requested lumbers",
-      "wool_r_2": "number of requested wools",
-      "grain_r_2": "number of requested grains",
-      "brick_r_2": "number of requested bricks",
-      "ore_r_2": "number of requested ores"
+      "player_1": "playerId",
+      "player_2": "playerId"
     }
   },
 
@@ -257,17 +229,7 @@
     "command": "selectOpponent",
     "arguments":
     {
-      "playerId": "player Id",
-      "lumber_o": "number of given lumbers",
-      "wool_o": "number of given wools",
-      "grain_o": "number of given grains",
-      "brick_o": "number of given bricks",
-      "ore_o": "number of given ores",
-      "lumber_r": "number of offered lumbers",
-      "wool_r": "number of offered wools",
-      "grain_r": "number of offered grains",
-      "brick_r": "number of offered bricks",
-      "ore_r": "number of offered ores"
+      "playerId": "player Id"
     }
   },
   {
@@ -302,7 +264,7 @@
     "command": "portTrade",
     "arguments":
     {
-      "intersection": "the number of the intersection of a port",
+      "port": "the number of the intersection of a port",
       "offer": "offered resource",
       "request": "requested resource"
     }
@@ -399,10 +361,10 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "playDevCard",
+    "command": "useDevelopment",
     "arguments":
     {
-      "devCard": "Knight"
+      "development": "knight"
     }
   },
   {
@@ -451,10 +413,11 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "playDevCard",
+    "command": "useDevelopment",
     "arguments":
     {
-      "devCard": "Monopoly/requested resource"
+      "development": "monopoly",
+      "resource": "requested resource"
     }
   },
   {
@@ -462,9 +425,9 @@
     "status": "message (success or error type)",
     "arguments":
     {
-      "playerId_1": "playerId",
+      "player_1": "playerId",
       "resources_1": "number of resources to stole",
-      "playerId_2": "playerId",
+      "player_2": "playerId",
       "resources_2": "number of resources to stole"
     }
   },
@@ -474,10 +437,10 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "playDevCard",
+    "command": "useDevelopment",
     "arguments":
     {
-      "devCard": "RoadBuilding"
+      "development": "RoadBuilding"
     }
   },
   {
@@ -529,10 +492,10 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "playDevCard",
+    "command": "useDevelopment",
     "arguments":
     {
-      "devCard": "YearOfPlenty"
+      "development": "yearOfPlenty"
     }
   },
   {
@@ -557,7 +520,7 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "getSecondResource",
+    "command": "getResource",
     "arguments":
     {
       "resource": "requested resource"
@@ -583,12 +546,12 @@
     "arguments" :
     {
       "foundWinner" : "true or false",
-      "playerId_1" : "playerId",
+      "player_1" : "playerId",
       "publicScore_1" : "number of public Victory Points",
       "hiddenScore_1" : "number of public Victory Points + Victory Point developments",
       "hasLargestArmy_1" : "true or false",
       "hasLongestRoad_1" : "true or false",
-      "playerId_2" : "playerId",
+      "player_2" : "playerId",
       "publicScore_2" : "number of public Victory Points",
       "hiddenScore_2" : "number of public Victory Points + Victory Point developments",
       "hasLargestArmy_2" : "true or false",

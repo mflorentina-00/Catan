@@ -33,7 +33,7 @@ public class Knight extends Development {
         }
         Random random = new Random();
         int resourceIndex = random.nextInt(resourceNumber);
-        owner.addResource(player.stealResource(resourceIndex));
+        owner.takeResource(player.stealResource(resourceIndex));
         return new Pair<>(HttpStatus.SC_OK, "The resource was stolen successfully.");
     }
 }

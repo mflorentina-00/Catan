@@ -7,7 +7,7 @@ import catan.game.card.development.RoadBuilding;
 import catan.game.card.development.YearOfPlenty;
 import catan.game.enumeration.ResourceType;
 import catan.game.game.Game;
-import catan.game.property.Intersection;
+import catan.game.property.Building;
 import catan.game.property.Road;
 import catan.game.rule.Component;
 import catan.game.rule.Cost;
@@ -24,14 +24,14 @@ public class Player {
 
     /* Fields */
 
-    private final String ID;
+    private final String id;
     private final Game game;
     private Bank bank;
-    private TurnFlow state;
+    private TurnFlow turnFlow;
 
     private List<Road> roads;
-    private List<Intersection> settlements;
-    private List<Intersection> cities;
+    private List<Building> settlements;
+    private List<Building> cities;
 
     private Map<ResourceType, Integer> resources;
     private List<Knight> knights;
@@ -49,11 +49,11 @@ public class Player {
 
     // region Constructors
 
-    public Player(String ID, Game game) {
-        this.ID = ID;
+    public Player(String id, Game game) {
+        this.id = id;
         this.game = game;
         try {
-            state = new TurnFlow(game);
+            turnFlow = new TurnFlow(game);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }
@@ -63,11 +63,11 @@ public class Player {
         cities = new ArrayList<>();
 
         resources = new HashMap<>();
-        resources.put(ResourceType.Ore, 5);
-        resources.put(ResourceType.Wool, 5);
-        resources.put(ResourceType.Grain, 5);
-        resources.put(ResourceType.Lumber, 5);
-        resources.put(ResourceType.Brick, 5);
+        resources.put(ResourceType.ore, 5);
+        resources.put(ResourceType.wool, 5);
+        resources.put(ResourceType.grain, 5);
+        resources.put(ResourceType.lumber, 5);
+        resources.put(ResourceType.brick, 5);
 
         knights = new ArrayList<>();
         monopolies = new ArrayList<>();
@@ -85,23 +85,23 @@ public class Player {
 
     // region Getters
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public TurnFlow getState() {
-        return state;
+    public TurnFlow getTurnFlow() {
+        return turnFlow;
     }
 
     public List<Road> getRoads() {
         return roads;
     }
 
-    public List<Intersection> getSettlements() {
+    public List<Building> getSettlements() {
         return settlements;
     }
 
-    public List<Intersection> getCities() {
+    public List<Building> getCities() {
         return cities;
     }
 
@@ -149,7 +149,7 @@ public class Player {
         return yearsOfPlenty;
     }
 
-    public int getLargestArmy() {
+    public int getUsedKnights() {
         return usedArmyCards;
     }
 
@@ -157,7 +157,7 @@ public class Player {
         return publicVP;
     }
 
-    public int getVP() {
+    public int getVictoryPoints() {
         return publicVP + hiddenVP;
     }
 
@@ -165,13 +165,15 @@ public class Player {
 
     // region Setters and Adders
 
-    public void setBank(Bank bank) { this.bank = bank; }
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
 
-    public void addResource(ResourceType resourceType) {
+    public void takeResource(ResourceType resourceType) {
         resources.put(resourceType, resources.get(resourceType) + 1);
     }
 
-    public void addResource(ResourceType resourceType, int resourceNumber) {
+    public void takeResource(ResourceType resourceType, int resourceNumber) {
         resources.put(resourceType, resources.get(resourceType) + resourceNumber);
     }
 
@@ -245,15 +247,16 @@ public class Player {
     // TODO REMINDER: This is used by GAME class
 
     // Called only for the first two roads or when using RoadBuilding development.
-    public Pair<Integer, String> buildRoad(Intersection start, Intersection end) {
+    public Pair<Integer, String> buildRoad(Building start, Building end) {
         if (start.getOwner() != this && end.getOwner() != this) {
             return new Pair<>(HttpStatus.SC_FORBIDDEN, "The road does not connect one of your roads, settlements or cities.");
         }
-        if (!bank.hasRoad(this)) {
+        if (!bank.hasRoads(this)) {
             return new Pair<>(HttpStatus.SC_NOT_FOUND, "You have no more roads to build.");
         }
-        Road road = bank.getRoad(this);
-        road.setCoordinates(start, end);
+        Road road = bank.takeRoad(this);
+        road.setStart(start);
+        road.setEnd(end);
         roads.add(road);
         return new Pair<>(HttpStatus.SC_OK, "The road was built successfully.");
     }
@@ -274,8 +277,8 @@ public class Player {
         }
         // Cazul de baza cand punem primele doua drumuri
         if (roads.size() < Component.INITIAL_FREE_ROADS) {
-            for (Intersection building : settlements) {
-                if (building.getID() == road.getStart().getID() || building.getID() == road.getEnd().getID()) {
+            for (Building building : settlements) {
+                if (building.getId() == road.getStart().getId() || building.getId() == road.getEnd().getId()) {
                     return true;
                 }
             }
@@ -296,16 +299,16 @@ public class Player {
     }
 
     private boolean hasRoadResources() {
-        return resources.get(ResourceType.Lumber) >= Cost.ROAD_LUMBER
-                && resources.get(ResourceType.Brick) >= Cost.ROAD_BRICK;
+        return resources.get(ResourceType.lumber) >= Cost.ROAD_LUMBER
+                && resources.get(ResourceType.brick) >= Cost.ROAD_BRICK;
     }
 
     private void removeRoadResources() {
-        int bricks = resources.get(ResourceType.Brick);
-        int lumbers = resources.get(ResourceType.Lumber);
+        int bricks = resources.get(ResourceType.brick);
+        int lumbers = resources.get(ResourceType.lumber);
 
-        resources.put(ResourceType.Brick, bricks - Cost.ROAD_BRICK);
-        resources.put(ResourceType.Lumber, lumbers - Cost.ROAD_LUMBER);
+        resources.put(ResourceType.brick, bricks - Cost.ROAD_BRICK);
+        resources.put(ResourceType.lumber, lumbers - Cost.ROAD_LUMBER);
     }
 
     // endregion
@@ -313,7 +316,7 @@ public class Player {
     // region Settlement
 
     // TODO REMINDER: This is used by GAME class
-    public boolean buildSettlement(Intersection settlement) {
+    public boolean buildSettlement(Building settlement) {
         if (!canBuildSettlement(settlement)) {
             return false;
         }
@@ -324,7 +327,7 @@ public class Player {
     }
 
     // TODO REMINDER: The GAME class verifies if the id is free and not adjacent to another settlement (2 roads rule).
-    public boolean canBuildSettlement(Intersection settlement) {
+    public boolean canBuildSettlement(Building settlement) {
         if (!canBuildSettlement()) {
             return false;
         }
@@ -335,7 +338,7 @@ public class Player {
         }
         // Adaugam doar la capatul unui drum.
         for (Road road : roads) {
-            if (road.getStart().getID() == settlement.getID() || road.getEnd().getID() == settlement.getID()) {
+            if (road.getStart().getId() == settlement.getId() || road.getEnd().getId() == settlement.getId()) {
                 return true;
             }
         }
@@ -347,22 +350,22 @@ public class Player {
     }
 
     private boolean hasSettlementResources() {
-        return resources.get(ResourceType.Lumber) >= Cost.SETTLEMENT_LUMBER &&
-                resources.get(ResourceType.Grain) >= Cost.SETTLEMENT_GRAIN &&
-                resources.get(ResourceType.Brick) >= Cost.SETTLEMENT_BRICK &&
-                resources.get(ResourceType.Wool) >= Cost.SETTLEMENT_WOOL;
+        return resources.get(ResourceType.lumber) >= Cost.SETTLEMENT_LUMBER &&
+                resources.get(ResourceType.grain) >= Cost.SETTLEMENT_GRAIN &&
+                resources.get(ResourceType.brick) >= Cost.SETTLEMENT_BRICK &&
+                resources.get(ResourceType.wool) >= Cost.SETTLEMENT_WOOL;
     }
 
     private void removeSettlementResources() {
-        int lumbers = resources.get(ResourceType.Lumber);
-        int grains = resources.get(ResourceType.Grain);
-        int bricks = resources.get(ResourceType.Brick);
-        int wools = resources.get(ResourceType.Wool);
+        int lumbers = resources.get(ResourceType.lumber);
+        int grains = resources.get(ResourceType.grain);
+        int bricks = resources.get(ResourceType.brick);
+        int wools = resources.get(ResourceType.wool);
 
-        resources.put(ResourceType.Lumber, lumbers - Cost.SETTLEMENT_LUMBER);
-        resources.put(ResourceType.Grain, grains - Cost.SETTLEMENT_GRAIN);
-        resources.put(ResourceType.Wool, wools - Cost.SETTLEMENT_WOOL);
-        resources.put(ResourceType.Brick, bricks - Cost.SETTLEMENT_BRICK);
+        resources.put(ResourceType.lumber, lumbers - Cost.SETTLEMENT_LUMBER);
+        resources.put(ResourceType.grain, grains - Cost.SETTLEMENT_GRAIN);
+        resources.put(ResourceType.wool, wools - Cost.SETTLEMENT_WOOL);
+        resources.put(ResourceType.brick, bricks - Cost.SETTLEMENT_BRICK);
 
     }
 
@@ -371,14 +374,14 @@ public class Player {
     // region City
 
     // TODO REMINDER: This is used by GAME class
-    public boolean buildCity(Intersection city) {
+    public boolean buildCity(Building city) {
         if (!canBuildCity(city)) {
             return false;
         }
         cities.add(city);
         // REMOVE SETTLEMENT
-        for (Intersection settlement : settlements) {
-            if (settlement.getID() == city.getID()) {
+        for (Building settlement : settlements) {
+            if (settlement.getId() == city.getId()) {
                 settlements.remove(settlement);
                 break;
             }
@@ -389,13 +392,13 @@ public class Player {
     }
 
     // TODO REMINDER: The GAME class verifies if the id is possessed by the player.
-    public boolean canBuildCity(Intersection city) {
+    public boolean canBuildCity(Building city) {
         if (!canBuildCity()) {
             return false;
         }
         // Isi construise dinainte un settlement acolo.
-        for (Intersection settlement : settlements) {
-            if (settlement.getID() == city.getID())
+        for (Building settlement : settlements) {
+            if (settlement.getId() == city.getId())
                 return true;
         }
         return false;
@@ -406,62 +409,53 @@ public class Player {
     }
 
     private boolean hasCityResources() {
-        return resources.get(ResourceType.Ore) >= Cost.CITY_ORES &&
-                resources.get(ResourceType.Grain) >= Cost.CITY_GRAINS;
+        return resources.get(ResourceType.ore) >= Cost.CITY_ORES &&
+                resources.get(ResourceType.grain) >= Cost.CITY_GRAINS;
     }
 
     private void removeCityResources() {
-        int ores = resources.get(ResourceType.Ore);
-        int grains = resources.get(ResourceType.Grain);
+        int ores = resources.get(ResourceType.ore);
+        int grains = resources.get(ResourceType.grain);
 
-        resources.put(ResourceType.Ore, ores - Cost.CITY_ORES);
-        resources.put(ResourceType.Grain, grains - Cost.CITY_GRAINS);
+        resources.put(ResourceType.ore, ores - Cost.CITY_ORES);
+        resources.put(ResourceType.grain, grains - Cost.CITY_GRAINS);
 
     }
 
     // endregion
 
-    // TODO: Add development logic.
-
     // region Trade
 
 
-    public boolean canMakeTrade(List<Pair<ResourceType, Integer>> offer) {
-        for (Pair<ResourceType, Integer> pair : offer) {
-            ResourceType resource = pair.getKey();
-            if (resources.get(resource) < pair.getValue())
+    public boolean hasResources(Map<ResourceType, Integer> resources) {
+        for (ResourceType resource : resources.keySet()) {
+            if (this.resources.get(resource) < resources.get(resource))
                 return false;
         }
         return true;
     }
 
-    public boolean startTrade(List<Pair<ResourceType, Integer>> offer, List<Pair<ResourceType, Integer>> request) {
-        if (canMakeTrade(offer)) {
-            game.addCurrentPlayerOffer(offer);
-            game.addCurrentPlayerRequest(request);
+    public boolean startTrade(Map<ResourceType, Integer> offer, Map<ResourceType, Integer> request) {
+        if (hasResources(offer)) {
+            game.setTradeOffer(offer);
+            game.setTradeRequest(request);
             return true;
         }
         return false;
     }
 
 
-    public boolean wantToTrade(String answer, List<Pair<ResourceType, Integer>> initialRequest, List<Pair<ResourceType, Integer>> offer, List<Pair<ResourceType, Integer>> request) {
-        if (canMakeTrade(initialRequest))
-            if (answer.equals("yes")) {
-                game.addOpponentOffer(ID, offer);
-                game.addOpponentRequest(ID, request);
-                return true;
-            } else
-                return false;
+    public boolean wantToTrade(String answer) {
+        if (hasResources(game.getTradeRequest())) {
+            return answer.equalsIgnoreCase("yes");
+        }
         return false;
     }
 
     public boolean selectOpponent(String playerId) {
         if (playerId != null) {
-            List<Pair<ResourceType, Integer>> request = game.getOpponentsOffers().get(playerId);
-            List<Pair<ResourceType, Integer>> offer = game.getOpponentsOffers().get(playerId);
-            updateTradeResources(offer, request);
-            game.getPlayers().get(playerId).updateTradeResources(request, offer);
+            //TODO: Move offer to specified player.
+            //TODO: Move request to current player.
             return true;
         }
         return false;
@@ -484,19 +478,20 @@ public class Player {
     // endregion
 
     //region Longest Road
-    public int getLongestRoad() {
+
+    public int getBuiltRoads() {
         int maxRoadLength = 0;
         roads.sort(new Comparator<Road>() {
             @Override
             public int compare(Road road1, Road road2) {
-                return road1.getStart().getID() - road2.getStart().getID();
+                return road1.getStart().getId() - road2.getStart().getId();
             }
         });
         List<Integer> roadsMax = new ArrayList<>(roads.size());
         Collections.fill(roadsMax, 1);
         for (int i = 1; i < roads.size(); i++) {
             for (int j = i - 1; j >= 0; j--) {
-                if (roads.get(i).getStart().getID() == roads.get(j).getEnd().getID()) {
+                if (roads.get(i).getStart().getId() == roads.get(j).getEnd().getId()) {
                     roadsMax.add(i, roadsMax.get(j) + 1);
                     break;
                 }
@@ -532,23 +527,24 @@ public class Player {
 
     // endregion
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "id=" + ID +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Player)) return false;
         Player player = (Player) o;
-        return Objects.equals(getID(), player.getID());
+        return Objects.equals(getId(), player.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getID());
+        return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id='" + id + '\'' +
+                '}';
     }
 }

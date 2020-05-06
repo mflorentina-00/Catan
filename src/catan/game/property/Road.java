@@ -1,39 +1,34 @@
 package catan.game.property;
 
-import javafx.util.Pair;
-
 import java.util.Objects;
 
 public class Road extends Property {
-    private Pair<Intersection, Intersection> coordinates;
+    private Building start;
+    private Building end;
 
     public Road() {
         super();
-        coordinates = null;
+        start = null;
+        end = null;
     }
 
-    public Pair<Intersection, Intersection> getCoordinates() {
-        return coordinates;
+    public Building getStart() {
+        return start;
     }
 
-    public void setCoordinates(Intersection start, Intersection end) {
-        if (start.getID() < end.getID()) {
-            coordinates = new Pair<>(start, end);
-        }
-        else {
-            coordinates = new Pair<>(end, start);
-        }
+    public void setStart(Building start) {
+        this.start = start;
     }
 
-    public Intersection getStart(){
-        return coordinates.getKey();
+    public Building getEnd() {
+        return end;
     }
 
-    public Intersection getEnd(){
-        return coordinates.getValue();
+    public void setEnd(Building end) {
+        this.end = end;
     }
 
-    public Intersection getCommonIntersection(Road road) {
+    public Building getCommonIntersection(Road road) {
         if (this.equals(road)) {
             return null;
         }
@@ -56,18 +51,21 @@ public class Road extends Property {
         if (!(o instanceof Road)) return false;
         if (!super.equals(o)) return false;
         Road road = (Road) o;
-        return Objects.equals(getCoordinates(), road.getCoordinates());
+        return Objects.equals(getStart(), road.getStart()) &&
+                Objects.equals(getEnd(), road.getEnd());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getCoordinates());
+        return Objects.hash(super.hashCode(), getStart(), getEnd());
     }
 
     @Override
     public String toString() {
         return "Road{" +
-                "coordinates=" + coordinates +
+                "start=" + start +
+                ", end=" + end +
+                ", owner=" + owner +
                 '}';
     }
 }

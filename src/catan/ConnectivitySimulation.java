@@ -86,7 +86,8 @@ public class ConnectivitySimulation {
 
     public boolean buyRoad(String gameId, String playerId, Integer spot) throws IOException {
         Map<String, String> payload = new HashMap<>();
-        payload.put("spot", spot.toString());
+        payload.put("start", spot.toString());
+        payload.put("end", spot.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
@@ -101,19 +102,19 @@ public class ConnectivitySimulation {
         return response.getCode() == HttpStatus.SC_OK;
     }
 
-    public boolean buyHouse(String gameId, String playerId, Integer spot) throws IOException {
-        Map<String, String> payload = new HashMap<>();
-        payload.put("spot", spot.toString());
+    public boolean buySettlement(String gameId, String playerId, Integer spot) throws IOException {
+        Map<String, Integer> payload = new HashMap<>();
+        payload.put("intersection", spot);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
-                "buyHouse", jsonArgs));
+                "buySettlement", jsonArgs));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean buyCity(String gameId, String playerId, Integer spot) throws IOException {
-        Map<String, String> payload = new HashMap<>();
-        payload.put("spot", spot.toString());
+        Map<String, Integer> payload = new HashMap<>();
+        payload.put("intersection", spot);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
@@ -121,31 +122,27 @@ public class ConnectivitySimulation {
         return response.getCode() == HttpStatus.SC_OK;
     }
 
-    public boolean playDevCard(String gameId, String playerId, Integer spot) throws IOException {
+    public boolean useDevelopment(String gameId, String playerId, String development) throws IOException {
+        Map<String, String> payload = new HashMap<>();
+        payload.put("development", development);
+        String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
-                "playDevCard", ""));
+                "useDevelopment", jsonArgs));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
-    public boolean selectOpponent(String gameId, String playerId) throws IOException {
+    public boolean selectOpponent(String gameId, String playerId, String opponentId) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
-                "selectOpponent", ""));
+                "selectOpponent", opponentId));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
-    public boolean endTrade(String gameId, String playerId) throws IOException {
+    public boolean playerTrade(String gameId, String playerId, String offerRequest) throws IOException {
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
-                "endTrade", ""));
-        return response.getCode() == HttpStatus.SC_OK;
-    }
-
-    public boolean startTrade(String gameId, String playerId) throws IOException {
-        Response response;
-        response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
-                "startTrade", ""));
+                "playerTrade", offerRequest));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
@@ -164,21 +161,19 @@ public class ConnectivitySimulation {
         // Run the game
         while (true) {
             rollDice(gameID, playersID.get(0));
-            startTrade(gameID, playersID.get(0));
-            selectOpponent(gameID, playersID.get(0));
-            endTrade(gameID, playersID.get(0));
-            buyHouse(gameID, playersID.get(0), 20);
+            playerTrade(gameID, playersID.get(0), "");
+            selectOpponent(gameID, playersID.get(0), "");
+            buySettlement(gameID, playersID.get(0), 20);
             rollDice(gameID, playersID.get(0));
             sleep(100);
             buyRoad(gameID, playersID.get(1), 42);
-            playDevCard(gameID, playersID.get(0), 20);
+            useDevelopment(gameID, playersID.get(0), "");
             endTurn(gameID, playersID.get(0));
             sleep(100);
             rollDice(gameID, playersID.get(1));
-            startTrade(gameID, playersID.get(1));
-            selectOpponent(gameID, playersID.get(1));
-            endTrade(gameID, playersID.get(1));
-            buyHouse(gameID, playersID.get(1), 22);
+            playerTrade(gameID, playersID.get(1), "");
+            selectOpponent(gameID, playersID.get(1), "");
+            buySettlement(gameID, playersID.get(1), 22);
             sleep(100);
             endTurn(gameID, playersID.get(1));
         }

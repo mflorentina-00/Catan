@@ -2,8 +2,9 @@ package catan.game.card;
 
 import catan.game.Player;
 import catan.game.card.development.*;
+import catan.game.enumeration.BuildingType;
 import catan.game.enumeration.ResourceType;
-import catan.game.property.Intersection;
+import catan.game.property.Building;
 import catan.game.property.Road;
 import catan.game.rule.Component;
 
@@ -18,8 +19,8 @@ public class Bank {
     private Stack<VictoryPoint> victoryPoints;
     private Stack<YearOfPlenty> yearsOfPlenty;
     private Map<Player, Stack<Road>> roads;
-    private Map<Player, Stack<Intersection>> settlements;
-    private Map<Player, Stack<Intersection>> cities;
+    private Map<Player, Stack<Building>> settlements;
+    private Map<Player, Stack<Building>> cities;
 
     public Bank(List<Player> players) {
         this.players = players;
@@ -36,32 +37,32 @@ public class Bank {
         return existsResource(resourceType, 1);
     }
 
-    public boolean hasRoad(Player player) {
+    public boolean hasRoads(Player player) {
         return !roads.get(player).isEmpty();
     }
 
-    public boolean hasSettlement(Player player) {
+    public boolean hasSettlements(Player player) {
         return !settlements.get(player).isEmpty();
     }
 
-    public boolean hasCity(Player player) {
+    public boolean hasCities(Player player) {
         return !settlements.get(player).isEmpty();
     }
 
-    public boolean getResource(ResourceType resourceType, int resourceNumber) {
+    public int takeResource(ResourceType resourceType, int resourceNumber) {
         int oldResourceNumber = resources.get(resourceType);
         if (existsResource(resourceType, resourceNumber)) {
             resources.put(resourceType, oldResourceNumber - resourceNumber);
-            return true;
+            return resourceNumber;
         }
-        return false;
+        return 0;
     }
 
-    public boolean getResource(ResourceType resourceType) {
-        return getResource(resourceType, 1);
+    public int takeResource(ResourceType resourceType) {
+        return takeResource(resourceType, 1);
     }
 
-    public Knight getKnight(Player player) {
+    public Knight takeKnight(Player player) {
         if (knights.isEmpty()) {
             return null;
         }
@@ -70,7 +71,7 @@ public class Bank {
         return knight;
     }
 
-    public Monopoly getMonopoly(Player player) {
+    public Monopoly takeMonopoly(Player player) {
         if (monopolies.isEmpty()) {
             return null;
         }
@@ -79,7 +80,7 @@ public class Bank {
         return monopoly;
     }
 
-    public RoadBuilding getRoadBuilding(Player player) {
+    public RoadBuilding takeRoadBuilding(Player player) {
         if (roadBuildings.isEmpty()) {
             return null;
         }
@@ -88,7 +89,7 @@ public class Bank {
         return roadBuilding;
     }
 
-    public VictoryPoint getVictoryPoint(Player player) {
+    public VictoryPoint takeVictoryPoint(Player player) {
         if (victoryPoints.isEmpty()) {
             return null;
         }
@@ -97,7 +98,7 @@ public class Bank {
         return victoryPoint;
     }
 
-    public YearOfPlenty getYearOfPlenty(Player player) {
+    public YearOfPlenty takeYearOfPlenty(Player player) {
         if (yearsOfPlenty.isEmpty()) {
             return null;
         }
@@ -106,7 +107,7 @@ public class Bank {
         return yearOfPlenty;
     }
 
-    public Road getRoad(Player player) {
+    public Road takeRoad(Player player) {
         Stack<Road> playerRoads = roads.get(player);
         if (playerRoads.isEmpty()) {
             return null;
@@ -116,39 +117,39 @@ public class Bank {
         return road;
     }
 
-    public Intersection getSettlement(Player player) {
-        Stack<Intersection> playerSettlements = settlements.get(player);
+    public Building takeSettlement(Player player) {
+        Stack<Building> playerSettlements = settlements.get(player);
         if (playerSettlements.isEmpty()) {
             return null;
         }
-        Intersection settlement = playerSettlements.pop();
+        Building settlement = playerSettlements.pop();
         settlement.setOwner(player);
         return settlement;
     }
 
-    public Intersection getCity(Player player) {
-        Stack<Intersection> playerCities = cities.get(player);
+    public Building takeCity(Player player) {
+        Stack<Building> playerCities = cities.get(player);
         if (playerCities.isEmpty()) {
             return null;
         }
-        Intersection city = playerCities.pop();
+        Building city = playerCities.pop();
         city.setOwner(player);
         return city;
     }
 
-    public void putResource(ResourceType resourceType, int resourceNumber) {
+    public void retrieveResource(ResourceType resourceType, int resourceNumber) {
         int oldResourceNumber = resources.get(resourceType);
         resources.put(resourceType, oldResourceNumber + resourceNumber);
     }
 
-    public void putResource(ResourceType resourceType) {
-        putResource(resourceType, 1);
+    public void retrieveResource(ResourceType resourceType) {
+        retrieveResource(resourceType, 1);
     }
 
-    public void putSettlement(Player player, Intersection intersection) {
-        intersection.setOwner(null);
-        Stack<Intersection> playerSettlements = settlements.get(player);
-        playerSettlements.push(intersection);
+    public void retrieveSettlement(Player player, Building building) {
+        building.setOwner(null);
+        Stack<Building> playerSettlements = settlements.get(player);
+        playerSettlements.push(building);
         settlements.put(player, playerSettlements);
     }
 
@@ -222,9 +223,9 @@ public class Bank {
     private void createSettlements() {
         settlements = new HashMap<>();
         for (Player player : players) {
-            Stack<Intersection> playerSettlements = new Stack<>();
+            Stack<Building> playerSettlements = new Stack<>();
             for (int index = 0; index < Component.SETTLEMENTS; ++index) {
-                playerSettlements.push(new Intersection());
+                playerSettlements.push(new Building(BuildingType.Settlement));
             }
             settlements.put(player, playerSettlements);
         }
@@ -233,9 +234,9 @@ public class Bank {
     private void createCities() {
         cities = new HashMap<>();
         for (Player player : players) {
-            Stack<Intersection> playerCities = new Stack<>();
+            Stack<Building> playerCities = new Stack<>();
             for (int index = 0; index < Component.CITIES; ++index) {
-                playerCities.push(new Intersection());
+                playerCities.push(new Building(BuildingType.City));
             }
             cities.put(player, playerCities);
         }

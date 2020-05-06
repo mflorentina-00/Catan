@@ -2,6 +2,9 @@ package catan.game;
 
 import catan.API.Response;
 import catan.game.game.Game;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ankzz.dynamicfsm.action.FSMAction;
 import com.github.ankzz.dynamicfsm.fsm.FSM;
 import org.apache.http.HttpStatus;
@@ -10,130 +13,205 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Random;
+import java.util.Map;
 
-//TODO call proper functions for each actions and get response arguments
+//TODO: The responses must be set in each game function.
 public class TurnFlow {
-    public FSM fsm;
     public final Game game;
+    public FSM state;
     public Response response;
-
 
     TurnFlow(Game game) throws IOException, SAXException, ParserConfigurationException {
         this.game = game;
-        fsm = new FSM("stateConfig.xml", new FSMAction() {
+        state = new FSM("turnFlow.xml", new FSMAction() {
             @Override
-            public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "The message has no assigned function!", "");
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                response = new Response(HttpStatus.SC_NOT_FOUND, "The message has no assigned function.", "");
                 return true;
             }
         });
-        fsm.setAction("rollDice", new FSMAction() {
+        state.setAction("rollDice", new FSMAction() {
             @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                Random random = new Random();
-                if (random.nextInt(7) + random.nextInt(7) == 7)
-                    fsm.ProcessFSM("rollNotASeven");//fsm.ProcessFSM("rollASeven");}
-                else
-                    fsm.ProcessFSM("rollNotASeven");
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                game.rollDice();
                 return false;
             }
         });
-        fsm.setAction("rollASeven", new FSMAction() {
+        state.setAction("rollSeven", new FSMAction() {
             @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Rolled a seven!", "");
-                return true;
-            }
-        });
-        fsm.setAction("rollNotASeven", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Rolled not a seven!", "");
-                return true;
-            }
-        });
-        fsm.setAction("giveResources", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Give resources!", "");
-                return true;
-            }
-        });
-        fsm.setAction("moveRobber", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Move robbert!", "");
-                return true;
-            }
-        });
-        fsm.setAction("giveSelectedResource", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Give selected resource!", "");
-                return true;
-            }
-        });
-        fsm.setAction("startTrade", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Started trading", "");
-                return true;
-            }
-        });
-        fsm.setAction("selectOpponent", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Selected opponent", "");
-                return true;
-            }
-        });
-        fsm.setAction("endTrade", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Ended trading", "");
-                return true;
-            }
-        });
-        fsm.setAction("buyRoad", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Buy road successfully!", "");
-                return true;
-            }
-        });
-        fsm.setAction("buyHouse", new FSMAction() {
-            @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Buy house successfully!", "");
-                if (!game.buySettlement(Integer.parseInt(((HashMap<String, String>) o).get("spot")))) {
-                    response = new Response(HttpStatus.SC_FORBIDDEN, "Buying the house is not possible!", "");
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                try {
+                    String data = new ObjectMapper().writeValueAsString(arguments);
+                    response = new Response(HttpStatus.SC_OK, "Rolled a seven.", data);
+                    return true;
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
                     return false;
                 }
+            }
+        });
+        state.setAction("rollNotSeven", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                try {
+                    String data = new ObjectMapper().writeValueAsString(arguments);
+                    response = new Response(HttpStatus.SC_OK, "Rolled not a seven.", data);
+                    return true;
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        });
+        state.setAction("moveRobber", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, Integer>>(){});
+                int tile = requestArguments.get("tile");
+                //TODO: Add game.moveRobber(int tile).
+                response = new Response(HttpStatus.SC_OK, "Moved robber successfully.", "");
                 return true;
             }
         });
-        fsm.setAction("buyCity", new FSMAction() {
+        state.setAction("stealResource", new FSMAction() {
             @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                response = new Response(HttpStatus.SC_OK, "Buy City successfully!", "");
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, String>>(){});
+                String playerId = requestArguments.get("playerId");
+                //TODO: Add game.stealResource(String playerId).
+                response = new Response(HttpStatus.SC_OK, "Stole resource successfully.", "");
                 return true;
             }
         });
-        fsm.setAction("playDevCard", new FSMAction() {
+        state.setAction("playerTrade", new FSMAction() {
             @Override
-            public boolean action(String s, String s1, String s2, Object o) {
-                // TODO: Add configuration for each development card.
-                fsm.ProcessFSM("playRoadBuilding");
-                response = new Response(HttpStatus.SC_OK, "Dev Card played successfully!", "");
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                //TODO: Create offerRequest map.
+                //TODO: Call game.playerTrade(Map<String, Integer> offerRequest).
+                response = new Response(HttpStatus.SC_OK, "Started trading successfully.", "");
                 return true;
             }
         });
-        fsm.setAction("endTurn", new FSMAction() {
+        state.setAction("sendOpponents", new FSMAction() {
             @Override
-            public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "Turn changed successfully!", "");
-                return game.changeTurn();
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                //TODO: Add game.sendOpponents().
+                response = new Response(HttpStatus.SC_OK, "Sent possible trade partners successfully.", "");
+                return true;
+            }
+        });
+        state.setAction("selectOpponent", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, String>>(){});
+                if (requestArguments != null) {
+                    String playerId = requestArguments.get("playerId");
+                }
+                //TODO: Add game.selectOpponent(String playerId).
+                response = new Response(HttpStatus.SC_OK, "Selected trade partner successfully.", "");
+                return true;
+            }
+        });
+        state.setAction("bankTrade", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, String>>(){});
+                String offer = requestArguments.get("offer");
+                String request = requestArguments.get("request");
+                //TODO: Add game.bankTrade(String offer, String request).
+                response = new Response(HttpStatus.SC_OK, "Made trade with bank successfully.", "");
+                return true;
+            }
+        });
+        state.setAction("portTrade", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, String>>(){});
+                int port = Integer.parseInt(requestArguments.get("port"));
+                String offer = requestArguments.get("offer");
+                String request = requestArguments.get("request");
+                //TODO: Add game.portTrade(int port, String offer, String request).
+                response = new Response(HttpStatus.SC_OK, "Made trade with a port successfully.", "");
+                return true;
+            }
+        });
+        state.setAction("buyRoad", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, Integer>>(){});
+                int start = requestArguments.get("start");
+                int end = requestArguments.get("end");
+                if (game.buyRoad(start, end)) {
+                    response = new Response(HttpStatus.SC_OK, "Bought road successfully.", "");
+                    return true;
+                }
+                response = new Response(HttpStatus.SC_FORBIDDEN, "Cannot buy settlement.", "");
+                return false;            }
+        });
+        state.setAction("buySettlement", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, Integer>>(){});
+                int intersection = requestArguments.get("intersection");
+                if (game.buySettlement(intersection)) {
+                    response = new Response(HttpStatus.SC_OK, "Bought settlement successfully.", "");
+                    return true;
+                }
+                response = new Response(HttpStatus.SC_FORBIDDEN, "Cannot buy settlement.", "");
+                return false;
+            }
+        });
+        state.setAction("buyCity", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, Integer>>(){});
+                int intersection = requestArguments.get("intersection");
+                if (game.buyCity(intersection)) {
+                    response = new Response(HttpStatus.SC_OK, "Bought city successfully.", "");
+                    return true;
+                }
+                response = new Response(HttpStatus.SC_FORBIDDEN, "Cannot buy city.", "");
+                return false;
+            }
+        });
+        state.setAction("buyDevelopment", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, String>>(){});
+                String development = requestArguments.get("development");
+                //TODO: Add game.buyDevelopment(String development).
+                response = new Response(HttpStatus.SC_OK, "Bought development successfully.", "");
+                return true;
+            }
+        });
+        state.setAction("useDevelopment", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
+                        new TypeReference<HashMap<String, String>>(){});
+                String development = requestArguments.get("development");
+                String resource = requestArguments.get("resource");
+                //TODO: Add game.useDevelopment(String development, String resource).
+                state.ProcessFSM("useRoadBuilding");
+                response = new Response(HttpStatus.SC_OK, "Used development successfully.", "");
+                return true;
+            }
+        });
+        state.setAction("endTurn", new FSMAction() {
+            @Override
+            public boolean action(String currentState, String message, String nextState, Object arguments) {
+                game.changeTurn();
+                response = new Response(HttpStatus.SC_OK, "Turn changed successfully.", "");
+                return true;
             }
         });
     }

@@ -31,4 +31,11 @@ public abstract class Property {
     public int hashCode() {
         return Objects.hash(getOwner());
     }
+
+    @Override
+    public String toString() {
+        return "Property{" +
+                "owner=" + owner +
+                '}';
+    }
 }

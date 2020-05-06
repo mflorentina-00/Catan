@@ -37,7 +37,7 @@ public class YearOfPlenty extends Development {
         if (!bank.existsResource(resourceType)) {
             return new Pair<>(HttpStatus.SC_NOT_FOUND, "The bank has no more " + resourceType + ".");
         }
-        owner.addResource(resourceType);
+        owner.takeResource(resourceType);
         return new Pair<>(HttpStatus.SC_FORBIDDEN, "The " + resourceType + " from the bank was took successfully.");
     }
 }
