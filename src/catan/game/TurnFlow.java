@@ -18,26 +18,26 @@ import java.util.Map;
 //TODO: The responses must be set in each game function.
 public class TurnFlow {
     public final Game game;
-    public FSM state;
+    public FSM fsm;
     public Response response;
 
     TurnFlow(Game game) throws IOException, SAXException, ParserConfigurationException {
         this.game = game;
-        state = new FSM("turnFlow.xml", new FSMAction() {
+        fsm = new FSM("stateConfig.xml", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 response = new Response(HttpStatus.SC_NOT_FOUND, "The message has no assigned function.", "");
                 return true;
             }
         });
-        state.setAction("rollDice", new FSMAction() {
+        fsm.setAction("rollDice", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 game.rollDice();
                 return false;
             }
         });
-        state.setAction("rollSeven", new FSMAction() {
+        fsm.setAction("rollSeven", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 try {
@@ -50,7 +50,7 @@ public class TurnFlow {
                 }
             }
         });
-        state.setAction("rollNotSeven", new FSMAction() {
+        fsm.setAction("rollNotSeven", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 try {
@@ -63,7 +63,7 @@ public class TurnFlow {
                 }
             }
         });
-        state.setAction("moveRobber", new FSMAction() {
+        fsm.setAction("moveRobber", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -74,7 +74,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("stealResource", new FSMAction() {
+        fsm.setAction("stealResource", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -85,7 +85,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("playerTrade", new FSMAction() {
+        fsm.setAction("playerTrade", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 //TODO: Create offerRequest map.
@@ -94,7 +94,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("sendOpponents", new FSMAction() {
+        fsm.setAction("sendOpponents", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 //TODO: Add game.sendOpponents().
@@ -102,7 +102,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("selectOpponent", new FSMAction() {
+        fsm.setAction("selectOpponent", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -115,7 +115,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("bankTrade", new FSMAction() {
+        fsm.setAction("bankTrade", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -127,7 +127,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("portTrade", new FSMAction() {
+        fsm.setAction("portTrade", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -140,7 +140,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("buyRoad", new FSMAction() {
+        fsm.setAction("buyRoad", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -174,11 +174,11 @@ public class TurnFlow {
                     response = new Response(HttpStatus.SC_FORBIDDEN, "Placing the road is not possible!", "");
                     return false;
                 }
-                return game.changeTurn();
+                game.changeTurn();
+                return true;
             }
         });
-        fsm.setAction("buyHouse", new FSMAction() {
-        state.setAction("buySettlement", new FSMAction() {
+        fsm.setAction("buySettlement", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -192,7 +192,7 @@ public class TurnFlow {
                 return false;
             }
         });
-        state.setAction("buyCity", new FSMAction() {
+        fsm.setAction("buyCity", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -206,7 +206,7 @@ public class TurnFlow {
                 return false;
             }
         });
-        state.setAction("buyDevelopment", new FSMAction() {
+        fsm.setAction("buyDevelopment", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -217,7 +217,7 @@ public class TurnFlow {
                 return true;
             }
         });
-        state.setAction("useDevelopment", new FSMAction() {
+        fsm.setAction("useDevelopment", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
@@ -225,12 +225,12 @@ public class TurnFlow {
                 String development = requestArguments.get("development");
                 String resource = requestArguments.get("resource");
                 //TODO: Add game.useDevelopment(String development, String resource).
-                state.ProcessFSM("useRoadBuilding");
+                fsm.ProcessFSM("useRoadBuilding");
                 response = new Response(HttpStatus.SC_OK, "Used development successfully.", "");
                 return true;
             }
         });
-        state.setAction("endTurn", new FSMAction() {
+        fsm.setAction("endTurn", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 game.changeTurn();

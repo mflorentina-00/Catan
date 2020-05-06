@@ -156,7 +156,7 @@ public abstract class Game {
         }
         int nextPlayer = (playerOrder.indexOf(currentPlayer) + 1) % playerOrder.size();
         currentPlayer = playerOrder.get(nextPlayer);
-        players.get(currentPlayer).getTurnFlow().state.ProcessFSM("restart");
+        players.get(currentPlayer).getTurnFlow().fsm.ProcessFSM("restart");
     }
 
     protected void updateBonusPoints() {
@@ -167,8 +167,7 @@ public abstract class Game {
                 players.get(currentPlayer).takeLargestArmy();
                 currentLargestArmy = new Pair<>(currentPlayer, usedKnights);
             }
-        }
-        else if (usedKnights > currentLargestArmy.getValue() &&
+        } else if (usedKnights > currentLargestArmy.getValue() &&
                 !(currentPlayer.equals(currentLargestArmy.getKey()))) {
             players.get(currentLargestArmy.getKey()).giveLargestArmy();
             players.get(currentPlayer).takeLargestArmy();
@@ -182,8 +181,7 @@ public abstract class Game {
                 players.get(currentPlayer).takeLongestRoad();
                 currentLongestRoad = new Pair<>(currentPlayer, builtRoads);
             }
-        }
-        else if (builtRoads > currentLongestRoad.getValue() &&
+        } else if (builtRoads > currentLongestRoad.getValue() &&
                 !(currentPlayer.equals(currentLongestRoad.getKey()))) {
             players.get(currentLongestRoad.getKey()).giveLongestRoad();
             players.get(currentPlayer).takeLongestRoad();
@@ -195,56 +193,44 @@ public abstract class Game {
         return players.get(currentPlayer).getVictoryPoints() >= VictoryPoint.FINISH_VICTORY_POINTS;
     }
 
-    public Response playTurn(String playerID, String command, Map<String, String> jsonArgs) {
-        if(command.equals("discardResources")) {
+    public Response playTurn(String playerId, String command, Map<String, String> requestArguments) {
+        // TODO: Add support for "synchronize" command.
+        // TODO: Add support for "buildRoad" command when using RoadBuilding development.
+        // TODO: Add suport for "getResource" command when using YearOfPlenty development.
+        if (command.equals("discardResources")) {
             Map<ResourceType, Integer> resources = new HashMap<>();
-            for (String resource : jsonArgs.keySet()) {
+            for (String resource : requestArguments.keySet()) {
                 switch (resource) {
                     case "lumber":
-                        resources.put(ResourceType.Lumber, Integer.valueOf(jsonArgs.get("lumber")));
+                        resources.put(ResourceType.lumber, Integer.valueOf(requestArguments.get("lumber")));
                         break;
                     case "wool":
-                        resources.put(ResourceType.Wool, Integer.valueOf(jsonArgs.get("wool")));
+                        resources.put(ResourceType.wool, Integer.valueOf(requestArguments.get("wool")));
                         break;
                     case "ore":
-                        resources.put(ResourceType.Ore, Integer.valueOf(jsonArgs.get("ore")));
+                        resources.put(ResourceType.ore, Integer.valueOf(requestArguments.get("ore")));
                         break;
                     case "brick":
-                        resources.put(ResourceType.Brick, Integer.valueOf(jsonArgs.get("brick")));
+                        resources.put(ResourceType.brick, Integer.valueOf(requestArguments.get("brick")));
                         break;
                     case "grain":
-                        resources.put(ResourceType.Grain, Integer.valueOf(jsonArgs.get("grain")));
+                        resources.put(ResourceType.grain, Integer.valueOf(requestArguments.get("grain")));
                         break;
                     default:
                         return new Response(HttpStatus.SC_NOT_FOUND, "Wrong argument.", "");
                 }
             }
-            takeResourcesSevenDice(playerID, resources);
+            takeResourcesSevenDice(playerId, resources);
             return new Response(HttpStatus.SC_OK, "Discarded resources successfully.", "");
         }
-
-        if (playerID.equals(currentPlayer)) {
-            players.get(playerID).getState().fsm.setShareData(jsonArgs);
-            players.get(playerID).getState().fsm.ProcessFSM(command);
-            Response response = players.get(playerID).getState().response;
-            //Reset player response in case that the state does not have the command | the command does not exist
-            players.get(playerID).getState().response = new Response(HttpStatus.SC_NOT_FOUND, "Wrong Command", "");
-    public Response playTurn(String playerId, String command, Map<String, String> requestArguments) {
-        // TODO: Add support for "synchronize" command.
-        // TODO: Add support for "buildRoad" command when using RoadBuilding development.
-        // TODO: Add suport for "getResource" command when using YearOfPlenty development.
         if (playerId.equals(currentPlayer)) {
-            players.get(playerId).getTurnFlow().state.setShareData(requestArguments);
-            players.get(playerId).getTurnFlow().state.ProcessFSM(command);
+            players.get(playerId).getTurnFlow().fsm.setShareData(requestArguments);
+            players.get(playerId).getTurnFlow().fsm.ProcessFSM(command);
             Response response = players.get(playerId).getTurnFlow().response;
             // Reset player response.
             players.get(playerId).getTurnFlow().response = new Response(HttpStatus.SC_BAD_REQUEST, "Wrong command.", "");
             return response;
-        }
-        else if (command.equals("discardResources")) {
-            //TODO: Add discardResources functionality.
-        }
-        else if (command.equals("wantToTrade")) {
+        } else if (command.equals("wantToTrade")) {
             //TODO: Add wantToTrade functionality.
         }
         return new Response(HttpStatus.SC_FORBIDDEN, "Not your turn.", "");
@@ -274,13 +260,12 @@ public abstract class Game {
         responseArguments.put("dice_1", firstDice);
         responseArguments.put("dice_2", secondDice);
         int diceSum = firstDice + secondDice;
-        FSM currentState = players.get(currentPlayer).getTurnFlow().state;
+        FSM currentState = players.get(currentPlayer).getTurnFlow().fsm;
         if (diceSum != 7) {
             responseArguments.putAll(giveResourcesFromDice(diceSum, responseArguments));
             currentState.setShareData(responseArguments);
             currentState.ProcessFSM("rollNotSeven");
-        }
-        else {
+        } else {
             for (String player : playerOrder) {
                 int playerIndex = playerOrder.indexOf(player);
                 responseArguments.put("resourcesToDiscard_" + playerIndex, players.get(player).getResourceNumber() / 2);
@@ -354,38 +339,44 @@ public abstract class Game {
         return neededResources;
     }
 
-    public boolean takeResourcesSevenDice (String playerID, Map<ResourceType, Integer> resourcesToGive) {
-            Player pl = players.get(playerID);
-            pl.removeResources(resourcesToGive);
+    public boolean takeResourcesSevenDice(String playerID, Map<ResourceType, Integer> resourcesToGive) {
+        Player pl = players.get(playerID);
+        pl.removeResources(resourcesToGive);
         return true;
     }
 
     //endregion
 
     //region place house and road region
-    public  boolean placeInitSettlement(int spot){
+    public boolean placeInitSettlement(int spot) {
+        /*
         Player player = players.get(currentPlayer);
-        Intersection intersection = board.getBuildings().get(spot);
+        Building intersection = board.getBuildings().get(spot);
         if (intersection == null || intersection.getOwner() != null || !isTwoRoadsDistance(intersection))
             return false;
         board.getBuildings().get(spot).setOwner(player);
+        */
         return true;
     }
-    public  boolean placeInitRoad(int intersectionId1,int intersectionId2){
+
+    public boolean placeInitRoad(int intersectionId1, int intersectionId2) {
+        /*
         Player player = players.get(currentPlayer);
-        Intersection firstIntersection = board.getBuildings().get(intersectionId1);
-        Intersection secondIntersection = board.getBuildings().get(intersectionId2);
+        Building firstIntersection = board.getBuildings().get(intersectionId1);
+        Building secondIntersection = board.getBuildings().get(intersectionId2);
 
         if (firstIntersection == null || secondIntersection == null)
             return false;
         if (!((firstIntersection.getOwner() == null || firstIntersection.getOwner().equals(player)) &&
                 (secondIntersection.getOwner() == null || secondIntersection.getOwner().equals(player))))
             return false;
-        if(!board.getIntersectionGraph().areAdjacent(intersectionId1,intersectionId2))
+        if (!board.getIntersectionGraph().areAdjacent(intersectionId1, intersectionId2))
             return false;
         Road road = bank.getRoad(player);
-        road.setCoordinates(firstIntersection,secondIntersection);
+        road.setCoordinates(firstIntersection, secondIntersection);
         return player.addRoad(road);
+        */
+        return true;
     }
 
     //endregion
@@ -451,11 +442,15 @@ public abstract class Game {
                 (secondBuilding.getOwner() == null || secondBuilding.getOwner().equals(player))))
             return false;
         Road road = bank.takeRoad(player);
-        if (road == null)
-        if(!board.getIntersectionGraph().areAdjacent(intersectionId1,intersectionId2))
+        if (road == null) {
             return false;
-        Road road = bank.getRoad(player);
-        road.setCoordinates(firstIntersection,secondIntersection);
+        }
+        if (!board.getIntersectionGraph().areAdjacent(intersectionId1, intersectionId2)) {
+            return false;
+        }
+
+        road.setStart(firstBuilding);
+        road.setEnd(secondBuilding);
         return player.buyRoad(road);
     }
 
@@ -464,7 +459,7 @@ public abstract class Game {
     //region Trade
 
     public void playerTrade(List<Player> playersThatAccepted, List<Pair<ResourceType, Integer>> offer,
-                          List<Pair<ResourceType, Integer>> request) {
+                            List<Pair<ResourceType, Integer>> request) {
         Player traderPlayer = players.get(currentPlayer);
         Random rand = new Random();
         int index = rand.nextInt(playersThatAccepted.size());

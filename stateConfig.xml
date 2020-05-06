@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 
 <FSM>
  <STATE id="Pre-Start-1-House">
-   <MESSAGE id="placeHouse" action="placeHouse" nextState="Pre-Start-1-Road"/>
+  <MESSAGE id="placeHouse" action="placeHouse" nextState="Pre-Start-1-Road"/>
  </STATE>
  <STATE id="Pre-Start-1-Road">
-   <MESSAGE id="placeRoad" action="placeRoad" nextState="Pre-Start-2-House"/>
+  <MESSAGE id="placeRoad" action="placeRoad" nextState="Pre-Start-2-House"/>
  </STATE>
  <STATE id="Pre-Start-2-House">
   <MESSAGE id="placeHouse" action="placeHouse" nextState="Pre-Start-2-Road"/>
@@ -14,32 +15,35 @@
  </STATE>
  <STATE id="Start" type="ID">
   <MESSAGE id="rollDice" action="rollDice" nextState="Start"/>
-  <MESSAGE id="rollASeven" action="rollASeven" nextState="MovingRobber"/>
-  <MESSAGE id="rollNotASeven" action="rollNotASeven" nextState="Playing"/>
+  <MESSAGE id="rollSeven" action="rollSeven" nextState="MovingRobber"/>
+  <MESSAGE id="rollNotSeven" action="rollNotSeven" nextState="Playing"/>
  </STATE>
  <STATE id="MovingRobber">
-  <MESSAGE id="moveRobber" action="moveRobber" nextState="StealingAResourceFromAPlayer"/>
+  <MESSAGE id="moveRobber" action="moveRobber" nextState="StealingResource"/>
  </STATE>
- <STATE id="StealingAResourceFromPlayer">
-  <MESSAGE id="stealSelectedResource" action="stealSelectedResource" nextState="Playing"/>
+ <STATE id="StealingResource">
+  <MESSAGE id="stealResource" action="stealResource" nextState="Playing"/>
  </STATE>
  <STATE id="Playing">
-  <MESSAGE id="startTrade" action="startTrade" nextState="Trading"/>
-  <MESSAGE id="playDevCard" action="playDevCard" nextState="Playing"/>
-  <MESSAGE id="playKnight" action="playKnight" nextState="MovingRobber"/>
-  <MESSAGE id="playMonopoly" action="playMonopoly" nextState="Playing"/>
-  <MESSAGE id="playRoadBuilding" action="playRoadBuilding" nextState="Playing"/>
-  <MESSAGE id="playYearOfPlenty" action="playYearOfPlenty" nextState="Playing"/>
+  <MESSAGE id="playerTrade" action="playerTrade" nextState="Trading"/>
+  <MESSAGE id="bankTrade" action="bankTrade" nextState="Playing"/>
+  <MESSAGE id="portTrade" action="portTrade" nextState="Playing"/>
   <MESSAGE id="buyRoad" action="buyRoad" nextState="Playing"/>
-  <MESSAGE id="buyHouse" action="buyHouse" nextState="Playing"/>
+  <MESSAGE id="buySettlement" action="buySettlement" nextState="Playing"/>
   <MESSAGE id="buyCity" action="buyCity" nextState="Playing"/>
-  <MESSAGE id="buyDevCard" action="buyDevCard" nextState="Playing"/>
+  <MESSAGE id="buyDevelopment" action="buyDevelopment" nextState="Playing"/>
+  <MESSAGE id="useDevelopment" action="useDevelopment" nextState="Playing"/>
+  <MESSAGE id="useKnight" action="useKnight" nextState="MovingRobber"/>
+  <MESSAGE id="useMonopoly" action="useMonopoly" nextState="Playing"/>
+  <MESSAGE id="useRoadBuilding" action="useRoadBuilding" nextState="Playing"/>
+  <MESSAGE id="useYearOfPlenty" action="useYearOfPlenty" nextState="Playing"/>
   <MESSAGE id="endTurn" action="endTurn" nextState="End"/>
  </STATE>
  <STATE id="Trading">
+  <MESSAGE id="sendOpponents" action="sendOpponents" nextState="Trading"/>
   <MESSAGE id="selectOpponent" action="selectOpponent" nextState="Playing"/>
  </STATE>
  <STATE id="End">
-  <MESSAGE id="Restart" action="Restart" nextState="Start"/>
+  <MESSAGE id="restart" action="restart" nextState="Start"/>
  </STATE>
 </FSM>
