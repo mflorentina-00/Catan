@@ -13,12 +13,13 @@ using System.Text;
 [System.Serializable]
 public class ReceiveBoardScript
 {
-    public BoardConnectivityJson ReceivedBoard = new BoardConnectivityJson();
+    public static BoardConnectivityJson ReceivedBoard = new BoardConnectivityJson();
+
     public static string stringBoard;
 
     public void GetString(string user)
     {
-        stringBoard = user;
+        ReceiveBoardScript.stringBoard = user;
     }
 
     public void getGameBoard(string ReceivedGameID)
@@ -29,11 +30,8 @@ public class ReceiveBoardScript
 
         RestClient.Post<BoardConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/startgame", gameid).Then(board =>
         {
-            ReceivedBoard.ports = board.ports;
-            ReceivedBoard.board = board.board;
-            string path = "board.json";
-            byte[] bytes = Encoding.ASCII.GetBytes(JsonUtility.ToJson(ReceivedBoard));
-            File.WriteAllBytes(path, bytes);
+            ReceiveBoardScript.ReceivedBoard.ports = board.ports;
+            ReceiveBoardScript.ReceivedBoard.board = board.board;
         }).Catch(err => { Debug.Log(err); });
     }
 
