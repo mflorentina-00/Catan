@@ -13,13 +13,12 @@ using System.Text;
 [System.Serializable]
 public class ReceiveBoardScript
 {
-    public static BoardConnectivityJson ReceivedBoard = new BoardConnectivityJson();
-
+    public BoardConnectivityJson ReceivedBoard = new BoardConnectivityJson();
     public static string stringBoard;
 
     public void GetString(string user)
     {
-        ReceiveBoardScript.stringBoard = user;
+        stringBoard = user;
     }
 
     public void getGameBoard(string ReceivedGameID)
@@ -30,8 +29,11 @@ public class ReceiveBoardScript
 
         RestClient.Post<BoardConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/startgame", gameid).Then(board =>
         {
-            ReceiveBoardScript.ReceivedBoard.ports = board.ports;
-            ReceiveBoardScript.ReceivedBoard.board = board.board;
+            ReceivedBoard.ports = board.ports;
+            ReceivedBoard.board = board.board;
+            string path = "board.json";
+            byte[] bytes = Encoding.ASCII.GetBytes(JsonUtility.ToJson(ReceivedBoard));
+            File.WriteAllBytes(path, bytes);
         }).Catch(err => { Debug.Log(err); });
     }
 
@@ -41,9 +43,9 @@ public class ReceiveBoardScript
         UnityConnectivityCommand command = new UnityConnectivityCommand();
         string board = "";
         command.username = "abcdef";
-        RestClient.Post<LobbyConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/add", command).Then(ReceivedLobby =>
+       RestClient.Post<LobbyConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/add", command).Then(ReceivedLobby =>
         {
-            getGameBoard(ReceivedLobby.gameid);
+           getGameBoard(ReceivedLobby.gameid);
         }).Catch(err => { Debug.Log(err); });
     }
 
