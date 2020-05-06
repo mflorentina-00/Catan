@@ -335,6 +335,12 @@ public class Board {
         return null;
     }
 
+    // TODO de modificat dupa ce facem clasa Intersection in Board si modificam clasa Building
+    // subject to change, needs optimization - RC
+    public List<Integer> getAdjacentIntersections (Building intersection){
+        return intersectionGraph.getAdjacentIntersectionsIDs(intersection.getId());
+    }
+
     public void printTileBuildingAdjacency() {
         try {
             FileWriter fileWriter = new FileWriter("resources/TileBuildingAdjacency.txt");

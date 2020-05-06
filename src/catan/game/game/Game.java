@@ -5,6 +5,7 @@ import catan.game.Player;
 import catan.game.board.Board;
 import catan.game.board.Tile;
 import catan.game.card.Bank;
+import catan.game.enumeration.BuildingType;
 import catan.game.enumeration.ResourceType;
 import catan.game.property.Building;
 import catan.game.property.Road;
@@ -395,6 +396,44 @@ public abstract class Game {
         return true;
     }
 
+    // TODO de modificat toate functiile care se ocupa de returnarea pozitiilor disponibile dupa ce
+    //  facem clasa Intersection in Board si modificam clasa Building
+    public boolean isAvailableHousePlacement (Building intersection) {
+        if (intersection.getBuildingType()== BuildingType.Settlement
+                || intersection.getBuildingType()==BuildingType.City)
+            return false;
+        for (Building building:
+             board.getBuildings()) {
+            if(board.getAdjacentIntersections(intersection).contains(building.getId()))
+                return false;
+        }
+        return true;
+    }
+
+    // TODO de modificat pentru a returna doar pozitii valide
+    public List<Integer> getAvailableRoadPlacements() {
+        Player player = players.get(currentPlayer);
+        Set<Integer> availableRoadPlacements = new HashSet<>();
+        for (Road road:
+             player.getRoads()) {
+            availableRoadPlacements.addAll(board.getAdjacentIntersections(road.getStart()));
+            availableRoadPlacements.addAll(board.getAdjacentIntersections(road.getEnd()));
+        }
+        return (List<Integer>) availableRoadPlacements;
+    }
+
+    public List<Integer> getAvailableHousePlacements() {
+        Player player = players.get(currentPlayer);
+        Set<Integer> availableHousePlacements = new HashSet<>();
+        for (Road road:
+             player.getRoads()) {
+            if (isAvailableHousePlacement(road.getStart()))
+                availableHousePlacements.add(road.getStart().getId());
+            if (isAvailableHousePlacement(road.getEnd()))
+                availableHousePlacements.add(road.getEnd().getId());
+        }
+        return (List<Integer>) availableHousePlacements;
+    }
     //endregion
 
     //region place house and road region

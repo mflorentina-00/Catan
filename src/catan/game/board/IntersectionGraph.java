@@ -112,6 +112,16 @@ public class IntersectionGraph {
         }
     }
 
+    //subject to change/delete - RC
+    public List<Integer> getAdjacentIntersectionsIDs(Integer intersectionID) {
+        List<Integer> adjacentIntersectionsID = new ArrayList<>();
+        for (Integer id :
+                adjacencyLists.get(intersectionID)) {
+            adjacentIntersectionsID.add(id);
+        }
+        return adjacentIntersectionsID;
+    }
+
     public void printAdjacencyLists() {
         try {
             FileWriter fileWriter = new FileWriter("resources/IntersectionsAdjacency.txt");
