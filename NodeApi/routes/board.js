@@ -9,3 +9,4 @@ router.put('/', boardController.updateBoard);
 router.delete('/', boardController.deleteBoard);
 
 module.exports = router;
+

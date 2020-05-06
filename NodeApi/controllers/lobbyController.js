@@ -257,3 +257,4 @@ const startGame = async(req, response) => {
 module.exports={
     getLobbies, addLobby, joinLobby, leaveLobby, startGame
 }
+
