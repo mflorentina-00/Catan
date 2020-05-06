@@ -30,7 +30,7 @@ public class ConnectivitySimulation {
         if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else {
-            Map<String, String> args = GameRequest.getMapFromData(response.getData());
+            Map<String, String> args = GameRequest.getMapFromData(response.getArguments());
             return args.get("gameId");
         }
     }
@@ -69,7 +69,7 @@ public class ConnectivitySimulation {
         if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else {
-            Map<String, String> args = GameRequest.getMapFromData(response.getData());
+            Map<String, String> args = GameRequest.getMapFromData(response.getArguments());
             return args.get("playerId");
         }
     }

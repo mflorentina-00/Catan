@@ -3,20 +3,20 @@ package catan.API;
 public class Response {
     private Integer code;
     private String status;
-    private String data;
+    private String arguments;
 
-    public Response(Integer code, String status, String data) {
+    public Response(Integer code, String status, String arguments) {
         this.code = code;
         this.status = status;
-        this.data = data;
+        this.arguments = arguments;
     }
 
-    public String getData() {
-        return data;
+    public String getArguments() {
+        return arguments;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setArguments(String arguments) {
+        this.arguments = arguments;
     }
 
     public String getStatus() {
@@ -40,7 +40,7 @@ public class Response {
         return "Response{" +
                 "code=" + code +
                 ", status='" + status + '\'' +
-                ", data='" + data + '\'' +
+                ", data='" + arguments + '\'' +
                 '}';
     }
 }

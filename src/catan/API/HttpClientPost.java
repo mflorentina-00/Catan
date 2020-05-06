@@ -55,7 +55,7 @@ public class HttpClientPost {
             Map<String, String> result = new ObjectMapper().readValue(response.toString(),
                     new TypeReference<HashMap<String, String>>(){});
             System.out.println(result);
-            return new Response(Integer.valueOf(result.get("code")), result.get("status"), result.get("data"));
+            return new Response(Integer.valueOf(result.get("code")), result.get("status"), result.get("arguments"));
         }
     }
 }
