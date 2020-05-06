@@ -32,7 +32,7 @@ public class RoadBuilding extends Development {
 
     public Pair<Integer, String> buildRoad() {
         if (owner == null || start == null || end == null) {
-            return new Pair<>(HttpStatus.SC_FORBIDDEN, "Owner, start or end were not set.");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "Owner, start or end were not set.");
         }
         return owner.buildRoad(start, end);
     }

@@ -25,11 +25,11 @@ public class Knight extends Development {
 
     public Pair<Integer, String> stoleResource() {
         if (owner == null || player == null) {
-            return new Pair<>(HttpStatus.SC_FORBIDDEN, "Owner or player were not set.");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "Owner or player were not set.");
         }
         int resourceNumber = player.getResourceNumber();
         if (resourceNumber == 0) {
-            return new Pair<>(HttpStatus.SC_FORBIDDEN, "The selected player has no more resources.");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "The selected player has no more resources.");
         }
         Random random = new Random();
         int resourceIndex = random.nextInt(resourceNumber);

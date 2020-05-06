@@ -3,6 +3,7 @@ package catan.API.request;
 import catan.API.Response;
 import catan.Application;
 import catan.game.game.Game;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpStatus;
 
 public class UserRequest implements GameRequest {
@@ -49,11 +50,15 @@ public class UserRequest implements GameRequest {
     public Response run() {
         Game game = Application.games.get(gameId);
         if (game == null) {
-            return new Response(HttpStatus.SC_NOT_FOUND, "The game does not exist.","");
+            return new Response(HttpStatus.SC_ACCEPTED, "The game does not exist.","");
         }
         if (game.getPlayer(playerId) == null) {
-            return new Response(HttpStatus.SC_NOT_FOUND,"The player does not exist.","");
+            return new Response(HttpStatus.SC_ACCEPTED,"The player does not exist.","");
         }
-        return game.playTurn(playerId, command, GameRequest.getMapFromData(arguments));
+        try {
+            return game.playTurn(playerId, command, GameRequest.getMapFromData(arguments));
+        } catch (JsonProcessingException e) {
+            return new Response(HttpStatus.SC_ACCEPTED, "Wrong command.", "");
+        }
     }
 }

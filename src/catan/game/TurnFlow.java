@@ -26,7 +26,7 @@ public class TurnFlow {
         fsm = new FSM("stateConfig.xml", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
-                response = new Response(HttpStatus.SC_NOT_FOUND, "The message has no assigned function.", "");
+                response = new Response(HttpStatus.SC_ACCEPTED, "The message has no assigned function.", "");
                 return true;
             }
         });
@@ -151,7 +151,7 @@ public class TurnFlow {
                     response = new Response(HttpStatus.SC_OK, "Bought road successfully.", "");
                     return true;
                 }
-                response = new Response(HttpStatus.SC_FORBIDDEN, "Cannot buy settlement.", "");
+                response = new Response(HttpStatus.SC_ACCEPTED, "Cannot buy settlement.", "");
                 return false;            }
         });
         fsm.setAction("placeHouse", new FSMAction() {
@@ -159,7 +159,7 @@ public class TurnFlow {
             public boolean action(String curState, String message, String nextState, Object args) {
                 response = new Response(HttpStatus.SC_OK, "House placed successfully!", "");
                 if (!game.placeInitSettlement(Integer.parseInt(((HashMap<String, String>) args).get("spot")))) {
-                    response = new Response(HttpStatus.SC_FORBIDDEN, "Placing the house is not possible!", "");
+                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the house is not possible!", "");
                     return false;
                 }
                  return true;
@@ -171,10 +171,10 @@ public class TurnFlow {
                 response = new Response(HttpStatus.SC_OK, "Road placed successfully!", "");
                 if (!game.placeInitRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
                         Integer.parseInt(((HashMap<String, String>) args).get("end")))) {
-                    response = new Response(HttpStatus.SC_FORBIDDEN, "Placing the road is not possible!", "");
+                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the road is not possible!", "");
                     return false;
                 }
-                game.changeTurn();
+                game.changeTurn(1);
                 return true;
             }
         });
@@ -188,7 +188,7 @@ public class TurnFlow {
                     response = new Response(HttpStatus.SC_OK, "Bought settlement successfully.", "");
                     return true;
                 }
-                response = new Response(HttpStatus.SC_FORBIDDEN, "Cannot buy settlement.", "");
+                response = new Response(HttpStatus.SC_ACCEPTED, "Cannot buy settlement.", "");
                 return false;
             }
         });
@@ -202,7 +202,7 @@ public class TurnFlow {
                     response = new Response(HttpStatus.SC_OK, "Bought city successfully.", "");
                     return true;
                 }
-                response = new Response(HttpStatus.SC_FORBIDDEN, "Cannot buy city.", "");
+                response = new Response(HttpStatus.SC_ACCEPTED, "Cannot buy city.", "");
                 return false;
             }
         });
@@ -233,7 +233,7 @@ public class TurnFlow {
         fsm.setAction("endTurn", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
-                game.changeTurn();
+                game.changeTurn(1);
                 response = new Response(HttpStatus.SC_OK, "Turn changed successfully.", "");
                 return true;
             }

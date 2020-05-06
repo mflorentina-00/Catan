@@ -35,7 +35,7 @@ public class Monopoly extends Development {
 
     public Pair<Integer, String> use() {
         if (owner == null || resourceType == null || players == null) {
-            return new Pair<>(HttpStatus.SC_FORBIDDEN, "Owner, resourceType or players were not set.");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "Owner, resourceType or players were not set.");
         }
         for (Player player : players) {
             if (owner != player) {

@@ -10,9 +10,12 @@ import catan.game.property.Building;
 import catan.game.property.Road;
 import catan.game.rule.Component;
 import catan.game.rule.VictoryPoint;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ankzz.dynamicfsm.fsm.FSM;
 import javafx.util.Pair;
 import org.apache.http.HttpStatus;
+import org.apache.http.protocol.HTTP;
 
 import java.util.*;
 
@@ -29,6 +32,7 @@ public abstract class Game {
     protected Pair<String, Integer> currentLongestRoad;
     protected Map<ResourceType, Integer> tradeOffer;
     protected Map<ResourceType, Integer> tradeRequest;
+    protected Map<String, Boolean> checkers;
 
     public Game() {
         bank = null;
@@ -41,6 +45,8 @@ public abstract class Game {
         currentLongestRoad = null;
         tradeOffer = null;
         tradeRequest = null;
+        checkers = new HashMap<>();
+        checkers.put("rolledSeven", false);
     }
 
     //region Getters
@@ -149,14 +155,14 @@ public abstract class Game {
         playerOrder.add(playerId);
     }
 
-    public void changeTurn() {
+    public void changeTurn(int direction) {
         updateBonusPoints();
         if (currentPlayerWon()) {
             //TODO: End game and show ranking.
         }
-        int nextPlayer = (playerOrder.indexOf(currentPlayer) + 1) % playerOrder.size();
+        int nextPlayer = (playerOrder.indexOf(currentPlayer) + direction) % playerOrder.size();
         currentPlayer = playerOrder.get(nextPlayer);
-        players.get(currentPlayer).getTurnFlow().fsm.ProcessFSM("restart");
+        players.get(currentPlayer).getState().fsm.ProcessFSM("restart");
     }
 
     protected void updateBonusPoints() {
@@ -193,47 +199,85 @@ public abstract class Game {
         return players.get(currentPlayer).getVictoryPoints() >= VictoryPoint.FINISH_VICTORY_POINTS;
     }
 
-    public Response playTurn(String playerId, String command, Map<String, String> requestArguments) {
+    public Response playTurn(String playerId, String command, Map<String, String> requestArguments)
+            throws JsonProcessingException {
         // TODO: Add support for "synchronize" command.
         // TODO: Add support for "buildRoad" command when using RoadBuilding development.
-        // TODO: Add suport for "getResource" command when using YearOfPlenty development.
-        if (command.equals("discardResources")) {
-            Map<ResourceType, Integer> resources = new HashMap<>();
-            for (String resource : requestArguments.keySet()) {
-                switch (resource) {
-                    case "lumber":
-                        resources.put(ResourceType.lumber, Integer.valueOf(requestArguments.get("lumber")));
-                        break;
-                    case "wool":
-                        resources.put(ResourceType.wool, Integer.valueOf(requestArguments.get("wool")));
-                        break;
-                    case "ore":
-                        resources.put(ResourceType.ore, Integer.valueOf(requestArguments.get("ore")));
-                        break;
-                    case "brick":
-                        resources.put(ResourceType.brick, Integer.valueOf(requestArguments.get("brick")));
-                        break;
-                    case "grain":
-                        resources.put(ResourceType.grain, Integer.valueOf(requestArguments.get("grain")));
-                        break;
-                    default:
-                        return new Response(HttpStatus.SC_NOT_FOUND, "Wrong argument.", "");
-                }
-            }
-            takeResourcesSevenDice(playerId, resources);
-            return new Response(HttpStatus.SC_OK, "Discarded resources successfully.", "");
+        // TODO: Add support for "getResource" command when using YearOfPlenty development.
+        Map<String, String> responseArguments = new HashMap<>();
+        Response specialResponse = applySpecialCommands(playerId, command, requestArguments, responseArguments);
+        if (specialResponse != null) {
+            return specialResponse;
         }
         if (playerId.equals(currentPlayer)) {
-            players.get(playerId).getTurnFlow().fsm.setShareData(requestArguments);
-            players.get(playerId).getTurnFlow().fsm.ProcessFSM(command);
-            Response response = players.get(playerId).getTurnFlow().response;
+            players.get(playerId).getState().fsm.setShareData(requestArguments);
+            players.get(playerId).getState().fsm.ProcessFSM(command);
+            Response response = players.get(playerId).getState().response;
             // Reset player response.
-            players.get(playerId).getTurnFlow().response = new Response(HttpStatus.SC_BAD_REQUEST, "Wrong command.", "");
+            players.get(playerId).getState().response = new Response(HttpStatus.SC_ACCEPTED, "Wrong command.", "");
             return response;
-        } else if (command.equals("wantToTrade")) {
-            //TODO: Add wantToTrade functionality.
         }
-        return new Response(HttpStatus.SC_FORBIDDEN, "Not your turn.", "");
+        return new Response(HttpStatus.SC_ACCEPTED, "Not your turn.", "");
+    }
+
+    public Response applySpecialCommands(String playerId, String command, Map<String, String> requestArguments,
+                                         Map<String, String> responseArguments) throws JsonProcessingException {
+        responseArguments.put("receivedAll", "false");
+        switch (command) {
+            case "discardResources":
+                return discardResources(playerId, requestArguments, responseArguments);
+            case "wantToTrade":
+                //TODO: Add wantToTrade functionality.
+        }
+        if (checkers.get("rolledSeven")) {
+            return new Response(HttpStatus.SC_ACCEPTED, "Invalid request.", "");
+        }
+        return null;
+    }
+
+    public Response discardResources(String playerId, Map<String, String> requestArguments,
+                                     Map<String, String> responseArguments) throws JsonProcessingException {
+        if (!checkers.get("rolledSeven")) {
+            return new Response(HttpStatus.SC_ACCEPTED, "Dice is not seven.",
+                    new ObjectMapper().writeValueAsString(responseArguments));
+        }
+        if (players.get(playerId).getResourceNumber() <= 7) {
+            return new Response(HttpStatus.SC_ACCEPTED,
+                    "The player does not have more than seven resource cards.",
+                    new ObjectMapper().writeValueAsString(responseArguments));
+        }
+        Map<ResourceType, Integer> resources = new HashMap<>();
+        for (String resource : requestArguments.keySet()) {
+            switch (resource) {
+                case "lumber":
+                    resources.put(ResourceType.lumber, Integer.valueOf(requestArguments.get("lumber")));
+                    break;
+                case "wool":
+                    resources.put(ResourceType.wool, Integer.valueOf(requestArguments.get("wool")));
+                    break;
+                case "ore":
+                    resources.put(ResourceType.ore, Integer.valueOf(requestArguments.get("ore")));
+                    break;
+                case "brick":
+                    resources.put(ResourceType.brick, Integer.valueOf(requestArguments.get("brick")));
+                    break;
+                case "grain":
+                    resources.put(ResourceType.grain, Integer.valueOf(requestArguments.get("grain")));
+                    break;
+                default:
+                    return new Response(HttpStatus.SC_ACCEPTED, "Wrong argument.", "");
+            }
+        }
+        takeResourcesSevenDice(playerId, resources);
+        for (String player : playerOrder) {
+            if (players.get(player).getResourceNumber() > 7) {
+                return new Response(HttpStatus.SC_OK, "Discarded resources successfully.",
+                        new ObjectMapper().writeValueAsString(responseArguments));
+            }
+        }
+        responseArguments.put("receivedAll", "true");
+        return new Response(HttpStatus.SC_OK, "Discarded resources successfully.",
+                new ObjectMapper().writeValueAsString(responseArguments));
     }
 
     public boolean startGame() {
@@ -260,15 +304,21 @@ public abstract class Game {
         responseArguments.put("dice_1", firstDice);
         responseArguments.put("dice_2", secondDice);
         int diceSum = firstDice + secondDice;
-        FSM currentState = players.get(currentPlayer).getTurnFlow().fsm;
+        FSM currentState = players.get(currentPlayer).getState().fsm;
         if (diceSum != 7) {
+            checkers.put("rolledSeven", false);
             responseArguments.putAll(giveResourcesFromDice(diceSum, responseArguments));
             currentState.setShareData(responseArguments);
             currentState.ProcessFSM("rollNotSeven");
         } else {
+            checkers.put("rolledSeven", true);
             for (String player : playerOrder) {
                 int playerIndex = playerOrder.indexOf(player);
-                responseArguments.put("resourcesToDiscard_" + playerIndex, players.get(player).getResourceNumber() / 2);
+                int resourceNumber = players.get(player).getResourceNumber();
+                if (resourceNumber > 7) {
+                    responseArguments.put("resourcesToDiscard_" + playerIndex,
+                            players.get(player).getResourceNumber() / 2);
+                }
             }
             currentState.setShareData(responseArguments);
             currentState.ProcessFSM("rollSeven");
@@ -480,7 +530,11 @@ public abstract class Game {
 
     }
 
+    //TODO:
     public boolean moveRobber(int tileId) {
+        if (board.getRobberPosition().getId() == tileId) {
+            return false;
+        }
         board.setRobberPosition(board.getTiles().get(tileId));
         return true;
     }

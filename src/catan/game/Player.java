@@ -89,7 +89,7 @@ public class Player {
         return id;
     }
 
-    public TurnFlow getTurnFlow() {
+    public TurnFlow getState() {
         return turnFlow;
     }
 
@@ -249,10 +249,10 @@ public class Player {
     // Called only for the first two roads or when using RoadBuilding development.
     public Pair<Integer, String> buildRoad(Building start, Building end) {
         if (start.getOwner() != this && end.getOwner() != this) {
-            return new Pair<>(HttpStatus.SC_FORBIDDEN, "The road does not connect one of your roads, settlements or cities.");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "The road does not connect one of your roads, settlements or cities.");
         }
         if (!bank.hasRoads(this)) {
-            return new Pair<>(HttpStatus.SC_NOT_FOUND, "You have no more roads to build.");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "You have no more roads to build.");
         }
         Road road = bank.takeRoad(this);
         road.setStart(start);

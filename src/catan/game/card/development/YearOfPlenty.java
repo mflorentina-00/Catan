@@ -32,12 +32,12 @@ public class YearOfPlenty extends Development {
 
     public Pair<Integer, String> getResource() {
         if (owner == null || bank == null || resourceType == null) {
-            return new Pair<>(HttpStatus.SC_FORBIDDEN, "Owner, bank or resourceType were not set.");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "Owner, bank or resourceType were not set.");
         }
         if (!bank.existsResource(resourceType)) {
-            return new Pair<>(HttpStatus.SC_NOT_FOUND, "The bank has no more " + resourceType + ".");
+            return new Pair<>(HttpStatus.SC_ACCEPTED, "The bank has no more " + resourceType + ".");
         }
         owner.takeResource(resourceType);
-        return new Pair<>(HttpStatus.SC_FORBIDDEN, "The " + resourceType + " from the bank was took successfully.");
+        return new Pair<>(HttpStatus.SC_ACCEPTED, "The " + resourceType + " from the bank was took successfully.");
     }
 }

@@ -116,7 +116,10 @@
   {
     "code": "HttpStatus code",
     "status": "message (success or error type)",
-    "arguments": ""
+    "arguments":
+    {
+      "receivedAll": "true or false"
+    }
   },
 
 

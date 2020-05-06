@@ -30,6 +30,6 @@ public class Controller {
                 return null;
             }
         }
-        return new Response(HttpStatus.SC_FORBIDDEN, "Wrong credentials","");
+        return new Response(HttpStatus.SC_ACCEPTED, "Wrong credentials","");
     }
 }
