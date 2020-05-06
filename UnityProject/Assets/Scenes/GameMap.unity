@@ -6397,7 +6397,7 @@ GameObject:
   - component: {fileID: 343905947}
   - component: {fileID: 343905946}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Settlement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6465,7 +6465,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 343905947}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1899658961}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &343905947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10196,7 +10207,7 @@ GameObject:
   - component: {fileID: 603548348}
   - component: {fileID: 603548347}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Road
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10264,7 +10275,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 603548348}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1585835860}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &603548348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15852,7 +15874,7 @@ GameObject:
   - component: {fileID: 1005823883}
   - component: {fileID: 1005823882}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Dev
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21672,7 +21694,7 @@ GameObject:
   - component: {fileID: 1395234058}
   - component: {fileID: 1395234057}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: City
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25325,7 +25347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1585835861
 Transform:
   m_ObjectHideFlags: 0
@@ -30437,7 +30459,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1899658962
 Transform:
   m_ObjectHideFlags: 0
