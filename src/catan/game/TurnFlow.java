@@ -154,6 +154,30 @@ public class TurnFlow {
                 response = new Response(HttpStatus.SC_FORBIDDEN, "Cannot buy settlement.", "");
                 return false;            }
         });
+        fsm.setAction("placeHouse", new FSMAction() {
+            @Override
+            public boolean action(String curState, String message, String nextState, Object args) {
+                response = new Response(HttpStatus.SC_OK, "House placed successfully!", "");
+                if (!game.placeInitSettlement(Integer.parseInt(((HashMap<String, String>) args).get("spot")))) {
+                    response = new Response(HttpStatus.SC_FORBIDDEN, "Placing the house is not possible!", "");
+                    return false;
+                }
+                 return true;
+            }
+        });
+        fsm.setAction("placeRoad", new FSMAction() {
+            @Override
+            public boolean action(String curState, String message, String nextState, Object args) {
+                response = new Response(HttpStatus.SC_OK, "Road placed successfully!", "");
+                if (!game.placeInitRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
+                        Integer.parseInt(((HashMap<String, String>) args).get("end")))) {
+                    response = new Response(HttpStatus.SC_FORBIDDEN, "Placing the road is not possible!", "");
+                    return false;
+                }
+                return game.changeTurn();
+            }
+        });
+        fsm.setAction("buyHouse", new FSMAction() {
         state.setAction("buySettlement", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {

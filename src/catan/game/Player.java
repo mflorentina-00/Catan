@@ -270,6 +270,11 @@ public class Player {
         return true;
     }
 
+    public boolean addRoad(Road road){
+        roads.add(road);
+        return true;
+    }
+
     // TODO REMINDER: The GAME class verifies if the id is free
     private boolean canBuildRoad(Road road) {
         if (!canBuildRoad()) {
@@ -488,7 +493,9 @@ public class Player {
             }
         });
         List<Integer> roadsMax = new ArrayList<>(roads.size());
-        Collections.fill(roadsMax, 1);
+        for(int i=0;i<roads.size();i++)
+            roadsMax.add(i,1);
+
         for (int i = 1; i < roads.size(); i++) {
             for (int j = i - 1; j >= 0; j--) {
                 if (roads.get(i).getStart().getId() == roads.get(j).getEnd().getId()) {

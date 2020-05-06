@@ -195,6 +195,40 @@ public abstract class Game {
         return players.get(currentPlayer).getVictoryPoints() >= VictoryPoint.FINISH_VICTORY_POINTS;
     }
 
+    public Response playTurn(String playerID, String command, Map<String, String> jsonArgs) {
+        if(command.equals("discardResources")) {
+            Map<ResourceType, Integer> resources = new HashMap<>();
+            for (String resource : jsonArgs.keySet()) {
+                switch (resource) {
+                    case "lumber":
+                        resources.put(ResourceType.Lumber, Integer.valueOf(jsonArgs.get("lumber")));
+                        break;
+                    case "wool":
+                        resources.put(ResourceType.Wool, Integer.valueOf(jsonArgs.get("wool")));
+                        break;
+                    case "ore":
+                        resources.put(ResourceType.Ore, Integer.valueOf(jsonArgs.get("ore")));
+                        break;
+                    case "brick":
+                        resources.put(ResourceType.Brick, Integer.valueOf(jsonArgs.get("brick")));
+                        break;
+                    case "grain":
+                        resources.put(ResourceType.Grain, Integer.valueOf(jsonArgs.get("grain")));
+                        break;
+                    default:
+                        return new Response(HttpStatus.SC_NOT_FOUND, "Wrong argument.", "");
+                }
+            }
+            takeResourcesSevenDice(playerID, resources);
+            return new Response(HttpStatus.SC_OK, "Discarded resources successfully.", "");
+        }
+
+        if (playerID.equals(currentPlayer)) {
+            players.get(playerID).getState().fsm.setShareData(jsonArgs);
+            players.get(playerID).getState().fsm.ProcessFSM(command);
+            Response response = players.get(playerID).getState().response;
+            //Reset player response in case that the state does not have the command | the command does not exist
+            players.get(playerID).getState().response = new Response(HttpStatus.SC_NOT_FOUND, "Wrong Command", "");
     public Response playTurn(String playerId, String command, Map<String, String> requestArguments) {
         // TODO: Add support for "synchronize" command.
         // TODO: Add support for "buildRoad" command when using RoadBuilding development.
@@ -320,6 +354,40 @@ public abstract class Game {
         return neededResources;
     }
 
+    public boolean takeResourcesSevenDice (String playerID, Map<ResourceType, Integer> resourcesToGive) {
+            Player pl = players.get(playerID);
+            pl.removeResources(resourcesToGive);
+        return true;
+    }
+
+    //endregion
+
+    //region place house and road region
+    public  boolean placeInitSettlement(int spot){
+        Player player = players.get(currentPlayer);
+        Intersection intersection = board.getBuildings().get(spot);
+        if (intersection == null || intersection.getOwner() != null || !isTwoRoadsDistance(intersection))
+            return false;
+        board.getBuildings().get(spot).setOwner(player);
+        return true;
+    }
+    public  boolean placeInitRoad(int intersectionId1,int intersectionId2){
+        Player player = players.get(currentPlayer);
+        Intersection firstIntersection = board.getBuildings().get(intersectionId1);
+        Intersection secondIntersection = board.getBuildings().get(intersectionId2);
+
+        if (firstIntersection == null || secondIntersection == null)
+            return false;
+        if (!((firstIntersection.getOwner() == null || firstIntersection.getOwner().equals(player)) &&
+                (secondIntersection.getOwner() == null || secondIntersection.getOwner().equals(player))))
+            return false;
+        if(!board.getIntersectionGraph().areAdjacent(intersectionId1,intersectionId2))
+            return false;
+        Road road = bank.getRoad(player);
+        road.setCoordinates(firstIntersection,secondIntersection);
+        return player.addRoad(road);
+    }
+
     //endregion
 
     //region Buy
@@ -384,7 +452,10 @@ public abstract class Game {
             return false;
         Road road = bank.takeRoad(player);
         if (road == null)
+        if(!board.getIntersectionGraph().areAdjacent(intersectionId1,intersectionId2))
             return false;
+        Road road = bank.getRoad(player);
+        road.setCoordinates(firstIntersection,secondIntersection);
         return player.buyRoad(road);
     }
 

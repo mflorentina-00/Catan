@@ -138,6 +138,23 @@ public class ConnectivitySimulation {
                 "selectOpponent", opponentId));
         return response.getCode() == HttpStatus.SC_OK;
     }
+    public boolean placeHouse(String gameId, String playerId,Integer spot) throws IOException{
+        Map<String, String> payload = new HashMap<>();
+        payload.put("spot", spot.toString());
+        String jsonArgs = new ObjectMapper().writeValueAsString(payload);
+        Response response;
+        response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"placeHouse",jsonArgs));
+        return response.getCode() == HttpStatus.SC_OK;
+    }
+    public boolean placeRoad(String gameId, String playerId,Integer start,Integer end) throws IOException{
+        Map<String, String> payload = new HashMap<>();
+        payload.put("start", start.toString());
+        payload.put("end", end.toString());
+        String jsonArgs = new ObjectMapper().writeValueAsString(payload);
+        Response response;
+        response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"placeRoad",jsonArgs));
+        return response.getCode() == HttpStatus.SC_OK;
+    }
 
     public boolean playerTrade(String gameId, String playerId, String offerRequest) throws IOException {
         Response response;
@@ -158,6 +175,20 @@ public class ConnectivitySimulation {
         playersID.add(addPlayer(gameID));
         setMaxPlayers(gameID, 1);
         startGame(gameID);
+
+        placeHouse(gameID,playersID.get(0),20);
+        placeRoad(gameID,playersID.get(0),20,19);
+
+        placeHouse(gameID,playersID.get(1),40);
+        placeRoad(gameID,playersID.get(1),41,40);
+
+        placeHouse(gameID,playersID.get(0),30);
+        placeRoad(gameID,playersID.get(0),30,31);
+
+        placeHouse(gameID,playersID.get(1),10);
+        placeRoad(gameID,playersID.get(1),10,11);
+
+
         // Run the game
         while (true) {
             rollDice(gameID, playersID.get(0));
