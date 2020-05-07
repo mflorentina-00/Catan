@@ -1,6 +1,7 @@
-package catan.API;
+package catan.API.controller;
 
 import catan.API.request.GameRequest;
+import catan.API.response.Response;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

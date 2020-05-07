@@ -1,7 +1,7 @@
 package catan.API.request;
 
-import catan.API.Response;
-import catan.API.util.RandomString;
+import catan.API.response.Response;
+import catan.util.RandomString;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

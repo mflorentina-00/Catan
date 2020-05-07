@@ -3,32 +3,32 @@ package catan.game.property;
 import java.util.Objects;
 
 public class Road extends Property {
-    private Building start;
-    private Building end;
+    private Intersection start;
+    private Intersection end;
 
-    public Road() {
+    public Road(Intersection start, Intersection end) {
         super();
-        start = null;
-        end = null;
-    }
-
-    public Building getStart() {
-        return start;
-    }
-
-    public void setStart(Building start) {
         this.start = start;
-    }
-
-    public Building getEnd() {
-        return end;
-    }
-
-    public void setEnd(Building end) {
         this.end = end;
     }
 
-    public Building getCommonIntersection(Road road) {
+    public Intersection getStart() {
+        return start;
+    }
+
+    public void setStart(Intersection start) {
+        this.start = start;
+    }
+
+    public Intersection getEnd() {
+        return end;
+    }
+
+    public void setEnd(Intersection end) {
+        this.end = end;
+    }
+
+    public Intersection getCommonIntersection(Road road) {
         if (this.equals(road)) {
             return null;
         }

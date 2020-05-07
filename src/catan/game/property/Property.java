@@ -1,6 +1,6 @@
 package catan.game.property;
 
-import catan.game.Player;
+import catan.game.player.Player;
 
 import java.util.Objects;
 

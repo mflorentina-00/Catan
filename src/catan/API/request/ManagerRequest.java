@@ -1,8 +1,8 @@
 package catan.API.request;
 
-import catan.API.Response;
+import catan.API.response.Response;
 import catan.Application;
-import catan.game.Player;
+import catan.game.player.Player;
 import catan.game.game.BaseGame;
 import catan.game.game.Game;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -133,6 +133,6 @@ public class ManagerRequest implements GameRequest {
             String responseJson = new ObjectMapper().writeValueAsString(payload);
             return new Response(HttpStatus.SC_OK, "The player was added successfully.", responseJson);
         }
-        return new Response(HttpStatus.SC_ACCEPTED,"The command was not implemented", command);
+        return new Response(HttpStatus.SC_ACCEPTED,"The command was not implemented.", command);
     }
 }

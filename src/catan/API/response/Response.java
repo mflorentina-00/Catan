@@ -1,4 +1,4 @@
-package catan.API;
+package catan.API.response;
 
 public class Response {
     private Integer code;

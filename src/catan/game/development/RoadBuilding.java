@@ -1,12 +1,12 @@
-package catan.game.card.development;
+package catan.game.development;
 
-import catan.game.property.Building;
+import catan.game.property.Intersection;
 import javafx.util.Pair;
 import org.apache.http.HttpStatus;
 
 public class RoadBuilding extends Development {
-    private Building start;
-    private Building end;
+    private Intersection start;
+    private Intersection end;
 
     public RoadBuilding() {
         super();
@@ -14,19 +14,19 @@ public class RoadBuilding extends Development {
         end = null;
     }
 
-    public Building getStart() {
+    public Intersection getStart() {
         return start;
     }
 
-    public void setStart(Building start) {
+    public void setStart(Intersection start) {
         this.start = start;
     }
 
-    public Building getEnd() {
+    public Intersection getEnd() {
         return end;
     }
 
-    public void setEnd(Building end) {
+    public void setEnd(Intersection end) {
         this.end = end;
     }
 

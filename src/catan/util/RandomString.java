@@ -1,4 +1,4 @@
-package catan.API.util;
+package catan.util;
 
 import java.security.SecureRandom;
 import java.util.Locale;

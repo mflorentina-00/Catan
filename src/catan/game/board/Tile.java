@@ -1,12 +1,12 @@
 package catan.game.board;
 
-import catan.game.enumeration.ResourceType;
+import catan.game.enumeration.Resource;
 
 import java.util.List;
 
 public class Tile {
     private int id;
-    private ResourceType resource;
+    private Resource resource;
     private int number;
     private List<Tile> neighbours;
     
@@ -42,11 +42,11 @@ public class Tile {
         return number;
     }
 
-    public ResourceType getResource() {
+    public Resource getResource() {
         return resource;
     }
 
-    public void setResource(ResourceType resource) {
+    public void setResource(Resource resource) {
         this.resource = resource;
     }
 

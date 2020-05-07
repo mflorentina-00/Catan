@@ -1,7 +1,7 @@
 package catan;
 
-import catan.API.Response;
-import catan.API.HttpClientPost;
+import catan.API.response.Response;
+import catan.API.controller.HttpClientPost;
 import catan.API.request.GameRequest;
 import catan.API.request.ManagerRequest;
 import catan.API.request.UserRequest;
@@ -168,6 +168,7 @@ public class ConnectivitySimulation {
 
     public void simulation() throws IOException, InterruptedException {
         // Configure the game
+        sleep(1000);
         gameID = createGame();
         setMaxPlayers(gameID, 2);
         playersID.add(addPlayer(gameID));
@@ -190,7 +191,7 @@ public class ConnectivitySimulation {
 
 
         // Run the game
-        while (true) {
+        while(true) {
             rollDice(gameID, playersID.get(0));
             playerTrade(gameID, playersID.get(0), "");
             selectOpponent(gameID, playersID.get(0), "");

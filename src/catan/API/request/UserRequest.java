@@ -1,6 +1,6 @@
 package catan.API.request;
 
-import catan.API.Response;
+import catan.API.response.Response;
 import catan.Application;
 import catan.game.game.Game;
 import com.fasterxml.jackson.core.JsonProcessingException;

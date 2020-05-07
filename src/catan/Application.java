@@ -22,19 +22,19 @@ public class Application {
 	@RequestMapping("/")
 	@ResponseBody
 	String home() {
-		return "Hello World!";
+		return "Hello, World!";
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class);
 
-		/*
+
 		try {
 			ConnectivitySimulation connectivity = new ConnectivitySimulation();
 			connectivity.simulation();
 		} catch (InterruptedException | IOException exception) {
 			exception.printStackTrace();
 		}
-		*/
+
 	}
 }

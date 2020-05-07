@@ -26,7 +26,7 @@ public class IntersectionGraph {
         return rings.get(ring);
     }
 
-    public List<Integer> getNeighborIntersections(Integer intersection) {
+    public List<Integer> getAdjacentIntersections(Integer intersection) {
         return adjacencyLists.get(intersection);
     }
 
@@ -110,16 +110,6 @@ public class IntersectionGraph {
                     neighbors.add(j);
             adjacencyLists.add(neighbors);
         }
-    }
-
-    //subject to change/delete - RC
-    public List<Integer> getAdjacentIntersectionsIDs(Integer intersectionID) {
-        List<Integer> adjacentIntersectionsID = new ArrayList<>();
-        for (Integer id :
-                adjacencyLists.get(intersectionID)) {
-            adjacentIntersectionsID.add(id);
-        }
-        return adjacentIntersectionsID;
     }
 
     public void printAdjacencyLists() {

@@ -1,6 +1,8 @@
-package catan.game;
+package catan.game.turn;
 
-import catan.API.Response;
+import catan.API.response.Code;
+import catan.API.response.Messages;
+import catan.API.response.Response;
 import catan.game.game.Game;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,14 +17,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO: The responses must be set in each game function.
 public class TurnFlow {
     public final Game game;
     public FSM fsm;
     public Response response;
+    public Messages messages;
 
-    TurnFlow(Game game) throws IOException, SAXException, ParserConfigurationException {
+    public TurnFlow(Game game) throws IOException, SAXException, ParserConfigurationException {
         this.game = game;
+        messages = Messages.getInstance();
         fsm = new FSM("stateConfig.xml", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
@@ -69,8 +72,11 @@ public class TurnFlow {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
                         new TypeReference<HashMap<String, Integer>>(){});
                 int tile = requestArguments.get("tile");
-                //TODO: Add game.moveRobber(int tile).
-                response = new Response(HttpStatus.SC_OK, "Moved robber successfully.", "");
+                Code code = game.moveRobber(tile);
+                if (code == null) {
+                    response = new Response(HttpStatus.SC_OK, "Moved robber successfully.", "");
+                }
+                response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
                 return true;
             }
         });

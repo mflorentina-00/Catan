@@ -1,6 +1,6 @@
-package catan.game.card.development;
+package catan.game.development;
 
-import catan.game.Player;
+import catan.game.player.Player;
 import javafx.util.Pair;
 import org.apache.http.HttpStatus;
 
@@ -23,7 +23,7 @@ public class Knight extends Development {
         return new Pair<>(HttpStatus.SC_OK, "The robber was moved successfully.");
     }
 
-    public Pair<Integer, String> stoleResource() {
+    public Pair<Integer, String> stealResource() {
         if (owner == null || player == null) {
             return new Pair<>(HttpStatus.SC_ACCEPTED, "Owner or player were not set.");
         }

@@ -1,6 +1,6 @@
-package catan.game.card.development;
+package catan.game.development;
 
-import catan.game.Player;
+import catan.game.player.Player;
 
 public abstract class Development {
     protected Player owner;

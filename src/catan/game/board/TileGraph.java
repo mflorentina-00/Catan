@@ -24,7 +24,7 @@ public class TileGraph {
 
     public List<Integer> getRing(Integer ring) { return rings.get(ring); }
 
-    public List<Integer> getNeighborTiles(Integer tile) {
+    public List<Integer> getAdjacentTiles(Integer tile) {
         return adjacencyLists.get(tile);
     }
 

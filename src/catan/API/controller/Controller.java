@@ -1,13 +1,11 @@
-package catan.API;
+package catan.API.controller;
 
 import catan.API.request.ManagerRequest;
 import catan.API.request.UserRequest;
+import catan.API.response.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping ("/Catan")
@@ -20,6 +18,11 @@ public class Controller {
             return request.run();
     }
 
+    @GetMapping(value = "/test")
+    public String salut() {
+        return "Hello";
+    }
+
     @RequestMapping (value = "/managerRequest", method = RequestMethod.POST)
     public Response sendResponse(@RequestBody ManagerRequest request) {
         if (request.getUsername().equals(username) && request.getPassword().equals(password)) {
@@ -30,6 +33,6 @@ public class Controller {
                 return null;
             }
         }
-        return new Response(HttpStatus.SC_ACCEPTED, "Wrong credentials","");
+        return new Response(HttpStatus.SC_ACCEPTED, "The credentials are wrong.","");
     }
 }

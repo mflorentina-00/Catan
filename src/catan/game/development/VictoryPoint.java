@@ -1,4 +1,4 @@
-package catan.game.card.development;
+package catan.game.development;
 
 import javafx.util.Pair;
 import org.apache.http.HttpStatus;
