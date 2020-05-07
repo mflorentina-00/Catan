@@ -139,7 +139,7 @@ public class TurnFlow {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
                 response = new UserResponse(HttpStatus.SC_OK, "The settlement was built successfully.", null);
-                if (!game.buildSettlement(Integer.parseInt(((HashMap<String, String>) args).get("intersection")))) {
+                if (!game.buildSettlement(((HashMap<String, Integer>)args).get("intersection"))) {
                     response = new UserResponse(HttpStatus.SC_ACCEPTED, "Placing the house is not possible!", null);
                     return false;
                 }
@@ -150,8 +150,8 @@ public class TurnFlow {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
                 response = new UserResponse(HttpStatus.SC_OK, "The road was built successfully.", null);
-                if (!game.buildRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
-                        Integer.parseInt(((HashMap<String, String>) args).get("end")))) {
+                if (!game.buildRoad(((HashMap<String, Integer>)args).get("start"),
+                        ((HashMap<String, Integer>)args).get("start"))) {
                     response = new UserResponse(HttpStatus.SC_ACCEPTED, "Placing the road is not possible!", null);
                     return false;
                 }

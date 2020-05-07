@@ -95,7 +95,7 @@ public class ConnectivitySimulation {
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
-                "buyRoad/" + intersection, payload));
+                "buyRoad", payload));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
@@ -146,7 +146,7 @@ public class ConnectivitySimulation {
     }
     public boolean buildSettlement(String gameId, String playerId,Integer intersection) throws IOException{
         Map<String, Object> payload = new HashMap<>();
-        payload.put("intersection", intersection.toString());
+        payload.put("intersection", intersection);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         UserResponse response;
         response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"buildSettlement",payload));
@@ -154,8 +154,8 @@ public class ConnectivitySimulation {
     }
     public boolean buildRoad(String gameId, String playerId,Integer start,Integer end) throws IOException{
         Map<String, Object> payload = new HashMap<>();
-        payload.put("start", start.toString());
-        payload.put("end", end.toString());
+        payload.put("start", start);
+        payload.put("end", end);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         UserResponse response;
         response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"buildRoad",payload));
