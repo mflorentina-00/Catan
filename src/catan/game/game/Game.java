@@ -3,6 +3,10 @@ package catan.game.game;
 import catan.API.response.Code;
 import catan.API.response.Messages;
 import catan.API.response.Response;
+import catan.game.development.Knight;
+import catan.game.development.Monopoly;
+import catan.game.development.RoadBuilding;
+import catan.game.development.YearOfPlenty;
 import catan.game.player.Player;
 import catan.game.board.Board;
 import catan.game.board.Tile;
@@ -498,6 +502,123 @@ public abstract class Game {
     //endregion
 
     //region Buy
+
+    public Code buyDevelopment(String playerId)
+    {
+
+        Player player=players.get(playerId);
+        if(player.getResourceNumber(Resource.wool)>=1 && player.getResourceNumber(Resource.ore)>=1 && player.getResourceNumber(Resource.grain)>=1)
+        {
+            player.removeResource(Resource.wool);
+            player.removeResource(Resource.ore);
+            player.removeResource(Resource.grain);
+            bank.giveResource(Resource.ore);
+            bank.giveResource(Resource.wool);
+            bank.giveResource(Resource.grain);
+            
+            boolean ok=true;
+            boolean noKnight=false;
+            boolean noVP=false;
+            boolean noYear=false;
+            boolean noMonopoly=false;
+            boolean noRoadBuilding=false;
+            Random rand=new Random();
+            int choice=0;
+            while (ok)
+            {
+                choice=rand.nextInt(5);
+                if(choice==0)
+                { Knight k=bank.takeKnight(player);
+                    if(k!=null){
+                        ok=false;
+                        player.addKnight(k);
+
+                    }
+                    else {
+                        noKnight=true;
+
+                    }
+
+                }
+                if(choice==1){
+                    Monopoly m=bank.takeMonopoly(player);
+                    if(m!=null)
+                    {
+                        ok=false;
+                        player.addMonopolies(m);
+
+                    }
+                    else {
+                        noMonopoly=true;
+                    }
+
+
+                }
+                if(choice==2){
+                    YearOfPlenty y=bank.takeYearOfPlenty(player);
+                    if(y!=null)
+                    {
+                        ok=false;
+                        player.addYearsOfPlenty(y);
+                    }
+                    else {
+                        noYear=true;
+                    }
+
+                }
+                if(choice==3){
+                    RoadBuilding r=bank.takeRoadBuilding(player);
+                    if(r!=null)
+                    {
+                        ok=false;
+                        player.addRoadBuilding(r);
+                    }
+                    else {
+                        noRoadBuilding=true;
+                    }
+
+                }
+                if(choice==4)
+                {   catan.game.development.VictoryPoint v=bank.takeVictoryPoint(player);
+                    if(v!=null)
+                    {
+                        ok=false;
+                        player.addVictoryPoint();
+                    }
+                    else {
+                        noVP=true;
+                    }
+
+                }
+
+           if(noKnight==true && noMonopoly==true && noRoadBuilding==true && noVP==true && noYear==true)
+           {
+               return Code.BankNoDev;
+
+           }
+
+            }
+
+
+
+        }
+        else{
+            if(player.getResourceNumber(Resource.wool)==0) return Code.PlayerNoWool;
+            if(player.getResourceNumber(Resource.grain)==0) return Code.PlayerNoGrain;
+            if(player.getResourceNumber(Resource.ore)==0) return Code.PlayerNoOre;
+
+
+
+        }
+
+
+
+return null;
+
+
+
+    }
+
 
     protected int currentPlayerIndex() {
         for (int i = 0; i < playerOrder.size(); i++) {
