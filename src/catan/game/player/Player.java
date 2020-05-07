@@ -545,4 +545,8 @@ public class Player {
                 "id='" + id + '\'' +
                 '}';
     }
+
+    public void addResource(Resource resource) {
+        resources.put(resource,resources.get(resource)+1);
+    }
 }

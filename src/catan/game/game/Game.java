@@ -23,6 +23,7 @@ import com.github.ankzz.dynamicfsm.fsm.FSM;
 import javafx.util.Pair;
 import org.apache.http.HttpStatus;
 
+import javax.imageio.ImageIO;
 import java.util.*;
 
 public abstract class Game {
@@ -477,6 +478,21 @@ public abstract class Game {
     //endregion
 
     //region place house and road region (INITIAL)
+    //TODO: use this function to make response arguments
+    public  void giveInitialResources(){
+        for(String player:playerOrder){
+            Player player1= players.get(player);
+            Intersection intersection=player1.getSettlements().get(player1.getSettlements().size());
+
+            for(List<Integer> tiles:board.getAdjacentTilesToIntersections()){
+                for(Integer tileId:tiles) {
+                    Tile tile=board.getTiles().get(tileId);
+                    bank.takeResource(tile.getResource(),1);
+                    player1.addResource(tile.getResource());
+                }
+            }
+        }
+    }
     public Code buildSettlement(int intersection) {
         Player player=players.get(currentPlayer);
         if(bank.hasSettlement(player)){
@@ -802,4 +818,6 @@ return null;
     public int hashCode() {
         return Objects.hash(getPlayers());
     }
+
+
 }

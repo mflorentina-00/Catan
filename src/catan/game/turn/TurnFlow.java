@@ -138,10 +138,10 @@ public class TurnFlow {
         fsm.setAction("buildSettlement", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "The settlement was built successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The settlement was built successfully.", null);
                 Code code=game.buildSettlement(Integer.parseInt(((HashMap<String, String>) args).get("intersection")));
                 if (code!=null) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                     return false;
                 }
                 return true;
@@ -150,11 +150,10 @@ public class TurnFlow {
         fsm.setAction("buildRoad", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "The road was built successfully.", "");
                 Code code=game.buildRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
                         Integer.parseInt(((HashMap<String, String>) args).get("end")));
                 if (code!=null) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                     return false;
                 }
                 if(!game.isInversion()) {
@@ -167,6 +166,7 @@ public class TurnFlow {
                 }
                 else {
                     if(game.getCurrentPlayer().equals(game.getPlayerOrder().get(0))){
+                        game.giveInitialResources();
                         game.setInversion();
                     }
                     else
@@ -186,7 +186,7 @@ public class TurnFlow {
 
                 Code code=game.buyRoad(start,end);
                 if(code!=null){
-                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                     return false;
                 }
                 return true;
@@ -200,7 +200,7 @@ public class TurnFlow {
                 int intersection = requestArguments.get("intersection");
                 Code code=game.buySettlement(Integer.parseInt(((HashMap<String, String>) arguments).get("intersection")));
                 if (code!=null) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                     return false;
                 }
                 return true;
@@ -215,7 +215,7 @@ public class TurnFlow {
                 int intersection = requestArguments.get("intersection");
                 Code code=game.buyCity(intersection);
                 if (code!=null) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                     return false;
                 }
                 return true;
