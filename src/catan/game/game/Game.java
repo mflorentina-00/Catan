@@ -276,7 +276,7 @@ public abstract class Game {
         }
         if (players.get(playerId).getResourceNumber() <= 7) {
             return new Response(HttpStatus.SC_ACCEPTED,
-                    "The player does not have more than seven resource cards.",
+                    "You do not have more than seven resource cards.",
                     new ObjectMapper().writeValueAsString(responseArguments));
         }
         Map<Resource, Integer> resources = new HashMap<>();
@@ -521,17 +521,8 @@ public abstract class Game {
 
     //TODO: Verify if player has settlement resources.
     public boolean buySettlement(int intersectionId) {
-        /*
         Player player = players.get(currentPlayer);
-        if (!isTwoRoadsDistance(intersectionId))
-            return false;
-
-        Intersection settlement = bank.takeSettlement(player);
-        if (settlement == null || !player.buildSettlement(settlement))
-            return false;
-
-        settlement.setOwner(player);
-        */
+        board.getIntersections().get(intersectionId).setOwner(player);
         return true;
     }
 
