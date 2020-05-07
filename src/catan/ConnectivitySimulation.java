@@ -84,14 +84,14 @@ public class ConnectivitySimulation {
         return response.getCode() == HttpStatus.SC_OK;
     }
 
-    public boolean buyRoad(String gameId, String playerId, Integer spot) throws IOException {
+    public boolean buyRoad(String gameId, String playerId, Integer intersection) throws IOException {
         Map<String, String> payload = new HashMap<>();
-        payload.put("start", spot.toString());
-        payload.put("end", spot.toString());
+        payload.put("start", intersection.toString());
+        payload.put("end", intersection.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
-                "buyRoad/" + spot, jsonArgs));
+                "buyRoad/" + intersection, jsonArgs));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
@@ -102,9 +102,9 @@ public class ConnectivitySimulation {
         return response.getCode() == HttpStatus.SC_OK;
     }
 
-    public boolean buySettlement(String gameId, String playerId, Integer spot) throws IOException {
+    public boolean buySettlement(String gameId, String playerId, Integer intersection) throws IOException {
         Map<String, Integer> payload = new HashMap<>();
-        payload.put("intersection", spot);
+        payload.put("intersection", intersection);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
@@ -112,9 +112,9 @@ public class ConnectivitySimulation {
         return response.getCode() == HttpStatus.SC_OK;
     }
 
-    public boolean buyCity(String gameId, String playerId, Integer spot) throws IOException {
+    public boolean buyCity(String gameId, String playerId, Integer intersection) throws IOException {
         Map<String, Integer> payload = new HashMap<>();
-        payload.put("intersection", spot);
+        payload.put("intersection", intersection);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
@@ -138,21 +138,21 @@ public class ConnectivitySimulation {
                 "selectOpponent", opponentId));
         return response.getCode() == HttpStatus.SC_OK;
     }
-    public boolean placeHouse(String gameId, String playerId,Integer spot) throws IOException{
+    public boolean buildSettlement(String gameId, String playerId,Integer intersection) throws IOException{
         Map<String, String> payload = new HashMap<>();
-        payload.put("spot", spot.toString());
+        payload.put("intersection", intersection.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"placeHouse",jsonArgs));
+        response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"buildSettlement",jsonArgs));
         return response.getCode() == HttpStatus.SC_OK;
     }
-    public boolean placeRoad(String gameId, String playerId,Integer start,Integer end) throws IOException{
+    public boolean buildRoad(String gameId, String playerId,Integer start,Integer end) throws IOException{
         Map<String, String> payload = new HashMap<>();
         payload.put("start", start.toString());
         payload.put("end", end.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
         Response response;
-        response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"placeRoad",jsonArgs));
+        response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"buildRoad",jsonArgs));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
@@ -168,7 +168,6 @@ public class ConnectivitySimulation {
 
     public void simulation() throws IOException, InterruptedException {
         // Configure the game
-        sleep(1000);
         gameID = createGame();
         setMaxPlayers(gameID, 2);
         playersID.add(addPlayer(gameID));
@@ -177,21 +176,20 @@ public class ConnectivitySimulation {
         setMaxPlayers(gameID, 1);
         startGame(gameID);
 
-        placeHouse(gameID,playersID.get(0),20);
-        placeRoad(gameID,playersID.get(0),20,19);
+        buildSettlement(gameID,playersID.get(0),20);
+        buildRoad(gameID,playersID.get(0),20,19);
 
-        placeHouse(gameID,playersID.get(1),40);
-        placeRoad(gameID,playersID.get(1),41,40);
+        buildSettlement(gameID,playersID.get(1),40);
+        buildRoad(gameID,playersID.get(1),41,40);
 
-        placeHouse(gameID,playersID.get(0),30);
-        placeRoad(gameID,playersID.get(0),30,31);
+        buildSettlement(gameID,playersID.get(0),30);
+        buildRoad(gameID,playersID.get(0),30,31);
 
-        placeHouse(gameID,playersID.get(1),10);
-        placeRoad(gameID,playersID.get(1),10,11);
-
+        buildSettlement(gameID,playersID.get(1),10);
+        buildRoad(gameID,playersID.get(1),10,11);
 
         // Run the game
-        while(true) {
+        for (int i = 0; i < 2; ++i) {
             rollDice(gameID, playersID.get(0));
             playerTrade(gameID, playersID.get(0), "");
             selectOpponent(gameID, playersID.get(0), "");

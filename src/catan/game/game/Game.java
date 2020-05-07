@@ -280,7 +280,7 @@ public abstract class Game {
         }
         if (players.get(playerId).getResourceNumber() <= 7) {
             return new Response(HttpStatus.SC_ACCEPTED,
-                    "The player does not have more than seven resource cards.",
+                    "You do not have more than seven resource cards.",
                     new ObjectMapper().writeValueAsString(responseArguments));
         }
         Map<Resource, Integer> resources = new HashMap<>();
@@ -468,18 +468,18 @@ public abstract class Game {
     //endregion
 
     //region place house and road region
-    public boolean placeInitSettlement(int spot) {
+    public boolean buildSettlement(int intersection) {
         /*
         Player player = players.get(currentPlayer);
-        Building intersection = board.getBuildings().get(spot);
+        Building intersection = board.getBuildings().get(intersection);
         if (intersection == null || intersection.getOwner() != null || !isTwoRoadsDistance(intersection))
             return false;
-        board.getBuildings().get(spot).setOwner(player);
+        board.getBuildings().get(intersection).setOwner(player);
         */
         return true;
     }
 
-    public boolean placeInitRoad(int intersectionId1, int intersectionId2) {
+    public boolean buildRoad(int intersectionId1, int intersectionId2) {
         /*
         Player player = players.get(currentPlayer);
         Building firstIntersection = board.getBuildings().get(intersectionId1);
@@ -642,17 +642,8 @@ return null;
 
     //TODO: Verify if player has settlement resources.
     public boolean buySettlement(int intersectionId) {
-        /*
         Player player = players.get(currentPlayer);
-        if (!isTwoRoadsDistance(intersectionId))
-            return false;
-
-        Intersection settlement = bank.takeSettlement(player);
-        if (settlement == null || !player.buildSettlement(settlement))
-            return false;
-
-        settlement.setOwner(player);
-        */
+        board.getIntersections().get(intersectionId).setOwner(player);
         return true;
     }
 

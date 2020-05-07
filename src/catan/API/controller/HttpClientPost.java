@@ -37,21 +37,23 @@ public class HttpClientPost {
     }
 
     public static Response postTo(URL url, String json) throws IOException {
+        System.out.println(json);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
         connection.setRequestProperty("Accept", "application/json");
         connection.setDoOutput(true);
-        try (OutputStream os = connection.getOutputStream()) {
+        try (OutputStream outputStream = connection.getOutputStream()) {
             byte[] input = json.getBytes(StandardCharsets.UTF_8);
-            os.write(input, 0, input.length);
+            outputStream.write(input, 0, input.length);
         }
-        try (BufferedReader br = new BufferedReader
+        try (BufferedReader bufferedReader = new BufferedReader
                 (new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
-            String responseLine;
-            while ((responseLine = br.readLine()) != null) {
+            String responseLine = bufferedReader.readLine();
+            while (responseLine != null) {
                 response.append(responseLine.trim());
+                responseLine = bufferedReader.readLine();
             }
             Map<String, String> result = new ObjectMapper().readValue(response.toString(),
                     new TypeReference<HashMap<String, String>>(){});

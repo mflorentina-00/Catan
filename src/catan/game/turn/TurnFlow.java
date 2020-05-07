@@ -45,7 +45,7 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 try {
                     String data = new ObjectMapper().writeValueAsString(arguments);
-                    response = new Response(HttpStatus.SC_OK, "Rolled a seven.", data);
+                    response = new Response(HttpStatus.SC_OK, "The dice sum is seven.", data);
                     return true;
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
@@ -58,7 +58,7 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 try {
                     String data = new ObjectMapper().writeValueAsString(arguments);
-                    response = new Response(HttpStatus.SC_OK, "Rolled not a seven.", data);
+                    response = new Response(HttpStatus.SC_OK, "The dice sum is not seven.", data);
                     return true;
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
@@ -74,7 +74,7 @@ public class TurnFlow {
                 int tile = requestArguments.get("tile");
                 Code code = game.moveRobber(tile);
                 if (code == null) {
-                    response = new Response(HttpStatus.SC_OK, "Moved robber successfully.", "");
+                    response = new Response(HttpStatus.SC_OK, "The robber was moved successfully.", "");
                 }
                 response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
                 return true;
@@ -87,7 +87,7 @@ public class TurnFlow {
                         new TypeReference<HashMap<String, String>>(){});
                 String playerId = requestArguments.get("playerId");
                 //TODO: Add game.stealResource(String playerId).
-                response = new Response(HttpStatus.SC_OK, "Stole resource successfully.", "");
+                response = new Response(HttpStatus.SC_OK, "The resource was stolen successfully.", "");
                 return true;
             }
         });
@@ -96,7 +96,7 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 //TODO: Create offerRequest map.
                 //TODO: Call game.playerTrade(Map<String, Integer> offerRequest).
-                response = new Response(HttpStatus.SC_OK, "Started trading successfully.", "");
+                response = new Response(HttpStatus.SC_OK, "The trade has started successfully.", "");
                 return true;
             }
         });
@@ -104,7 +104,7 @@ public class TurnFlow {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 //TODO: Add game.sendOpponents().
-                response = new Response(HttpStatus.SC_OK, "Sent possible trade partners successfully.", "");
+                response = new Response(HttpStatus.SC_OK, "The trade partners were sent successfully.", "");
                 return true;
             }
         });
@@ -117,32 +117,45 @@ public class TurnFlow {
                     String playerId = requestArguments.get("playerId");
                 }
                 //TODO: Add game.selectOpponent(String playerId).
-                response = new Response(HttpStatus.SC_OK, "Selected trade partner successfully.", "");
+                response = new Response(HttpStatus.SC_OK, "The trade was made successfully.", "");
                 return true;
             }
         });
-        fsm.setAction("bankTrade", new FSMAction() {
+        fsm.setAction("noPlayerTrade", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
                         new TypeReference<HashMap<String, String>>(){});
-                String offer = requestArguments.get("offer");
+                String firstOffer = requestArguments.get("offer_1");
+                String secondOffer = requestArguments.get("offer_2");
+                String thirdOffer = requestArguments.get("offer_3");
                 String request = requestArguments.get("request");
-                //TODO: Add game.bankTrade(String offer, String request).
-                response = new Response(HttpStatus.SC_OK, "Made trade with bank successfully.", "");
+                //TODO: Add game.noPlayerTrade(String firstOffer, secondOffer, thirdOffer, String request).
+                response = new Response(HttpStatus.SC_OK, "The trade was made successfully.", "");
                 return true;
             }
         });
-        fsm.setAction("portTrade", new FSMAction() {
+        fsm.setAction("buildSettlement", new FSMAction() {
             @Override
-            public boolean action(String currentState, String message, String nextState, Object arguments) {
-                Map<String, String> requestArguments = new ObjectMapper().convertValue(arguments,
-                        new TypeReference<HashMap<String, String>>(){});
-                int port = Integer.parseInt(requestArguments.get("port"));
-                String offer = requestArguments.get("offer");
-                String request = requestArguments.get("request");
-                //TODO: Add game.portTrade(int port, String offer, String request).
-                response = new Response(HttpStatus.SC_OK, "Made trade with a port successfully.", "");
+            public boolean action(String curState, String message, String nextState, Object args) {
+                response = new Response(HttpStatus.SC_OK, "The settlement was built successfully.", "");
+                if (!game.buildSettlement(Integer.parseInt(((HashMap<String, String>) args).get("intersection")))) {
+                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the house is not possible!", "");
+                    return false;
+                }
+                return true;
+            }
+        });
+        fsm.setAction("buildRoad", new FSMAction() {
+            @Override
+            public boolean action(String curState, String message, String nextState, Object args) {
+                response = new Response(HttpStatus.SC_OK, "The road was built successfully.", "");
+                if (!game.buildRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
+                        Integer.parseInt(((HashMap<String, String>) args).get("end")))) {
+                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the road is not possible!", "");
+                    return false;
+                }
+                game.changeTurn(1);
                 return true;
             }
         });
@@ -154,35 +167,11 @@ public class TurnFlow {
                 int start = requestArguments.get("start");
                 int end = requestArguments.get("end");
                 if (game.buyRoad(start, end)) {
-                    response = new Response(HttpStatus.SC_OK, "Bought road successfully.", "");
+                    response = new Response(HttpStatus.SC_OK, "The road was built successfully.", "");
                     return true;
                 }
-                response = new Response(HttpStatus.SC_ACCEPTED, "Cannot buy settlement.", "");
+                response = new Response(HttpStatus.SC_ACCEPTED, "You do not have enough resources or the spot is unavailable.", "");
                 return false;            }
-        });
-        fsm.setAction("placeHouse", new FSMAction() {
-            @Override
-            public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "House placed successfully!", "");
-                if (!game.placeInitSettlement(Integer.parseInt(((HashMap<String, String>) args).get("spot")))) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the house is not possible!", "");
-                    return false;
-                }
-                 return true;
-            }
-        });
-        fsm.setAction("placeRoad", new FSMAction() {
-            @Override
-            public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "Road placed successfully!", "");
-                if (!game.placeInitRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
-                        Integer.parseInt(((HashMap<String, String>) args).get("end")))) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the road is not possible!", "");
-                    return false;
-                }
-                game.changeTurn(1);
-                return true;
-            }
         });
         fsm.setAction("buySettlement", new FSMAction() {
             @Override
@@ -191,10 +180,10 @@ public class TurnFlow {
                         new TypeReference<HashMap<String, Integer>>(){});
                 int intersection = requestArguments.get("intersection");
                 if (game.buySettlement(intersection)) {
-                    response = new Response(HttpStatus.SC_OK, "Bought settlement successfully.", "");
+                    response = new Response(HttpStatus.SC_OK, "The settlement was built successfully.", "");
                     return true;
                 }
-                response = new Response(HttpStatus.SC_ACCEPTED, "Cannot buy settlement.", "");
+                response = new Response(HttpStatus.SC_ACCEPTED, "You do not have enough resources or the spot is unavailable.", "");
                 return false;
             }
         });
@@ -205,10 +194,10 @@ public class TurnFlow {
                         new TypeReference<HashMap<String, Integer>>(){});
                 int intersection = requestArguments.get("intersection");
                 if (game.buyCity(intersection)) {
-                    response = new Response(HttpStatus.SC_OK, "Bought city successfully.", "");
+                    response = new Response(HttpStatus.SC_OK, "The city was built successfully.", "");
                     return true;
                 }
-                response = new Response(HttpStatus.SC_ACCEPTED, "Cannot buy city.", "");
+                response = new Response(HttpStatus.SC_ACCEPTED, "You do not have enough resources or the spot is unavailable.", "");
                 return false;
             }
         });
@@ -219,7 +208,7 @@ public class TurnFlow {
                         new TypeReference<HashMap<String, String>>(){});
                 String development = requestArguments.get("development");
                 //TODO: Add game.buyDevelopment(String development).
-                response = new Response(HttpStatus.SC_OK, "Bought development successfully.", "");
+                response = new Response(HttpStatus.SC_OK, "The development was built successfully.", "");
                 return true;
             }
         });
@@ -232,7 +221,7 @@ public class TurnFlow {
                 String resource = requestArguments.get("resource");
                 //TODO: Add game.useDevelopment(String development, String resource).
                 fsm.ProcessFSM("useRoadBuilding");
-                response = new Response(HttpStatus.SC_OK, "Used development successfully.", "");
+                response = new Response(HttpStatus.SC_OK, "The development was used successfully.", "");
                 return true;
             }
         });
@@ -240,7 +229,7 @@ public class TurnFlow {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 game.changeTurn(1);
-                response = new Response(HttpStatus.SC_OK, "Turn changed successfully.", "");
+                response = new Response(HttpStatus.SC_OK, "The turn was changed successfully.", "");
                 return true;
             }
         });

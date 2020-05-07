@@ -11,12 +11,12 @@ public class Response {
         this.arguments = arguments;
     }
 
-    public String getArguments() {
-        return arguments;
+    public Integer getCode() {
+        return code;
     }
 
-    public void setArguments(String arguments) {
-        this.arguments = arguments;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     public String getStatus() {
@@ -27,12 +27,12 @@ public class Response {
         this.status = status;
     }
 
-    public Integer getCode() {
-        return code;
+    public String getArguments() {
+        return arguments;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
+    public void setArguments(String arguments) {
+        this.arguments = arguments;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Response {
         return "Response{" +
                 "code=" + code +
                 ", status='" + status + '\'' +
-                ", data='" + arguments + '\'' +
+                ", arguments='" + arguments + '\'' +
                 '}';
     }
 }
