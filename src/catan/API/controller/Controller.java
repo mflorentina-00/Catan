@@ -2,7 +2,8 @@ package catan.API.controller;
 
 import catan.API.request.ManagerRequest;
 import catan.API.request.UserRequest;
-import catan.API.response.Response;
+import catan.API.response.ManagerResponse;
+import catan.API.response.UserResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +15,12 @@ public class Controller {
     private static final String password = "catan";
 
     @RequestMapping (value = "/userRequest", method = RequestMethod.POST)
-    public Response sendResponse(@RequestBody UserRequest request) {
+    public UserResponse sendResponse(@RequestBody UserRequest request) {
             return request.run();
     }
 
     @RequestMapping (value = "/managerRequest", method = RequestMethod.POST)
-    public Response sendResponse(@RequestBody ManagerRequest request) {
+    public ManagerResponse sendResponse(@RequestBody ManagerRequest request) {
         if (request.getUsername().equals(username) && request.getPassword().equals(password)) {
             try {
                 return request.run();
@@ -28,6 +29,6 @@ public class Controller {
                 return null;
             }
         }
-        return new Response(HttpStatus.SC_ACCEPTED, "The credentials are wrong.",null);
+        return new ManagerResponse(HttpStatus.SC_ACCEPTED, "The credentials are wrong.","");
     }
 }

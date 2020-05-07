@@ -1,8 +1,9 @@
 package catan;
 
-import catan.API.response.Response;
-import catan.API.controller.HttpClientPost;
 import catan.API.request.GameRequest;
+import catan.API.response.ManagerResponse;
+import catan.API.response.UserResponse;
+import catan.API.controller.HttpClientPost;
 import catan.API.request.ManagerRequest;
 import catan.API.request.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,12 +28,14 @@ public class ConnectivitySimulation {
     public String createGame() throws IOException {
         Map<String, Object> payload = new HashMap<>();
         payload.put("scenario", "SettlersOfCatan");
-        Response response;
-        response = HttpClientPost.managerPost(new ManagerRequest(username, password, "newGame", payload));
+        String jsonArgs = new ObjectMapper().writeValueAsString(payload);
+        ManagerResponse response;
+        response = HttpClientPost.managerPost(new ManagerRequest(username, password, "newGame", jsonArgs));
         if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else {
-            return (String) response.getArguments().get("gameId");
+            Map<String, String> args = GameRequest.getMapFromData(response.getArguments());
+            return args.get("gameId");
         }
     }
 
@@ -40,9 +43,9 @@ public class ConnectivitySimulation {
         Map<String, Object> payload = new HashMap<>();
         payload.put("gameId", gameId);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        ManagerResponse response;
         response = HttpClientPost.managerPost(new ManagerRequest(username, password,
-                "startGame", payload));
+                "startGame", jsonArgs));
         if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else
@@ -54,9 +57,9 @@ public class ConnectivitySimulation {
         payload.put("gameId", gameId);
         payload.put("maxPlayers", no);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        ManagerResponse response;
         response = HttpClientPost.managerPost(new ManagerRequest(username, password,
-                "setMaxPlayers", payload));
+                "setMaxPlayers", jsonArgs));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
@@ -64,14 +67,14 @@ public class ConnectivitySimulation {
         Map<String, Object> payload = new HashMap<>();
         payload.put("gameId", gameId);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        ManagerResponse response;
         response = HttpClientPost.managerPost(new ManagerRequest(username, password,
-                "addPlayer", payload));
+                "addPlayer", jsonArgs));
         if (response.getCode() != HttpStatus.SC_OK)
             return null;
         else {
-
-            return (String) response.getArguments().get("playerId");
+            Map<String, String> args = GameRequest.getMapFromData(response.getArguments());
+            return args.get("playerId");
         }
     }
 
@@ -80,7 +83,7 @@ public class ConnectivitySimulation {
     // region User Commands
 
     public boolean rollDice(String gameID, String playerId) throws IOException {
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameID, playerId, "rollDice", null));
         return response.getCode() == HttpStatus.SC_OK;
     }
@@ -90,14 +93,14 @@ public class ConnectivitySimulation {
         payload.put("start", intersection);
         payload.put("end", intersection);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "buyRoad/" + intersection, payload));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean endTurn(String gameId, String playerId) throws IOException {
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "endTurn", null));
         return response.getCode() == HttpStatus.SC_OK;
@@ -107,7 +110,7 @@ public class ConnectivitySimulation {
         Map<String, Object> payload = new HashMap<>();
         payload.put("intersection", intersection);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "buySettlement", payload));
         return response.getCode() == HttpStatus.SC_OK;
@@ -117,7 +120,7 @@ public class ConnectivitySimulation {
         Map<String, Object> payload = new HashMap<>();
         payload.put("intersection", intersection);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "buyCity", payload));
         return response.getCode() == HttpStatus.SC_OK;
@@ -127,7 +130,7 @@ public class ConnectivitySimulation {
         Map<String, Object> payload = new HashMap<>();
         payload.put("development", development);
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "useDevelopment", payload));
         return response.getCode() == HttpStatus.SC_OK;
@@ -136,7 +139,7 @@ public class ConnectivitySimulation {
     public boolean selectOpponent(String gameId, String playerId, String opponentId) throws IOException {
         Map<String, Object> payload = new HashMap<>();
         payload.put("playerId", opponentId);
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "selectOpponent", payload));
         return response.getCode() == HttpStatus.SC_OK;
@@ -145,7 +148,7 @@ public class ConnectivitySimulation {
         Map<String, Object> payload = new HashMap<>();
         payload.put("intersection", intersection.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        UserResponse response;
         response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"buildSettlement",payload));
         return response.getCode() == HttpStatus.SC_OK;
     }
@@ -154,13 +157,13 @@ public class ConnectivitySimulation {
         payload.put("start", start.toString());
         payload.put("end", end.toString());
         String jsonArgs = new ObjectMapper().writeValueAsString(payload);
-        Response response;
+        UserResponse response;
         response=HttpClientPost.userPost(new UserRequest(gameId,playerId,"buildRoad",payload));
         return response.getCode() == HttpStatus.SC_OK;
     }
 
     public boolean playerTrade(String gameId, String playerId, String offerRequest) throws IOException {
-        Response response;
+        UserResponse response;
         response = HttpClientPost.userPost(new UserRequest(gameId, playerId,
                 "playerTrade", null));
         return response.getCode() == HttpStatus.SC_OK;

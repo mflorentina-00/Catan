@@ -2,12 +2,12 @@ package catan.API.response;
 
 import java.util.Map;
 
-public class Response {
+public class UserResponse implements GameResponse {
     private Integer code;
     private String status;
     private Map<String, Object> arguments;
 
-    public Response(Integer code, String status, Map<String, Object> arguments) {
+    public UserResponse(Integer code, String status, Map<String, Object> arguments) {
         this.code = code;
         this.status = status;
         this.arguments = arguments;

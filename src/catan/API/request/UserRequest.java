@@ -1,6 +1,6 @@
 package catan.API.request;
 
-import catan.API.response.Response;
+import catan.API.response.UserResponse;
 import catan.Application;
 import catan.game.game.Game;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,18 +49,18 @@ public class UserRequest implements GameRequest {
 
     public void setArguments(Map<String, Object> arguments) { this.arguments = arguments; }
 
-    public Response run() {
+    public UserResponse run() {
         Game game = Application.games.get(gameId);
         if (game == null) {
-            return new Response(HttpStatus.SC_ACCEPTED, "The game does not exist.",null);
+            return new UserResponse(HttpStatus.SC_ACCEPTED, "The game does not exist.",null);
         }
         if (game.getPlayer(playerId) == null) {
-            return new Response(HttpStatus.SC_ACCEPTED,"The player does not exist.",null);
+            return new UserResponse(HttpStatus.SC_ACCEPTED,"The player does not exist.",null);
         }
         try {
             return game.playTurn(playerId, command, arguments);
         } catch (JsonProcessingException e) {
-            return new Response(HttpStatus.SC_ACCEPTED, "Wrong command.", null);
+            return new UserResponse(HttpStatus.SC_ACCEPTED, "Wrong command.", null);
         }
     }
 }

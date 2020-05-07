@@ -342,6 +342,31 @@ public class Board {
         return tilesInformation;
     }
 
+    public String getBoardJson() {
+        List<Pair<Resource, Integer>> tilesInformation = new ArrayList<>();
+        for (Tile tile : tiles) {
+            tilesInformation.add(new Pair<>(tile.getResource(), tile.getNumber()));
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String boardJSON = objectMapper.writeValueAsString(tilesInformation);
+            return boardJSON.replaceAll("key", "resource")
+                    .replaceAll("value", "number");
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getPortsJson() {
+        try {
+            return new ObjectMapper().writeValueAsString(ports);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
     public void printAdjacentIntersectionsToTiles() {
         try {
             FileWriter fileWriter = new FileWriter("resources/AdjacentIntersectionsToTiles.txt");

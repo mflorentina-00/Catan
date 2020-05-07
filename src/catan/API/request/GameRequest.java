@@ -1,6 +1,7 @@
 package catan.API.request;
 
-import catan.API.response.Response;
+import catan.API.response.GameResponse;
+import catan.API.response.UserResponse;
 import catan.util.RandomString;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -13,7 +14,7 @@ import java.util.Map;
 public interface GameRequest {
     RandomString randomString = new RandomString();
 
-    Response run() throws JsonProcessingException;
+    GameResponse run() throws JsonProcessingException;
 
     static Map<String, String> getMapFromData(String data) {
         ObjectMapper mapper = new ObjectMapper();
