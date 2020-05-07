@@ -19,5 +19,6 @@ public enum Code {
     BankNoRoad,
     BankNoSettlement,
     BankNoCity,
+    BankNoDev,
     SameTile
 }
