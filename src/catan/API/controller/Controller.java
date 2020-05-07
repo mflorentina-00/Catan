@@ -18,11 +18,6 @@ public class Controller {
             return request.run();
     }
 
-    @GetMapping(value = "/test")
-    public String salut() {
-        return "Hello";
-    }
-
     @RequestMapping (value = "/managerRequest", method = RequestMethod.POST)
     public Response sendResponse(@RequestBody ManagerRequest request) {
         if (request.getUsername().equals(username) && request.getPassword().equals(password)) {
