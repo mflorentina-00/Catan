@@ -160,22 +160,22 @@ public class TurnFlow {
                 response = new Response(HttpStatus.SC_ACCEPTED, "Cannot buy settlement.", "");
                 return false;            }
         });
-        fsm.setAction("placeHouse", new FSMAction() {
+        fsm.setAction("buildSettlement", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "House placed successfully!", "");
-                if (!game.placeInitSettlement(Integer.parseInt(((HashMap<String, String>) args).get("spot")))) {
+                response = new Response(HttpStatus.SC_OK, "Settlement was built successfully.", "");
+                if (!game.buildSettlement(Integer.parseInt(((HashMap<String, String>) args).get("intersection")))) {
                     response = new Response(HttpStatus.SC_ACCEPTED, "Placing the house is not possible!", "");
                     return false;
                 }
                  return true;
             }
         });
-        fsm.setAction("placeRoad", new FSMAction() {
+        fsm.setAction("buildRoad", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                response = new Response(HttpStatus.SC_OK, "Road placed successfully!", "");
-                if (!game.placeInitRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
+                response = new Response(HttpStatus.SC_OK, "Road was built successfully.", "");
+                if (!game.buildRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
                         Integer.parseInt(((HashMap<String, String>) args).get("end")))) {
                     response = new Response(HttpStatus.SC_ACCEPTED, "Placing the road is not possible!", "");
                     return false;

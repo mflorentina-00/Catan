@@ -5,7 +5,7 @@
     "command": "buildSettlement",
     "arguments":
     {
-      "intersection": "number of intersection"
+      "intersection": "a number between 0 and 18 where to build the settlement"
     }
   },
   {
