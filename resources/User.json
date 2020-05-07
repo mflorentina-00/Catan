@@ -268,10 +268,10 @@
     "code": "HttpStatus code",
     "status": "message (success or error type)",
     "arguments":
-    {
-      "player_1": "playerId",
-      "player_2": "playerId"
-    }
+    [
+      "playerId_1",
+      "playerId_2"
+    ]
   },
 
 
@@ -464,12 +464,16 @@
     "code": "HttpStatus code",
     "status": "message (success or error type)",
     "arguments":
-    {
-      "player_1": "playerId",
-      "resources_1": "number of resources to stole",
-      "player_2": "playerId",
-      "resources_2": "number of resources to stole"
-    }
+    [
+      {
+      "player": "playerId",
+      "resources": "number of resources to stole"
+      },
+      {
+      "player": "playerId",
+      "resources": "number of resources to stole"
+      }
+    ]
   },
 
 

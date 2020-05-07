@@ -2,7 +2,7 @@ package catan.game.turn;
 
 import catan.API.response.Code;
 import catan.API.response.Messages;
-import catan.API.response.Response;
+import catan.API.response.UserResponse;
 import catan.game.game.Game;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class TurnFlow {
     public final Game game;
     public FSM fsm;
-    public Response response;
+    public UserResponse response;
     public Messages messages;
 
     public TurnFlow(Game game) throws IOException, SAXException, ParserConfigurationException {
@@ -29,7 +29,7 @@ public class TurnFlow {
         fsm = new FSM("stateConfig.xml", new FSMAction() {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
-                response = new Response(HttpStatus.SC_ACCEPTED, "The message has no assigned function.", "");
+                response = new UserResponse(HttpStatus.SC_ACCEPTED, "The message has no assigned function.", null);
                 return true;
             }
         });
@@ -45,7 +45,7 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 try {
                     String data = new ObjectMapper().writeValueAsString(arguments);
-                    response = new Response(HttpStatus.SC_OK, "The dice sum is seven.", data);
+                    response = new UserResponse(HttpStatus.SC_OK, "The dice sum is seven.", (Map<String, Object>)arguments);
                     return true;
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
@@ -58,7 +58,7 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 try {
                     String data = new ObjectMapper().writeValueAsString(arguments);
-                    response = new Response(HttpStatus.SC_OK, "The dice sum is not seven.", data);
+                    response = new UserResponse(HttpStatus.SC_OK, "The dice sum is not seven.", (Map<String, Object>)arguments);
                     return true;
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
@@ -74,9 +74,9 @@ public class TurnFlow {
                 int tile = requestArguments.get("tile");
                 Code code = game.moveRobber(tile);
                 if (code == null) {
-                    response = new Response(HttpStatus.SC_OK, "The robber was moved successfully.", "");
+                    response = new UserResponse(HttpStatus.SC_OK, "The robber was moved successfully.", null);
                 }
-                response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                 return true;
             }
         });
@@ -87,7 +87,7 @@ public class TurnFlow {
                         new TypeReference<HashMap<String, String>>(){});
                 String playerId = requestArguments.get("playerId");
                 //TODO: Add game.stealResource(String playerId).
-                response = new Response(HttpStatus.SC_OK, "The resource was stolen successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The resource was stolen successfully.", null);
                 return true;
             }
         });
@@ -96,7 +96,7 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 //TODO: Create offerRequest map.
                 //TODO: Call game.playerTrade(Map<String, Integer> offerRequest).
-                response = new Response(HttpStatus.SC_OK, "The trade has started successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The trade has started successfully.", null);
                 return true;
             }
         });
@@ -104,7 +104,7 @@ public class TurnFlow {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 //TODO: Add game.sendOpponents().
-                response = new Response(HttpStatus.SC_OK, "The trade partners were sent successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The trade partners were sent successfully.", null);
                 return true;
             }
         });
@@ -117,7 +117,7 @@ public class TurnFlow {
                     String playerId = requestArguments.get("playerId");
                 }
                 //TODO: Add game.selectOpponent(String playerId).
-                response = new Response(HttpStatus.SC_OK, "The trade was made successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The trade was made successfully.", null);
                 return true;
             }
         });
@@ -131,7 +131,7 @@ public class TurnFlow {
                 String thirdOffer = requestArguments.get("offer_3");
                 String request = requestArguments.get("request");
                 //TODO: Add game.noPlayerTrade(String firstOffer, secondOffer, thirdOffer, String request).
-                response = new Response(HttpStatus.SC_OK, "The trade was made successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The trade was made successfully.", null);
                 return true;
             }
         });
@@ -228,7 +228,7 @@ public class TurnFlow {
                         new TypeReference<HashMap<String, String>>(){});
                 String development = requestArguments.get("development");
                 //TODO: Add game.buyDevelopment(String development).
-                response = new Response(HttpStatus.SC_OK, "The development was built successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The development was built successfully.", null);
                 return true;
             }
         });
@@ -241,7 +241,7 @@ public class TurnFlow {
                 String resource = requestArguments.get("resource");
                 //TODO: Add game.useDevelopment(String development, String resource).
                 fsm.ProcessFSM("useRoadBuilding");
-                response = new Response(HttpStatus.SC_OK, "The development was used successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The development was used successfully.", null);
                 return true;
             }
         });
@@ -249,7 +249,7 @@ public class TurnFlow {
             @Override
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 game.changeTurn(1);
-                response = new Response(HttpStatus.SC_OK, "The turn was changed successfully.", "");
+                response = new UserResponse(HttpStatus.SC_OK, "The turn was changed successfully.", null);
                 return true;
             }
         });

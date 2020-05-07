@@ -2,7 +2,7 @@ package catan.game.game;
 
 import catan.API.response.Code;
 import catan.API.response.Messages;
-import catan.API.response.Response;
+import catan.API.response.UserResponse;
 import catan.game.development.Knight;
 import catan.game.development.Monopoly;
 import catan.game.development.RoadBuilding;
@@ -19,7 +19,6 @@ import catan.game.rule.Component;
 import catan.game.rule.VictoryPoint;
 import catan.util.Helper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ankzz.dynamicfsm.fsm.FSM;
 import javafx.util.Pair;
 import org.apache.http.HttpStatus;
@@ -249,73 +248,73 @@ public abstract class Game {
         return players.get(currentPlayer).getVictoryPoints() >= VictoryPoint.FINISH_VICTORY_POINTS;
     }
 
-    public Response playTurn(String playerId, String command, Map<String, String> requestArguments)
+    public UserResponse playTurn(String playerId, String command, Map<String, Object> requestArguments)
             throws JsonProcessingException {
-        Response otherResponse = processOtherCommand(playerId, command, requestArguments);
+        UserResponse otherResponse = processOtherCommand(playerId, command, requestArguments);
         if (otherResponse != null) {
             return otherResponse;
         }
         if (playerId.equals(currentPlayer)) {
             players.get(playerId).getState().fsm.setShareData(requestArguments);
             players.get(playerId).getState().fsm.ProcessFSM(command);
-            Response response = players.get(playerId).getState().response;
+            UserResponse response = players.get(playerId).getState().response;
             // Reset player response.
-            players.get(playerId).getState().response = new Response(HttpStatus.SC_ACCEPTED,
-                    "The request is forbidden.", "");
+            players.get(playerId).getState().response = new UserResponse(HttpStatus.SC_ACCEPTED,
+                    "The request is forbidden.", null);
             return response;
         }
-        return new Response(HttpStatus.SC_ACCEPTED, "It is not your turn.", "");
+        return new UserResponse(HttpStatus.SC_ACCEPTED, "It is not your turn.", null);
     }
 
-    public Response processOtherCommand(String playerId, String command, Map<String, String> requestArguments)
+    public UserResponse processOtherCommand(String playerId, String command, Map<String, Object> requestArguments)
             throws JsonProcessingException {
-        Map<String, String> responseArguments = new HashMap<>();
-        responseArguments.put("sentAll", "false");
+        Map<String, Object> responseArguments = new HashMap<>();
+        responseArguments.put("sentAll", false);
         switch (command) {
             case "discardResources":
                 return discardResources(playerId, requestArguments, responseArguments);
             case "wantToTrade":
         }
         if (notDiscardedAll) {
-            return new Response(HttpStatus.SC_ACCEPTED, "The request is forbidden.", "");
+            return new UserResponse(HttpStatus.SC_ACCEPTED, "The request is forbidden.", null);
         }
         return null;
     }
 
-    public Response discardResources(String playerId, Map<String, String> requestArguments,
-                                     Map<String, String> responseArguments) throws JsonProcessingException {
+    public UserResponse discardResources(String playerId, Map<String, Object> requestArguments,
+                                         Map<String, Object> responseArguments) throws JsonProcessingException {
         if (!notDiscardedAll) {
-            return new Response(HttpStatus.SC_ACCEPTED, "Dice does not sum seven.",
-                    new ObjectMapper().writeValueAsString(responseArguments));
+            return new UserResponse(HttpStatus.SC_ACCEPTED, "Dice does not sum seven.",
+                    responseArguments);
         }
         if (players.get(playerId).getResourceNumber() <= 7) {
-            return new Response(HttpStatus.SC_ACCEPTED,
+            return new UserResponse(HttpStatus.SC_ACCEPTED,
                     "You do not have more than seven resource cards.",
-                    new ObjectMapper().writeValueAsString(responseArguments));
+                    responseArguments);
         }
         Map<Resource, Integer> resources = new HashMap<>();
         for (String resource : requestArguments.keySet()) {
             Resource resourceType = Helper.getResourceTypeFromString(resource);
             if (resourceType == null) {
-                return new Response(HttpStatus.SC_ACCEPTED, "An argument is invalid.", "");
+                return new UserResponse(HttpStatus.SC_ACCEPTED, "An argument is invalid.", null);
             }
-            resources.put(resourceType, Integer.valueOf(requestArguments.get(resource)));
+            resources.put(resourceType, (Integer) requestArguments.get(resource));
         }
         Code code = discardResources(playerId, resources);
         if (code != null) {
-            return new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code),
-                    new ObjectMapper().writeValueAsString(responseArguments));
+            return new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code),
+                    responseArguments);
         }
         for (String player : playerOrder) {
             if (players.get(player).getResourceNumber() > 7) {
-                return new Response(HttpStatus.SC_OK, "Discarded resources successfully.",
-                        new ObjectMapper().writeValueAsString(responseArguments));
+                return new UserResponse(HttpStatus.SC_OK, "Discarded resources successfully.",
+                        responseArguments);
             }
         }
-        responseArguments.put("sentAll", "true");
+        responseArguments.put("sentAll", true);
         notDiscardedAll = false;
-        return new Response(HttpStatus.SC_OK, "Discarded resources successfully.",
-                new ObjectMapper().writeValueAsString(responseArguments));
+        return new UserResponse(HttpStatus.SC_OK, "Discarded resources successfully.",
+                responseArguments);
     }
 
     public boolean startGame() {

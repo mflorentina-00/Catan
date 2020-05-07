@@ -12,10 +12,7 @@ import javafx.util.Pair;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Board {
     private List<Tile> tiles = new ArrayList<>();
@@ -348,6 +345,17 @@ public class Board {
             }
             index += addValue;
         }
+    }
+
+    public List<Map<String, Object>> getBoardArguments() {
+        List<Map<String, Object>> tilesInformation = new ArrayList<>();
+        for (Tile tile : tiles) {
+            Map<String, Object> tileInformation = new HashMap<>();
+            tileInformation.put("resource", tile.getResource());
+            tileInformation.put("number", tile.getNumber());
+            tilesInformation.add(tileInformation);
+        }
+        return tilesInformation;
     }
 
     public String getBoardJson() {

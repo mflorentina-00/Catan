@@ -1,11 +1,13 @@
 package catan.API.response;
 
-public class Response {
+import java.util.Map;
+
+public class UserResponse implements GameResponse {
     private Integer code;
     private String status;
-    private String arguments;
+    private Map<String, Object> arguments;
 
-    public Response(Integer code, String status, String arguments) {
+    public UserResponse(Integer code, String status, Map<String, Object> arguments) {
         this.code = code;
         this.status = status;
         this.arguments = arguments;
@@ -27,11 +29,11 @@ public class Response {
         this.status = status;
     }
 
-    public String getArguments() {
+    public Map<String, Object> getArguments() {
         return arguments;
     }
 
-    public void setArguments(String arguments) {
+    public void setArguments(Map<String, Object> arguments) {
         this.arguments = arguments;
     }
 
