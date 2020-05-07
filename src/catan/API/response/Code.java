@@ -20,5 +20,15 @@ public enum Code {
     BankNoSettlement,
     BankNoCity,
     BankNoDev,
-    SameTile
+    IntersectionAlreadyOccupied,
+    NotTwoRoadsDistance,
+    SameTile,
+    NoSuchIntersection,
+    RoadAlreadyExistent,
+    RoadInvalidPosition,
+    RoadStartNotOwned,
+    InvalidCityPosition,
+    NotEnoughResources,
+    InvalidSettlementPosition,
+
 }

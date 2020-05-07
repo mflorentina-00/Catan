@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -182,11 +183,14 @@ public class ConnectivitySimulation {
         buildSettlement(gameID,playersID.get(1),40);
         buildRoad(gameID,playersID.get(1),41,40);
 
+        buildSettlement(gameID,playersID.get(1),10);
+        buildRoad(gameID,playersID.get(1),10,11);
+
         buildSettlement(gameID,playersID.get(0),30);
         buildRoad(gameID,playersID.get(0),30,31);
 
-        buildSettlement(gameID,playersID.get(1),10);
-        buildRoad(gameID,playersID.get(1),10,11);
+
+
 
         // Run the game
         for (int i = 0; i < 2; ++i) {

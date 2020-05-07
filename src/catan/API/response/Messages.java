@@ -25,6 +25,17 @@ public class Messages {
         messages.put(Code.NoSettlement, "You have no more settlements to build.");
         messages.put(Code.NoCity, "You have no more cities to build.");
         messages.put(Code.SameTile, "You can not move robber on the same tile.");
+        messages.put(Code.IntersectionAlreadyOccupied,"The intersection is already occupied by someone.");
+        messages.put(Code.NotTwoRoadsDistance,"The two road distance is not satisfied.");
+        messages.put(Code.NoSuchIntersection,"There is not such intersection");
+        messages.put(Code.RoadAlreadyExistent,"Road already existent");
+        messages.put(Code.RoadInvalidPosition,"Invalid position for the road");
+        messages.put(Code.RoadStartNotOwned,"Road has no owned start.");
+        messages.put(Code.InvalidCityPosition,"Invalid position for city.");
+        messages.put(Code.InvalidSettlementPosition,"Invalid position for the settlement");
+        messages.put(Code.NotEnoughResources,"Not enough resources");
+
+
     }
 
     public static Messages getInstance() {

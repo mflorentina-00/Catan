@@ -250,22 +250,6 @@ public class Player {
     // TODO REMINDER: This is used by GAME class
 
     // Called only for the first two roads or when using RoadBuilding development.
-    public Pair<Integer, String> buildRoad(Intersection start, Intersection end) {
-        /*
-        if (start.getOwner() != this && end.getOwner() != this) {
-            return new Pair<>(HttpStatus.SC_ACCEPTED, "The road does not connect one of your roads, settlements or cities.");
-        }
-        if (!bank.hasRoad(this)) {
-            return new Pair<>(HttpStatus.SC_ACCEPTED, "You have no more roads to build.");
-        }
-        Road road = bank.takeRoad(this);
-        road.setStart(start);
-        road.setEnd(end);
-        roads.add(road);
-        return new Pair<>(HttpStatus.SC_OK, "The road was built successfully.");
-        */
-        return null;
-    }
 
     public boolean buyRoad(Road road) {
         if (!canBuildRoad(road)) {
@@ -326,7 +310,6 @@ public class Player {
 
     // region Settlement
 
-    // TODO REMINDER: This is used by GAME class
     public boolean buildSettlement(Intersection settlement) {
         if (!canBuildSettlement(settlement)) {
             return false;
@@ -336,8 +319,11 @@ public class Player {
         publicVP++;
         return true;
     }
-
-    // TODO REMINDER: The GAME class verifies if the id is free and not adjacent to another settlement (2 roads rule).
+    public boolean placeSettlement(Intersection settlement){
+        settlements.add(settlement);
+        publicVP++;
+        return true;
+    }
     public boolean canBuildSettlement(Intersection settlement) {
         if (!canBuildSettlement()) {
             return false;
@@ -407,7 +393,6 @@ public class Player {
         if (!canBuildCity()) {
             return false;
         }
-        // Isi construise dinainte un settlement acolo.
         for (Intersection settlement : settlements) {
             if (settlement.getId() == city.getId())
                 return true;

@@ -139,8 +139,9 @@ public class TurnFlow {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
                 response = new Response(HttpStatus.SC_OK, "The settlement was built successfully.", "");
-                if (!game.buildSettlement(Integer.parseInt(((HashMap<String, String>) args).get("intersection")))) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the house is not possible!", "");
+                Code code=game.buildSettlement(Integer.parseInt(((HashMap<String, String>) args).get("intersection")));
+                if (code!=null) {
+                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
                     return false;
                 }
                 return true;
@@ -150,12 +151,28 @@ public class TurnFlow {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
                 response = new Response(HttpStatus.SC_OK, "The road was built successfully.", "");
-                if (!game.buildRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
-                        Integer.parseInt(((HashMap<String, String>) args).get("end")))) {
-                    response = new Response(HttpStatus.SC_ACCEPTED, "Placing the road is not possible!", "");
+                Code code=game.buildRoad(Integer.parseInt(((HashMap<String, String>) args).get("start")),
+                        Integer.parseInt(((HashMap<String, String>) args).get("end")));
+                if (code!=null) {
+                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
                     return false;
                 }
-                game.changeTurn(1);
+                if(!game.isInversion()) {
+                    if (game.getCurrentPlayer().equals(game.getPlayerOrder().get(game.getPlayerOrder().size() - 1))) {
+                        game.setInversion();
+                    } else {
+                        game.changeTurn(1);
+                    }
+
+                }
+                else {
+                    if(game.getCurrentPlayer().equals(game.getPlayerOrder().get(0))){
+                        game.setInversion();
+                    }
+                    else
+                        game.changeTurn(-1);
+
+                }
                 return true;
             }
         });
@@ -166,12 +183,14 @@ public class TurnFlow {
                         new TypeReference<HashMap<String, Integer>>(){});
                 int start = requestArguments.get("start");
                 int end = requestArguments.get("end");
-                if (game.buyRoad(start, end)) {
-                    response = new Response(HttpStatus.SC_OK, "The road was built successfully.", "");
-                    return true;
+
+                Code code=game.buyRoad(start,end);
+                if(code!=null){
+                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    return false;
                 }
-                response = new Response(HttpStatus.SC_ACCEPTED, "You do not have enough resources or the spot is unavailable.", "");
-                return false;            }
+                return true;
+            }
         });
         fsm.setAction("buySettlement", new FSMAction() {
             @Override
@@ -179,12 +198,13 @@ public class TurnFlow {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
                         new TypeReference<HashMap<String, Integer>>(){});
                 int intersection = requestArguments.get("intersection");
-                if (game.buySettlement(intersection)) {
-                    response = new Response(HttpStatus.SC_OK, "The settlement was built successfully.", "");
-                    return true;
+                Code code=game.buySettlement(Integer.parseInt(((HashMap<String, String>) arguments).get("intersection")));
+                if (code!=null) {
+                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    return false;
                 }
-                response = new Response(HttpStatus.SC_ACCEPTED, "You do not have enough resources or the spot is unavailable.", "");
-                return false;
+                return true;
+
             }
         });
         fsm.setAction("buyCity", new FSMAction() {
@@ -193,12 +213,12 @@ public class TurnFlow {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
                         new TypeReference<HashMap<String, Integer>>(){});
                 int intersection = requestArguments.get("intersection");
-                if (game.buyCity(intersection)) {
-                    response = new Response(HttpStatus.SC_OK, "The city was built successfully.", "");
-                    return true;
+                Code code=game.buyCity(intersection);
+                if (code!=null) {
+                    response = new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code), "");
+                    return false;
                 }
-                response = new Response(HttpStatus.SC_ACCEPTED, "You do not have enough resources or the spot is unavailable.", "");
-                return false;
+                return true;
             }
         });
         fsm.setAction("buyDevelopment", new FSMAction() {
