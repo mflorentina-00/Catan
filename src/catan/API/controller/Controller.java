@@ -28,6 +28,6 @@ public class Controller {
                 return null;
             }
         }
-        return new Response(HttpStatus.SC_ACCEPTED, "The credentials are wrong.","");
+        return new Response(HttpStatus.SC_ACCEPTED, "The credentials are wrong.",null);
     }
 }

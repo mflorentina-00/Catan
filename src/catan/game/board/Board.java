@@ -12,10 +12,7 @@ import javafx.util.Pair;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Board {
     private List<Tile> tiles = new ArrayList<>();
@@ -334,29 +331,15 @@ public class Board {
         }
     }
 
-    public String getBoardJson() {
-        List<Pair<Resource, Integer>> tilesInformation = new ArrayList<>();
+    public List<Map<String, Object>> getBoardArguments() {
+        List<Map<String, Object>> tilesInformation = new ArrayList<>();
         for (Tile tile : tiles) {
-            tilesInformation.add(new Pair<>(tile.getResource(), tile.getNumber()));
+            Map<String, Object> tileInformation = new HashMap<>();
+            tileInformation.put("resource", tile.getResource());
+            tileInformation.put("number", tile.getNumber());
+            tilesInformation.add(tileInformation);
         }
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String boardJSON = objectMapper.writeValueAsString(tilesInformation);
-            return boardJSON.replaceAll("key", "resource")
-                    .replaceAll("value", "number");
-        } catch (JsonProcessingException exception) {
-            exception.printStackTrace();
-        }
-        return null;
-    }
-
-    public String getPortsJson() {
-        try {
-            return new ObjectMapper().writeValueAsString(ports);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        return null;
+        return tilesInformation;
     }
 
     public void printAdjacentIntersectionsToTiles() {

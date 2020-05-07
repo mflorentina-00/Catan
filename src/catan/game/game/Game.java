@@ -235,7 +235,7 @@ public abstract class Game {
         return players.get(currentPlayer).getVictoryPoints() >= VictoryPoint.FINISH_VICTORY_POINTS;
     }
 
-    public Response playTurn(String playerId, String command, Map<String, String> requestArguments)
+    public Response playTurn(String playerId, String command, Map<String, Object> requestArguments)
             throws JsonProcessingException {
         Response otherResponse = processOtherCommand(playerId, command, requestArguments);
         if (otherResponse != null) {
@@ -247,61 +247,61 @@ public abstract class Game {
             Response response = players.get(playerId).getState().response;
             // Reset player response.
             players.get(playerId).getState().response = new Response(HttpStatus.SC_ACCEPTED,
-                    "The request is forbidden.", "");
+                    "The request is forbidden.", null);
             return response;
         }
-        return new Response(HttpStatus.SC_ACCEPTED, "It is not your turn.", "");
+        return new Response(HttpStatus.SC_ACCEPTED, "It is not your turn.", null);
     }
 
-    public Response processOtherCommand(String playerId, String command, Map<String, String> requestArguments)
+    public Response processOtherCommand(String playerId, String command, Map<String, Object> requestArguments)
             throws JsonProcessingException {
-        Map<String, String> responseArguments = new HashMap<>();
-        responseArguments.put("sentAll", "false");
+        Map<String, Object> responseArguments = new HashMap<>();
+        responseArguments.put("sentAll", false);
         switch (command) {
             case "discardResources":
                 return discardResources(playerId, requestArguments, responseArguments);
             case "wantToTrade":
         }
         if (notDiscardedAll) {
-            return new Response(HttpStatus.SC_ACCEPTED, "The request is forbidden.", "");
+            return new Response(HttpStatus.SC_ACCEPTED, "The request is forbidden.", null);
         }
         return null;
     }
 
-    public Response discardResources(String playerId, Map<String, String> requestArguments,
-                                     Map<String, String> responseArguments) throws JsonProcessingException {
+    public Response discardResources(String playerId, Map<String, Object> requestArguments,
+                                     Map<String, Object> responseArguments) throws JsonProcessingException {
         if (!notDiscardedAll) {
             return new Response(HttpStatus.SC_ACCEPTED, "Dice does not sum seven.",
-                    new ObjectMapper().writeValueAsString(responseArguments));
+                    responseArguments);
         }
         if (players.get(playerId).getResourceNumber() <= 7) {
             return new Response(HttpStatus.SC_ACCEPTED,
                     "You do not have more than seven resource cards.",
-                    new ObjectMapper().writeValueAsString(responseArguments));
+                    responseArguments);
         }
         Map<Resource, Integer> resources = new HashMap<>();
         for (String resource : requestArguments.keySet()) {
             Resource resourceType = Helper.getResourceTypeFromString(resource);
             if (resourceType == null) {
-                return new Response(HttpStatus.SC_ACCEPTED, "An argument is invalid.", "");
+                return new Response(HttpStatus.SC_ACCEPTED, "An argument is invalid.", null);
             }
-            resources.put(resourceType, Integer.valueOf(requestArguments.get(resource)));
+            resources.put(resourceType, (Integer) requestArguments.get(resource));
         }
         Code code = discardResources(playerId, resources);
         if (code != null) {
             return new Response(HttpStatus.SC_ACCEPTED, messages.getMessage(code),
-                    new ObjectMapper().writeValueAsString(responseArguments));
+                    responseArguments);
         }
         for (String player : playerOrder) {
             if (players.get(player).getResourceNumber() > 7) {
                 return new Response(HttpStatus.SC_OK, "Discarded resources successfully.",
-                        new ObjectMapper().writeValueAsString(responseArguments));
+                        responseArguments);
             }
         }
-        responseArguments.put("sentAll", "true");
+        responseArguments.put("sentAll", true);
         notDiscardedAll = false;
         return new Response(HttpStatus.SC_OK, "Discarded resources successfully.",
-                new ObjectMapper().writeValueAsString(responseArguments));
+                responseArguments);
     }
 
     public boolean startGame() {

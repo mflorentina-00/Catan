@@ -24,6 +24,7 @@ public class HttpClientPost {
 
     public static Response managerPost(GameRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString((request)));
         String requestJson = objectMapper.writeValueAsString(request);
         URL url = new URL(localhostManagerUrl);
         return postTo(url, requestJson);
@@ -31,13 +32,13 @@ public class HttpClientPost {
 
     public static Response userPost(GameRequest request) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString((request)));
         String jsonInputString = objectMapper.writeValueAsString((request));
         URL url = new URL(localhostUserUrl);
         return postTo(url, jsonInputString);
     }
 
     public static Response postTo(URL url, String json) throws IOException {
-        System.out.println(json);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -55,10 +56,10 @@ public class HttpClientPost {
                 response.append(responseLine.trim());
                 responseLine = bufferedReader.readLine();
             }
-            Map<String, String> result = new ObjectMapper().readValue(response.toString(),
-                    new TypeReference<HashMap<String, String>>(){});
-            System.out.println(result);
-            return new Response(Integer.valueOf(result.get("code")), result.get("status"), result.get("arguments"));
+            Map<String, Object> result = new ObjectMapper().readValue(response.toString(),
+                    new TypeReference<HashMap<String, Object>>(){});
+            System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString((result)));
+            return new Response((Integer)result.get("code"), (String)result.get("status"), (Map<String, Object>)result.get("arguments"));
         }
     }
 }
