@@ -34,17 +34,7 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (string ports in ReceiveBoardScript.ReceivedBoard.ports)
-        {
-            if (ports == null)
-            {
-                Debug.Log("Misule");
-            }
-            else
-            {
-                Debug.Log(ports);
-            }
-        }
+
     }
 
 }
