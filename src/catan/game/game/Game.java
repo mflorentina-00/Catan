@@ -338,6 +338,10 @@ public abstract class Game {
         Random dice = new Random();
         int firstDice = dice.nextInt(6) + 1;
         int secondDice = dice.nextInt(6) + 1;
+        while (firstDice + secondDice == 7) {
+            firstDice = dice.nextInt(6) + 1;
+            secondDice = dice.nextInt(6) + 1;
+        }
         Map<String, Object> responseArguments = initializeRollDiceResponse();
         responseArguments.put("dice_1", firstDice);
         responseArguments.put("dice_2", secondDice);

@@ -138,10 +138,8 @@ public class TurnFlow {
         fsm.setAction("buildSettlement", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                Map<String, String> requestArguments = new ObjectMapper().convertValue(args,
-                        new TypeReference<HashMap<String, String>>(){});
                 response = new UserResponse(HttpStatus.SC_OK, "The settlement was built successfully.", null);
-                Code code=game.buildSettlement(Integer.parseInt(requestArguments.get("intersection")));
+                Code code=game.buildSettlement(((HashMap<String, Integer>) args).get("intersection"));
                 if (code!=null) {
                     response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                     return false;
@@ -152,10 +150,9 @@ public class TurnFlow {
         fsm.setAction("buildRoad", new FSMAction() {
             @Override
             public boolean action(String curState, String message, String nextState, Object args) {
-                Map<String, Integer> requestArguments = new ObjectMapper().convertValue(args,
-                        new TypeReference<HashMap<String, Integer>>(){});
                 response = new UserResponse(HttpStatus.SC_OK, "The road was built successfully.", null);
-                Code code=game.buildRoad(requestArguments.get("start"), requestArguments.get("end"));
+                Code code=game.buildRoad(((HashMap<String, Integer>) args).get("start"),
+                        ((HashMap<String, Integer>) args).get("end"));
                 if (code!=null) {
                     response = new UserResponse(HttpStatus.SC_ACCEPTED, messages.getMessage(code), null);
                     return false;
@@ -185,7 +182,6 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
                         new TypeReference<HashMap<String, Integer>>(){});
-                response = new UserResponse(HttpStatus.SC_OK, "The road was built successfully.", null);
                 int start = requestArguments.get("start");
                 int end = requestArguments.get("end");
 
@@ -202,7 +198,6 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
                         new TypeReference<HashMap<String, Integer>>(){});
-                response = new UserResponse(HttpStatus.SC_OK, "The settlement was built successfully.", null);
                 int intersection = requestArguments.get("intersection");
                 Code code=game.buySettlement(intersection);
                 if (code!=null) {
@@ -218,7 +213,6 @@ public class TurnFlow {
             public boolean action(String currentState, String message, String nextState, Object arguments) {
                 Map<String, Integer> requestArguments = new ObjectMapper().convertValue(arguments,
                         new TypeReference<HashMap<String, Integer>>(){});
-                response = new UserResponse(HttpStatus.SC_OK, "The city was built successfully.", null);
                 int intersection = requestArguments.get("intersection");
                 Code code=game.buyCity(intersection);
                 if (code!=null) {
