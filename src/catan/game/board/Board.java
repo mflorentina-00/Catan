@@ -96,6 +96,7 @@ public class Board {
     public List<List<Integer>> getAdjacentTilesToIntersections() {
         return adjacentTilesToIntersections;
     }
+    public List<Integer> getAdjacentTilesToIntersection(int intersection){return adjacentTilesToIntersections.get(intersection);}
 
     public Tile getRobberPosition() {
         return robberPosition;

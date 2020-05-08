@@ -482,17 +482,18 @@ public abstract class Game {
     public  void giveInitialResources(){
         for(String player:playerOrder){
             Player player1= players.get(player);
-            Intersection intersection=player1.getSettlements().get(player1.getSettlements().size());
+            Intersection intersection=player1.getSettlements().get(player1.getSettlements().size()-1);
 
-            for(List<Integer> tiles:board.getAdjacentTilesToIntersections()){
-                for(Integer tileId:tiles) {
-                    Tile tile=board.getTiles().get(tileId);
-                    bank.takeResource(tile.getResource(),1);
-                    player1.addResource(tile.getResource());
+            for(Integer tileID:board.getAdjacentTilesToIntersection(intersection.getId())){
+                    Tile tile=board.getTiles().get(tileID);
+                    if(tile.getResource()!=Resource.desert) {
+                        bank.takeResource(tile.getResource(), 1);
+                        player1.addResource(tile.getResource());
+                    }
                 }
             }
+
         }
-    }
     public Code buildSettlement(int intersection) {
         Player player=players.get(currentPlayer);
         if(bank.hasSettlement(player)){

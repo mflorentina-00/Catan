@@ -547,6 +547,7 @@ public class Player {
     }
 
     public void addResource(Resource resource) {
-        resources.put(resource,resources.get(resource)+1);
+        int resourceNumber=resources.get(resource)+1;
+        resources.put(resource,1);
     }
 }
