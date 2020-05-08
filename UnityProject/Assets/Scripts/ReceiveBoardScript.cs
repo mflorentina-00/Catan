@@ -15,19 +15,10 @@ public class ReceiveBoardScript
 {
     public static BoardConnectivityJson ReceivedBoard = new BoardConnectivityJson();
 
-    public static string stringBoard;
-
-    public void GetString(string user)
-    {
-        ReceiveBoardScript.stringBoard = user;
-    }
-
     public void getGameBoard(string ReceivedGameID)
     {
-        string board2 = "";
         GameIDConnectivityJson gameid = new GameIDConnectivityJson();
         gameid.gameid = ReceivedGameID;
-
         RestClient.Post<BoardConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/startgame", gameid).Then(board =>
         {
             ReceiveBoardScript.ReceivedBoard.ports = board.ports;
