@@ -85,8 +85,14 @@ public class Board {
         return intersectionGraph;
     }
 
-    public List<Integer> getAdjacentIntersections(int intersection) {
-        return intersectionGraph.getAdjacentIntersections(intersection);
+    public List<Intersection> getAdjacentIntersections(Intersection intersection) {
+        List<Intersection> adjacentIntersections = new ArrayList<>();
+        for (Intersection intersection1:
+             intersections) {
+            if (intersectionGraph.getAdjacentIntersectionIDs(intersection.getId()).contains(intersection1.getId()))
+                adjacentIntersections.add(intersection1);
+        }
+        return adjacentIntersections;
     }
 
     public List<List<Integer>> getAdjacentIntersectionsToTiles() {

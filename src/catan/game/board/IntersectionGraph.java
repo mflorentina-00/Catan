@@ -26,9 +26,7 @@ public class IntersectionGraph {
         return rings.get(ring);
     }
 
-    public List<Integer> getAdjacentIntersections(Integer intersection) {
-        return adjacencyLists.get(intersection);
-    }
+    public List<Integer> getAdjacentIntersectionIDs(Integer intersectionID) { return adjacencyLists.get(intersectionID); }
 
     public boolean areAdjacent(int source, int target) {
         return adjacencyMatrix[source][target];

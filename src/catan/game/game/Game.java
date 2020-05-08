@@ -23,7 +23,6 @@ import com.github.ankzz.dynamicfsm.fsm.FSM;
 import javafx.util.Pair;
 import org.apache.http.HttpStatus;
 
-import javax.imageio.ImageIO;
 import java.util.*;
 
 public abstract class Game {
@@ -440,38 +439,50 @@ public abstract class Game {
         bank.giveResources(resourcesToDiscard);
         return null;
     }
+    //endregion
 
-    // TODO de modificat toate functiile care se ocupa de returnarea pozitiilor disponibile dupa ce
-    //  facem clasa Intersection in Board si modificam clasa Building
+    //region get available placements for houses and roads
     public boolean isAvailableHousePlacement (Intersection intersection) {
         if (intersection.getBuilding()== Building.Settlement
                 || intersection.getBuilding()== Building.City)
             return false;
-        for (Intersection building:
-             board.getIntersections()) {
-            if(board.getAdjacentIntersections(intersection.getId()).contains(building.getId()))
+        for (Intersection intersection1:
+                board.getAdjacentIntersections(intersection)) {
+            if (intersection1.getBuilding()== Building.Settlement
+                    || intersection1.getBuilding()== Building.City)
                 return false;
         }
         return true;
     }
 
-    // TODO de modificat pentru a returna doar pozitii valide
-    public List<Integer> getAvailableRoadPlacements() {
+    // TODO ma gandesc ca ar fi mai bine sa returneze perechi, ca sa poata cei de la interfata sa evidentieze latura
+    //  pe care trebuie pus drumul
+    public List<Pair<Integer, Integer>> getAvailableRoadPlacements() {
         Player player = players.get(currentPlayer);
-        Set<Integer> availableRoadPlacements = new HashSet<>();
+        Set<Pair<Integer, Integer>> availableRoadPlacements = new HashSet<>();
         for (Road road:
-             player.getRoads()) {
-            availableRoadPlacements.addAll(board.getAdjacentIntersections(road.getStart().getId()));
-            availableRoadPlacements.addAll(board.getAdjacentIntersections(road.getEnd().getId()));
+                player.getRoads()) {
+            List<Intersection> adjacentStartIntersections = board.getAdjacentIntersections(road.getStart());
+            List<Intersection> adjacentEndIntersections = board.getAdjacentIntersections(road.getEnd());
+            for (Intersection intersection:
+                    adjacentStartIntersections) {
+                if (!board.existsRoad(road.getStart().getId(), intersection.getId()))
+                    availableRoadPlacements.add(new Pair<>(road.getStart().getId(), intersection.getId()));
+            }
+            for (Intersection intersection:
+                    adjacentEndIntersections) {
+                if (!board.existsRoad(road.getEnd().getId(), intersection.getId()))
+                    availableRoadPlacements.add(new Pair<>(road.getEnd().getId(), intersection.getId()));
+            }
         }
-        return (List<Integer>) availableRoadPlacements;
+        return (List<Pair<Integer, Integer>>) availableRoadPlacements;
     }
 
     public List<Integer> getAvailableHousePlacements() {
         Player player = players.get(currentPlayer);
         Set<Integer> availableHousePlacements = new HashSet<>();
         for (Road road:
-             player.getRoads()) {
+                player.getRoads()) {
             if (isAvailableHousePlacement(road.getStart()))
                 availableHousePlacements.add(road.getStart().getId());
             if (isAvailableHousePlacement(road.getEnd()))
@@ -679,7 +690,7 @@ return null;
         if (board.getIntersections() == null || board.getIntersections().size() == 0) {
             return true;
         }
-        List<Integer> neighborIntersections = board.getIntersectionGraph().getAdjacentIntersections(buildingId);
+        List<Integer> neighborIntersections = board.getIntersectionGraph().getAdjacentIntersectionIDs(buildingId);
         for (Integer neighbour : neighborIntersections) {
             if (board.getIntersections().get(neighbour).getOwner() != null)
                 return false;
