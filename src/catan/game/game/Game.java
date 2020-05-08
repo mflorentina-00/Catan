@@ -49,7 +49,7 @@ public abstract class Game {
         playerOrder = new ArrayList<>();
         maxPlayers = 0;
         currentPlayer = null;
-        inversion=false;
+        inversion = false;
         currentLargestArmy = null;
         currentLongestRoad = null;
         tradeOffer = null;
@@ -209,7 +209,7 @@ public abstract class Game {
         if (currentPlayerWon()) {
             //TODO: End game and show ranking.
         }
-        int nextPlayer = (playerOrder.indexOf(currentPlayer) + direction)%playerOrder.size();
+        int nextPlayer = (playerOrder.indexOf(currentPlayer) + direction) % playerOrder.size();
         currentPlayer = playerOrder.get(nextPlayer);
         players.get(currentPlayer).getState().fsm.ProcessFSM("restart");
     }
@@ -441,15 +441,15 @@ public abstract class Game {
     }
     //endregion
 
-    //region get available placements for houses and roads
-    public boolean isAvailableHousePlacement (Intersection intersection) {
-        if (intersection.getBuilding()== Building.Settlement
-                || intersection.getBuilding()== Building.City)
+    //region get available placements for settlements, cities and roads
+    public boolean isAvailableHousePlacement(Intersection intersection) {
+        if (intersection.getBuilding() == Building.Settlement
+                || intersection.getBuilding() == Building.City)
             return false;
-        for (Intersection intersection1:
+        for (Intersection intersection1 :
                 board.getAdjacentIntersections(intersection)) {
-            if (intersection1.getBuilding()== Building.Settlement
-                    || intersection1.getBuilding()== Building.City)
+            if (intersection1.getBuilding() == Building.Settlement
+                    || intersection1.getBuilding() == Building.City)
                 return false;
         }
         return true;
@@ -460,16 +460,16 @@ public abstract class Game {
     public List<Pair<Integer, Integer>> getAvailableRoadPlacements() {
         Player player = players.get(currentPlayer);
         Set<Pair<Integer, Integer>> availableRoadPlacements = new HashSet<>();
-        for (Road road:
+        for (Road road :
                 player.getRoads()) {
             List<Intersection> adjacentStartIntersections = board.getAdjacentIntersections(road.getStart());
             List<Intersection> adjacentEndIntersections = board.getAdjacentIntersections(road.getEnd());
-            for (Intersection intersection:
+            for (Intersection intersection :
                     adjacentStartIntersections) {
                 if (!board.existsRoad(road.getStart().getId(), intersection.getId()))
                     availableRoadPlacements.add(new Pair<>(road.getStart().getId(), intersection.getId()));
             }
-            for (Intersection intersection:
+            for (Intersection intersection :
                     adjacentEndIntersections) {
                 if (!board.existsRoad(road.getEnd().getId(), intersection.getId()))
                     availableRoadPlacements.add(new Pair<>(road.getEnd().getId(), intersection.getId()));
@@ -481,7 +481,7 @@ public abstract class Game {
     public List<Integer> getAvailableHousePlacements() {
         Player player = players.get(currentPlayer);
         Set<Integer> availableHousePlacements = new HashSet<>();
-        for (Road road:
+        for (Road road :
                 player.getRoads()) {
             if (isAvailableHousePlacement(road.getStart()))
                 availableHousePlacements.add(road.getStart().getId());
@@ -490,36 +490,47 @@ public abstract class Game {
         }
         return (List<Integer>) availableHousePlacements;
     }
+
+    public List<Integer> getAvailableCityPlacement() {
+        Player player = players.get(currentPlayer);
+        Set<Integer> availableCityPlacement = new HashSet<>();
+        for (Intersection building :
+                player.getSettlements()) {
+            availableCityPlacement.add(building.getId());
+        }
+        return (List<Integer>) availableCityPlacement;
+    }
     //endregion
 
     //region place house and road region (INITIAL)
     //TODO: use this function to make response arguments
-    public  void giveInitialResources(){
-        for(String player:playerOrder){
-            Player player1= players.get(player);
-            Intersection intersection=player1.getSettlements().get(player1.getSettlements().size()-1);
+    public void giveInitialResources() {
+        for (String player : playerOrder) {
+            Player player1 = players.get(player);
+            Intersection intersection = player1.getSettlements().get(player1.getSettlements().size() - 1);
 
-            for(Integer tileID:board.getAdjacentTilesToIntersection(intersection.getId())){
-                    Tile tile=board.getTiles().get(tileID);
-                    if(tile.getResource()!=Resource.desert) {
-                        bank.takeResource(tile.getResource(), 1);
-                        player1.addResource(tile.getResource());
-                    }
+            for (Integer tileID : board.getAdjacentTilesToIntersection(intersection.getId())) {
+                Tile tile = board.getTiles().get(tileID);
+                if (tile.getResource() != Resource.desert) {
+                    bank.takeResource(tile.getResource(), 1);
+                    player1.addResource(tile.getResource());
                 }
             }
-
         }
+
+    }
+
     public Code buildSettlement(int intersection) {
-        Player player=players.get(currentPlayer);
-        if(bank.hasSettlement(player)){
-            Intersection building=board.getIntersections().get(intersection);
-            if(building==null){
+        Player player = players.get(currentPlayer);
+        if (bank.hasSettlement(player)) {
+            Intersection building = board.getIntersections().get(intersection);
+            if (building == null) {
                 return Code.NoSuchIntersection;
             }
-            if(building.getBuilding()!=Building.None||building.getOwner()!=null){
+            if (building.getBuilding() != Building.None || building.getOwner() != null) {
                 return Code.IntersectionAlreadyOccupied;
             }
-            if(!isTwoRoadsDistance(intersection)){
+            if (!isTwoRoadsDistance(intersection)) {
                 return Code.NotTwoRoadsDistance;
             }
             bank.takeSettlement(player);
@@ -534,24 +545,24 @@ public abstract class Game {
     public Code buildRoad(int intersectionId1, int intersectionId2) {
 
         Player player = players.get(currentPlayer);
-        if(bank.hasRoad(player)){
+        if (bank.hasRoad(player)) {
             Intersection firstIntersection = board.getIntersections().get(intersectionId1);
             Intersection secondIntersection = board.getIntersections().get(intersectionId2);
 
             if (firstIntersection == null || secondIntersection == null)
                 return Code.NoSuchIntersection;
-            if(board.existsRoad(intersectionId1,intersectionId2)){
+            if (board.existsRoad(intersectionId1, intersectionId2)) {
                 return Code.RoadAlreadyExistent;
             }
-            if(firstIntersection.getOwner()!=player&&secondIntersection.getOwner()!=player){
+            if (firstIntersection.getOwner() != player && secondIntersection.getOwner() != player) {
                 return Code.RoadInvalidPosition;
             }
-            if (!board.getIntersectionGraph().areAdjacent(intersectionId1, intersectionId2)){
+            if (!board.getIntersectionGraph().areAdjacent(intersectionId1, intersectionId2)) {
                 return Code.RoadStartNotOwned;
             }
 
             bank.takeRoad(player);
-            Road road=new Road(firstIntersection,secondIntersection);
+            Road road = new Road(firstIntersection, secondIntersection);
             board.addRoad(road);
             player.addRoad(road);
             return null;
@@ -563,121 +574,82 @@ public abstract class Game {
 
     //region Buy
 
-    public Code buyDevelopment(String playerId)
-    {
-
-        Player player=players.get(playerId);
-        if(player.getResourceNumber(Resource.wool)>=1 && player.getResourceNumber(Resource.ore)>=1 && player.getResourceNumber(Resource.grain)>=1)
-        {
+    public Code buyDevelopment(String playerId) {
+        Player player = players.get(playerId);
+        if (player.getResourceNumber(Resource.wool) >= 1 && player.getResourceNumber(Resource.ore) >= 1 && player.getResourceNumber(Resource.grain) >= 1) {
             player.removeResource(Resource.wool);
             player.removeResource(Resource.ore);
             player.removeResource(Resource.grain);
             bank.giveResource(Resource.ore);
             bank.giveResource(Resource.wool);
             bank.giveResource(Resource.grain);
-            
-            boolean ok=true;
-            boolean noKnight=false;
-            boolean noVP=false;
-            boolean noYear=false;
-            boolean noMonopoly=false;
-            boolean noRoadBuilding=false;
-            Random rand=new Random();
-            int choice=0;
-            while (ok)
-            {
-                choice=rand.nextInt(5);
-                if(choice==0)
-                { Knight k=bank.takeKnight(player);
-                    if(k!=null){
-                        ok=false;
+            boolean ok = true;
+            boolean noKnight = false;
+            boolean noVP = false;
+            boolean noYear = false;
+            boolean noMonopoly = false;
+            boolean noRoadBuilding = false;
+            Random rand = new Random();
+            int choice = 0;
+            while (ok) {
+                choice = rand.nextInt(5);
+                if (choice == 0) {
+                    Knight k = bank.takeKnight(player);
+                    if (k != null) {
+                        ok = false;
                         player.addKnight(k);
-
+                    } else {
+                        noKnight = true;
                     }
-                    else {
-                        noKnight=true;
-
-                    }
-
                 }
-                if(choice==1){
-                    Monopoly m=bank.takeMonopoly(player);
-                    if(m!=null)
-                    {
-                        ok=false;
+                if (choice == 1) {
+                    Monopoly m = bank.takeMonopoly(player);
+                    if (m != null) {
+                        ok = false;
                         player.addMonopolies(m);
-
+                    } else {
+                        noMonopoly = true;
                     }
-                    else {
-                        noMonopoly=true;
-                    }
-
-
                 }
-                if(choice==2){
-                    YearOfPlenty y=bank.takeYearOfPlenty(player);
-                    if(y!=null)
-                    {
-                        ok=false;
+                if (choice == 2) {
+                    YearOfPlenty y = bank.takeYearOfPlenty(player);
+                    if (y != null) {
+                        ok = false;
                         player.addYearsOfPlenty(y);
+                    } else {
+                        noYear = true;
                     }
-                    else {
-                        noYear=true;
-                    }
-
                 }
-                if(choice==3){
-                    RoadBuilding r=bank.takeRoadBuilding(player);
-                    if(r!=null)
-                    {
-                        ok=false;
+                if (choice == 3) {
+                    RoadBuilding r = bank.takeRoadBuilding(player);
+                    if (r != null) {
+                        ok = false;
                         player.addRoadBuilding(r);
+                    } else {
+                        noRoadBuilding = true;
                     }
-                    else {
-                        noRoadBuilding=true;
-                    }
-
                 }
-                if(choice==4)
-                {   catan.game.development.VictoryPoint v=bank.takeVictoryPoint(player);
-                    if(v!=null)
-                    {
-                        ok=false;
+                if (choice == 4) {
+                    catan.game.development.VictoryPoint v = bank.takeVictoryPoint(player);
+                    if (v != null) {
+                        ok = false;
                         player.addVictoryPoint();
+                    } else {
+                        noVP = true;
                     }
-                    else {
-                        noVP=true;
-                    }
-
                 }
-
-           if(noKnight==true && noMonopoly==true && noRoadBuilding==true && noVP==true && noYear==true)
-           {
-               return Code.BankNoDev;
-
-           }
-
+                if (noKnight == true && noMonopoly == true && noRoadBuilding == true && noVP == true && noYear == true) {
+                    return Code.BankNoDev;
+                }
             }
-
-
-
+        } else {
+            if (player.getResourceNumber(Resource.wool) == 0) return Code.PlayerNoWool;
+            if (player.getResourceNumber(Resource.grain) == 0) return Code.PlayerNoGrain;
+            if (player.getResourceNumber(Resource.ore) == 0) return Code.PlayerNoOre;
         }
-        else{
-            if(player.getResourceNumber(Resource.wool)==0) return Code.PlayerNoWool;
-            if(player.getResourceNumber(Resource.grain)==0) return Code.PlayerNoGrain;
-            if(player.getResourceNumber(Resource.ore)==0) return Code.PlayerNoOre;
-
-
-
-        }
-
-
-
-return null;
-
-
-
+        return null;
     }
+
     protected int currentPlayerIndex() {
         for (int i = 0; i < playerOrder.size(); i++) {
             if (playerOrder.get(i).equals(currentPlayer))
@@ -700,18 +672,18 @@ return null;
 
     public Code buySettlement(int intersectionId) {
         Player player = players.get(currentPlayer);
-        if(bank.hasSettlement(player)) {
-            Intersection intersection= board.getIntersections().get(intersectionId);
-            if(intersection==null){
+        if (bank.hasSettlement(player)) {
+            Intersection intersection = board.getIntersections().get(intersectionId);
+            if (intersection == null) {
                 return Code.NoSuchIntersection;
             }
-            if(!(intersection.getOwner()==null||intersection.getOwner().equals(player))) {
+            if (!(intersection.getOwner() == null || intersection.getOwner().equals(player))) {
                 return Code.IntersectionAlreadyOccupied;
             }
             if (!intersection.getBuilding().equals(Building.None)) {
                 return Code.InvalidSettlementPosition;
             }
-            if(!isTwoRoadsDistance(intersectionId)){
+            if (!isTwoRoadsDistance(intersectionId)) {
                 return Code.NotTwoRoadsDistance;
             }
             if (!player.buildSettlement(intersection))
@@ -727,7 +699,7 @@ return null;
 
     public Code buyCity(int intersectionId) {
         Player player = players.get(currentPlayer);
-        if(bank.hasCity(player)) {
+        if (bank.hasCity(player)) {
             Intersection intersection = board.getIntersections().get(intersectionId);
 
             if (intersection == null)
@@ -753,21 +725,21 @@ return null;
         Player player = players.get(currentPlayer);
         Intersection firstIntersection = board.getIntersections().get(intersectionId1);
         Intersection secondIntersection = board.getIntersections().get(intersectionId2);
-        if(bank.hasRoad(player)){
+        if (bank.hasRoad(player)) {
 
             if (firstIntersection == null || secondIntersection == null)
                 return Code.NoSuchIntersection;
-            if(board.existsRoad(intersectionId1,intersectionId2)){
+            if (board.existsRoad(intersectionId1, intersectionId2)) {
                 return Code.RoadAlreadyExistent;
             }
-            if(firstIntersection.getOwner()!=player&&secondIntersection.getOwner()!=player){
+            if (firstIntersection.getOwner() != player && secondIntersection.getOwner() != player) {
                 return Code.RoadInvalidPosition;
             }
-            if (!board.getIntersectionGraph().areAdjacent(intersectionId1, intersectionId2)){
+            if (!board.getIntersectionGraph().areAdjacent(intersectionId1, intersectionId2)) {
                 return Code.RoadStartNotOwned;
             }
-            Road road=new Road(firstIntersection,secondIntersection);
-            if(!player.buyRoad(road)){
+            Road road = new Road(firstIntersection, secondIntersection);
+            if (!player.buyRoad(road)) {
                 return Code.NotEnoughResources;
             }
 
