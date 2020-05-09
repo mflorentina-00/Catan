@@ -554,10 +554,11 @@
   {
     "gameId": "gameId",
     "playerId": "playerId",
-    "command": "takeResource",
+    "command": "takeTwoResources",
     "arguments":
     {
-      "resource": "requested resource"
+      "resource_1": "first requested resource",
+      "resource_2": "second requested resource"
     }
   },
   {
@@ -568,23 +569,7 @@
       "sentAll": "true or false"
     }
   },
-  {
-    "gameId": "gameId",
-    "playerId": "playerId",
-    "command": "takeResource",
-    "arguments":
-    {
-      "resource": "requested resource"
-    }
-  },
-  {
-    "code": "HttpStatus code",
-    "status": "message (success or error type)",
-    "arguments":
-    {
-      "sentAll": "true or false"
-    }
-  },
+
 
 
   {

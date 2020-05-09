@@ -41,7 +41,7 @@ public abstract class Game {
     protected String tradeOpponent;
     protected boolean notDiscardedAll;
     protected boolean inversion;
-    private Deque<GameResponse> logs=new ArrayDeque<>();
+    private Deque<GameResponse> logs = new ArrayDeque<>();
 
     public Game() {
         bank = null;
@@ -267,9 +267,9 @@ public abstract class Game {
         responseArguments.put("sentAll", false);
         switch (command) {
             case "update":
-                return new UserResponse(HttpStatus.SC_OK,"Here are your information",initializeUpdateResponse());
+                return new UserResponse(HttpStatus.SC_OK, "Here are your information", initializeUpdateResponse());
             case "getRanking":
-                return new UserResponse(HttpStatus.SC_OK,"Here is the current ranking",initializeRankingResponse());
+                return new UserResponse(HttpStatus.SC_OK, "Here is the current ranking", initializeRankingResponse());
             case "discardResources":
                 return discardResources(playerId, requestArguments, responseArguments);
             case "wantToTrade":
@@ -399,32 +399,35 @@ public abstract class Game {
         }
         return responseArguments;
     }
-    public Map<String,Object> initializeRankingResponse() {
+
+    public Map<String, Object> initializeRankingResponse() {
         Map<String, Object> responseArguments = new HashMap<>();
-        boolean finish=false;
+        boolean finish = false;
         for (String player : playerOrder) {
             int playerIndex = playerOrder.indexOf(player);
             responseArguments.put("player_" + playerIndex, player);
             Player player1 = players.get(player);
             responseArguments.put("publicScore_" + playerIndex, player1.getPublicVP());
             responseArguments.put("hiddenScore_" + playerIndex, player1.getVictoryPoints());
-            if(player1.getVictoryPoints()>=VictoryPoint.FINISH_VICTORY_POINTS)
-                finish=true;
+            if (player1.getVictoryPoints() >= VictoryPoint.FINISH_VICTORY_POINTS)
+                finish = true;
         }
-        responseArguments.put("foundWinner",finish);
+        responseArguments.put("foundWinner", finish);
         return responseArguments;
     }
-    public Map<String,Object> initializeUpdateResponse(){
+
+    public Map<String, Object> initializeUpdateResponse() {
         Map<String, Object> responseArguments = new HashMap<>();
-        Player player1=players.get(currentPlayer);
+        Player player1 = players.get(currentPlayer);
         responseArguments.put("publicScore", player1.getPublicVP());
         responseArguments.put("hiddenScore", player1.getVictoryPoints());
         responseArguments.put("hasLargestArmy", player1.isHasLargestArmy());
-        responseArguments.put("hasLongestRoad" , player1.isHasLongestRoad());
-        responseArguments.put("availableHouses",getAvailableHousePlacements());
-        responseArguments.put("availableRoads",getAvailableRoadPlacements());
+        responseArguments.put("hasLongestRoad", player1.isHasLongestRoad());
+        responseArguments.put("availableHouses", getAvailableHousePlacements());
+        responseArguments.put("availableRoads", getAvailableRoadPlacements());
         return responseArguments;
     }
+
     public Map<String, Object> initializeRollDiceResponse() {
         Map<String, Object> responseArguments = new HashMap<>();
         for (String player : playerOrder) {
@@ -481,23 +484,31 @@ public abstract class Game {
     public Set<List<Integer>> getAvailableRoadPlacements() {
         Player player = players.get(currentPlayer);
         Set<List<Integer>> availableRoadPlacements = new HashSet<>();
-        for (Road road:
+        for (Road road :
                 player.getRoads()) {
-            for (Intersection intersection:
+            for (Intersection intersection :
                     board.getAdjacentIntersections(road.getStart())) {
-                Integer start=road.getStart().getId();
-                Integer end=intersection.getId();
-                if(start>end){ Integer aux=start;start=end;end=aux; } //swap
+                Integer start = road.getStart().getId();
+                Integer end = intersection.getId();
+                if (start > end) {
+                    Integer aux = start;
+                    start = end;
+                    end = aux;
+                } //swap
                 if (!board.existsRoad(road.getEnd().getId(), intersection.getId()))
-                    availableRoadPlacements.add(new ArrayList<>(Arrays.asList(start,end)));
+                    availableRoadPlacements.add(new ArrayList<>(Arrays.asList(start, end)));
             }
-            for (Intersection intersection:
+            for (Intersection intersection :
                     board.getAdjacentIntersections(road.getEnd())) {
-                Integer start=intersection.getId();
-                Integer end=road.getEnd().getId();
-                if(start>end){ Integer aux=start;start=end;end=aux; } //swap
+                Integer start = intersection.getId();
+                Integer end = road.getEnd().getId();
+                if (start > end) {
+                    Integer aux = start;
+                    start = end;
+                    end = aux;
+                } //swap
                 if (!board.existsRoad(road.getEnd().getId(), intersection.getId()))
-                    availableRoadPlacements.add(new ArrayList<>(Arrays.asList(start,end)));
+                    availableRoadPlacements.add(new ArrayList<>(Arrays.asList(start, end)));
             }
         }
         return availableRoadPlacements;
@@ -506,7 +517,7 @@ public abstract class Game {
     public Set<Integer> getAvailableHousePlacements() {
         Player player = players.get(currentPlayer);
         Set<Integer> availableHousePlacements = new HashSet<>();
-        for (Road road:
+        for (Road road :
                 player.getRoads()) {
             if (isAvailableHousePlacement(road.getStart()))
                 availableHousePlacements.add(road.getStart().getId());
@@ -515,6 +526,7 @@ public abstract class Game {
         }
         return availableHousePlacements;
     }
+
     public Set<Integer> getAvailableCityPlacement() {
         Player player = players.get(currentPlayer);
         Set<Integer> availableCityPlacement = new HashSet<>();
@@ -618,44 +630,40 @@ public abstract class Game {
             while (ok) {
                 choice = rand.nextInt(5);
                 if (choice == 0) {
-                    Knight k = bank.takeKnight(player);
-                    if (k != null) {
+                    if (bank.takeKnight(player) != false) {
                         ok = false;
-                        player.addKnight(k);
+                        player.addKnight();
                     } else {
                         noKnight = true;
                     }
                 }
                 if (choice == 1) {
-                    Monopoly m = bank.takeMonopoly(player);
-                    if (m != null) {
+                    if (bank.takeMonopoly(player) != false) {
                         ok = false;
-                        player.addMonopolies(m);
+                        player.addMonopolies();
                     } else {
                         noMonopoly = true;
                     }
                 }
                 if (choice == 2) {
-                    YearOfPlenty y = bank.takeYearOfPlenty(player);
-                    if (y != null) {
+                    if (bank.takeYearOfPlenty(player) != false) {
                         ok = false;
-                        player.addYearsOfPlenty(y);
+                        player.addYearsOfPlenty();
                     } else {
                         noYear = true;
                     }
                 }
                 if (choice == 3) {
-                    RoadBuilding r = bank.takeRoadBuilding(player);
-                    if (r != null) {
+
+                    if (bank.takeRoadBuilding(player) != false) {
                         ok = false;
-                        player.addRoadBuilding(r);
+                        player.addRoadBuilding();
                     } else {
                         noRoadBuilding = true;
                     }
                 }
                 if (choice == 4) {
-                    catan.game.development.VictoryPoint v = bank.takeVictoryPoint(player);
-                    if (v != null) {
+                    if (bank.takeVictoryPoint(player) != false) {
                         ok = false;
                         player.addVictoryPoint();
                     } else {
@@ -817,6 +825,91 @@ public abstract class Game {
     }
 
     //endregion
+
+    //region Development
+    public String useDevelopment(String development) {
+        switch (development) {
+            case "knight":
+                return "useKnight";
+            case "monopoly":
+                return "useMonopoly";
+            case "yearOfPlenty":
+                return "useYearOfPlenty";
+            case "roadBuilding":
+                return "useRoadBuilding";
+            default:
+                return null;
+        }
+    }
+
+    public Code useKnight() {
+        if (players.get(currentPlayer).getKnightsCounter() >= 1)
+            return Code.PlayerHasDev;
+        else
+            return Code.PlayerNoDev;
+    }
+
+    public Code useMonopoly() {
+        if (players.get(currentPlayer).getMonopoliesCounter() >= 1)
+            return Code.PlayerHasDev;
+        else
+            return Code.PlayerNoDev;
+    }
+
+    public Code useYearOfPlenty() {
+        if (players.get(currentPlayer).getYearsOfPlentyCounter() >= 1)
+            return Code.PlayerHasDev;
+        else
+            return Code.PlayerNoDev;
+    }
+
+    public Code useRoadBuilding() {
+        Player player = players.get(currentPlayer);
+        if (player.getRoadBuildingsCounter() >= 1) {
+            int remainingRoads = Math.min(bank.getNumberOfRoads(player),2);
+            player.setRoadsToBuildCounter(remainingRoads);
+            return Code.PlayerHasDev;
+        }
+        else
+            return Code.PlayerNoDev;
+    }
+
+    public Code takeResourceFromAll(String resource) {
+        Resource r = Resource.valueOf(resource);
+        if (resource == null) {
+            return Code.ResourceNotSet;
+        }
+        for (Map.Entry<String, Player> player : players.entrySet()) {
+            if (players.get(currentPlayer) != player.getValue()) {
+                int resourceNumber = player.getValue().getResourceNumber(r);
+                if (resourceNumber > 0) {
+                    players.get(currentPlayer).takeResource(r, resourceNumber);
+                    player.getValue().removeResource(r, resourceNumber);
+                }
+            }
+        }
+        return Code.MonopolySuccess;
+    }
+
+    public Code takeTwoResources(String resource1, String resource2) {
+        Player player = players.get(currentPlayer);
+        Resource r1 = Helper.getResourceTypeFromString(resource1);
+        Resource r2 = Helper.getResourceTypeFromString(resource2);
+        if (r1 == null) {
+            return Code.FirstResourceNotSet;
+        }
+        if(r2 == null)
+            return Code.SecondResourceNotSet;
+        if(!bank.existsResource(r1))
+            return Helper.getBankCodeFromResourceType(r1);
+        if(!bank.existsResource(r2))
+            return Helper.getBankCodeFromResourceType(r2);
+        bank.takeResource(r1, 1);
+        player.addResource(r1);
+        bank.takeResource(r2,1);
+        player.addResource(r2);
+        return Code.YearOfPlentySuccess;
+    }
 
     @Override
     public boolean equals(Object o) {
