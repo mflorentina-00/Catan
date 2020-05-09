@@ -17,6 +17,7 @@ public enum Code {
     ResourceNotSet,
     FirstResourceNotSet,
     SecondResourceNotSet,
+    PlayerNoResource,
     NoRoad,
     NoSettlement,
     NoCity,
@@ -29,6 +30,7 @@ public enum Code {
     BankNoSettlement,
     BankNoCity,
     BankNoDev,
+    BankNoResource,
     IntersectionAlreadyOccupied,
     NotTwoRoadsDistance,
     SameTile,
@@ -39,5 +41,7 @@ public enum Code {
     InvalidCityPosition,
     NotEnoughResources,
     InvalidSettlementPosition,
+    TradeIsDone,
+    InvalidTradeRequest,
 
 }

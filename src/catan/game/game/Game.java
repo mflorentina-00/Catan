@@ -8,6 +8,7 @@ import catan.game.development.Knight;
 import catan.game.development.Monopoly;
 import catan.game.development.RoadBuilding;
 import catan.game.development.YearOfPlenty;
+import catan.game.enumeration.Port;
 import catan.game.player.Player;
 import catan.game.board.Board;
 import catan.game.board.Tile;
@@ -797,6 +798,43 @@ public abstract class Game {
         trader.updateTradeResources(request, offer);
     }
 
+    public Code tradeWithPort(Port portType, Pair<Resource,Integer> offer, Pair<Resource,Integer> request){
+        Player traderPlayer = players.get(currentPlayer);
+        if(bank.existsResource(request.getKey(),request.getValue())) {
+            if (portType.toString().equalsIgnoreCase(offer.getKey().toString()) && offer.getValue() / 2 == request.getValue() && offer.getValue() % 2 == 0) {
+                if (traderPlayer.removeResource(offer.getKey(), offer.getValue())) {
+                    traderPlayer.takeResource(request.getKey(), request.getValue());
+                    return Code.TradeIsDone;
+                }
+            } else if (portType.toString().equalsIgnoreCase(offer.getKey().toString()) && offer.getValue() / 2 != request.getValue())
+                return Code.InvalidTradeRequest;
+            else if (portType.equals("ThreeForOne") && offer.getValue() / 3 == request.getValue()) {
+                if (traderPlayer.removeResource(offer.getKey(), offer.getValue())) {
+                    traderPlayer.takeResource(request.getKey(), request.getValue());
+                    return Code.TradeIsDone;
+                }
+            } else if (portType.equals("ThreeForOne") && offer.getValue() / 3 != request.getValue())
+                return Code.InvalidTradeRequest;
+        }
+
+        return Helper.getBankCodeFromResourceType(request.getKey());
+    }
+
+    public Code tradeWithBank(Pair<Resource,Integer> offer, Pair<Resource,Integer> request) {
+        Player traderPlayer = players.get(currentPlayer);
+        if(offer.getValue()/4 == request.getValue() && offer.getValue()%4 == 0 ) {
+            if (bank.existsResource(request.getKey(), request.getValue())) {
+                if (traderPlayer.removeResource(offer.getKey(), offer.getValue())) {
+                    traderPlayer.takeResource(request.getKey(), request.getValue());
+                    return Code.TradeIsDone;
+                } else
+                    return Helper.getPlayerCodeFromResourceType(request.getKey());
+            } else
+                return Helper.getBankCodeFromResourceType(request.getKey());
+        }
+        else
+            return Code.InvalidTradeRequest;
+    }
     //endregion
 
     //region Robber
