@@ -8,6 +8,7 @@ public enum Code {
     PlayerNoGrain,
     PlayerNoBrick,
     PlayerNoOre,
+    PlayerNoResource,
     NoRoad,
     NoSettlement,
     NoCity,
@@ -20,6 +21,7 @@ public enum Code {
     BankNoSettlement,
     BankNoCity,
     BankNoDev,
+    BankNoResource,
     IntersectionAlreadyOccupied,
     NotTwoRoadsDistance,
     SameTile,
@@ -30,5 +32,7 @@ public enum Code {
     InvalidCityPosition,
     NotEnoughResources,
     InvalidSettlementPosition,
+    TradeIsDone,
+    InvalidTradeRequest,
 
 }
