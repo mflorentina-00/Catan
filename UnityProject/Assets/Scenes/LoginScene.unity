@@ -1110,7 +1110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Username: {fileID: 1783467850}
   Password: {fileID: 415478365}
-  LoginEndpoint: http://catan-connectivity.herokuapp.com/auth/login
 --- !u!1 &608163793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1345,7 +1344,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Username: {fileID: 1783467850}
   Password: {fileID: 415478365}
-  LoginEndpoint: http://catan-connectivity.herokuapp.com/auth/login
 --- !u!1 &674150429
 GameObject:
   m_ObjectHideFlags: 0

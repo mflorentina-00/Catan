@@ -170,8 +170,9 @@ GameObject:
   - component: {fileID: 32986153}
   - component: {fileID: 32986152}
   - component: {fileID: 32986155}
+  - component: {fileID: 32986156}
   m_Layer: 5
-  m_Name: Choose
+  m_Name: Choose3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,7 +254,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1924238070}
+      - m_Target: {fileID: 32986156}
+        m_MethodName: SendMessage
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 32986155}
         m_MethodName: goToWaitingRoom
         m_Mode: 1
         m_Arguments:
@@ -310,6 +322,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64ad043d99fd9bc42b5775dbff13a841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &32986156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32986150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffaa4587c57e9304980442e0bca61df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &116260531
@@ -975,7 +999,7 @@ GameObject:
   - component: {fileID: 427009760}
   - component: {fileID: 427009759}
   m_Layer: 5
-  m_Name: Exp
+  m_Name: Exp3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2264,7 +2288,7 @@ GameObject:
   - component: {fileID: 876171530}
   - component: {fileID: 876171529}
   m_Layer: 5
-  m_Name: Exp
+  m_Name: Exp1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2632,7 +2656,7 @@ GameObject:
   - component: {fileID: 939113521}
   - component: {fileID: 939113520}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3615,7 +3639,7 @@ GameObject:
   - component: {fileID: 1278926692}
   - component: {fileID: 1278926691}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3629,7 +3653,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1278926689}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2128551446}
@@ -3637,7 +3661,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.1001, y: -85}
+  m_AnchoredPosition: {x: -17, y: -85}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1278926691
@@ -3769,7 +3793,7 @@ GameObject:
   - component: {fileID: 1326017081}
   - component: {fileID: 1326017080}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4281,8 +4305,9 @@ GameObject:
   - component: {fileID: 1467107925}
   - component: {fileID: 1467107924}
   - component: {fileID: 1467107927}
+  - component: {fileID: 1467107928}
   m_Layer: 5
-  m_Name: Choose
+  m_Name: Choose1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4375,6 +4400,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1467107928}
+        m_MethodName: SendMessage
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 1
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1467107925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4421,6 +4457,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64ad043d99fd9bc42b5775dbff13a841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1467107928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467107922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffaa4587c57e9304980442e0bca61df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1473536188
@@ -4796,7 +4844,7 @@ GameObject:
   - component: {fileID: 1571350395}
   - component: {fileID: 1571350398}
   m_Layer: 5
-  m_Name: Choose
+  m_Name: Choose5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4948,7 +4996,7 @@ GameObject:
   - component: {fileID: 1614780269}
   - component: {fileID: 1614780268}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5104,7 +5152,7 @@ GameObject:
   - component: {fileID: 1661210105}
   - component: {fileID: 1661210108}
   m_Layer: 5
-  m_Name: Choose
+  m_Name: Choose4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5735,9 +5783,10 @@ GameObject:
   - component: {fileID: 1924238069}
   - component: {fileID: 1924238068}
   - component: {fileID: 1924238067}
+  - component: {fileID: 1924238071}
   - component: {fileID: 1924238070}
   m_Layer: 5
-  m_Name: Choose
+  m_Name: Choose2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5819,6 +5868,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1924238071}
+        m_MethodName: SendMessage
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 2
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1924238070}
         m_MethodName: goToWaitingRoom
         m_Mode: 1
@@ -5878,6 +5938,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ad043d99fd9bc42b5775dbff13a841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1924238071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1924238065}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffaa4587c57e9304980442e0bca61df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1939792500
 GameObject:
   m_ObjectHideFlags: 0
@@ -5890,7 +5962,7 @@ GameObject:
   - component: {fileID: 1939792503}
   - component: {fileID: 1939792502}
   m_Layer: 5
-  m_Name: Exp
+  m_Name: Exp4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6198,7 +6270,7 @@ GameObject:
   - component: {fileID: 1971348253}
   - component: {fileID: 1971348252}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6517,7 +6589,7 @@ GameObject:
   - component: {fileID: 2025447411}
   - component: {fileID: 2025447410}
   m_Layer: 5
-  m_Name: Exp
+  m_Name: Exp2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6992,7 +7064,7 @@ GameObject:
   - component: {fileID: 2128551448}
   - component: {fileID: 2128551447}
   m_Layer: 5
-  m_Name: Exp
+  m_Name: Exp5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
