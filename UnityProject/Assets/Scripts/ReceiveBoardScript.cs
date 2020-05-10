@@ -30,25 +30,12 @@ public class ReceiveBoardScript
     public void RequestLobbyidAndGameid()
     {
         UnityConnectivityCommand command = new UnityConnectivityCommand();
-        command.username = LoginScript.CurrentUser;
+        string board = "";
+        command.username = "abcdef";
         RestClient.Post<LobbyConnectivityJson>("https://catan-connectivity.herokuapp.com/lobby/add", command).Then(ReceivedLobby =>
         {
-            LoginScript.CurrentUserGameId = ReceivedLobby.gameid;
-            LoginScript.CurrentUserLobbyId = ReceivedLobby.lobbyid;
             getGameBoard(ReceivedLobby.gameid);
         }).Catch(err => { Debug.Log(err); });
     }
 
-    public void getGameBoardNotMaster()
-    {
-        GameIDConnectivityJson gameid = new GameIDConnectivityJson();
-        gameid.gameid = LoginScript.CurrentUserGameId;
-        //gameid.gameid = "P9LapF9QcYQ2SKG8ph4hz";
-        RestClient.Post<BoardConnectivityJson>("https://catan-connectivity.herokuapp.com/board/get", gameid).Then(board =>
-        {
-            ReceiveBoardScript.ReceivedBoard.ports = board.ports;
-            ReceiveBoardScript.ReceivedBoard.board = board.board;
-            Debug.Log(ReceiveBoardScript.ReceivedBoard.board[0].number);
-        }).Catch(err => { Debug.Log(err); });
-    }
 }
