@@ -33,38 +33,40 @@ public class ChangeTexture : MonoBehaviour
     void Update()
     {
         BoardConnectivityJson board = ReceiveBoardScript.ReceivedBoard;
-        if (ReceiveBoardScript.ReceivedBoard.board[0] != null && done == false)
-        {
-            done = true;
-            string str = "";
-            str = board.board[nr].number.ToString();
-            text.text = str;
-            string resource = board.board[nr].resource;
-            Debug.Log(resource);
-            switch (resource)
+        if (done == false) { 
+            if (ReceiveBoardScript.ReceivedBoard.board[0] != null)
             {
-                case "lumber":
-                    Instantiate(objForest, SpawnForestOre.position, SpawnForestOre.rotation);
-                    break;
-                case "wool":
-                    Instantiate(objPasture, SpawnPasture.position, SpawnPasture.rotation);
-                    break;
-                case "ore":
-                    Instantiate(objOre, SpawnForestOre.position, SpawnForestOre.rotation);
-                    break;
-                case "grain":
-                    Instantiate(objGrain, SpawnPasture.position, SpawnPasture.rotation);
-                    break;
-                case "desert":
-                    Instantiate(objDesert, SpawnDesertField.position, SpawnDesertField.rotation);
-                    break;
-                case "brick":
-                    Instantiate(objBrick, SpawnHills.position, SpawnHills.rotation);
-                    break;
+                done = true;
+                string str = "";
+                str = board.board[nr].number.ToString();
+                text.text = str;
+                string resource = board.board[nr].resource;
+                Debug.Log(resource);
+                switch (resource)
+                {
+                    case "lumber":
+                        Instantiate(objForest, SpawnForestOre.position, SpawnForestOre.rotation);
+                        break;
+                    case "wool":
+                        Instantiate(objPasture, SpawnPasture.position, SpawnPasture.rotation);
+                        break;
+                    case "ore":
+                        Instantiate(objOre, SpawnForestOre.position, SpawnForestOre.rotation);
+                        break;
+                    case "grain":
+                        Instantiate(objGrain, SpawnPasture.position, SpawnPasture.rotation);
+                        break;
+                    case "desert":
+                        Instantiate(objDesert, SpawnDesertField.position, SpawnDesertField.rotation);
+                        break;
+                    case "brick":
+                        Instantiate(objBrick, SpawnHills.position, SpawnHills.rotation);
+                        break;
 
+                }
             }
+            else
+                Debug.Log("Null");
         }
-        else
-            Debug.Log("Null");
     }
 }
